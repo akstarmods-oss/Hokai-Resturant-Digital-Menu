@@ -504,9 +504,7 @@
       font-weight: 600;
     }
 
-    /* ========================================================
-       SMART ADAPTIVE MENU CARDS (NO EMPTY BLACK SQUARES)
-    ======================================================== */
+    /* SMART ADAPTIVE CARDS (PHOTO 1 FORMAT) */
     .menu-grid {
       display: flex;
       flex-direction: column;
@@ -619,7 +617,6 @@
       overflow: hidden;
     }
 
-    /* Thumbnail rendered only if image link is valid */
     .card-right-thumb-wrap {
       width: 110px;
       height: 100px;
@@ -770,7 +767,6 @@
       line-height: 1.55;
     }
 
-    /* VARIANT SELECTION INSIDE SHEET */
     .sheet-variants-box {
       background: #1A1A1A;
       border: 1px solid var(--border-dark);
@@ -1522,12 +1518,10 @@
     <div class="dish-sheet-card" id="dish-sheet-card">
       <button type="button" class="sheet-close-btn" id="sheet-close-btn"><i class="fa-solid fa-xmark"></i></button>
       
-      <!-- HERO IMAGE IN MODAL (ONLY IF IMAGE EXISTS) -->
       <div class="sheet-hero-image-box" id="sheet-hero-image-box">
         <img id="sheet-dish-img" src="" alt="Dish Preview">
       </div>
 
-      <!-- NO-IMAGE MOTIF (ELEGANT RESTAURANT BADGE) -->
       <div class="sheet-no-img-header" id="sheet-no-img-header" style="display:none;">
         <i class="fa-solid fa-utensils"></i>
         <span style="font-family:var(--font-heading); font-size:1.1rem; color:var(--gold-primary); font-weight:700;">HOKAI MASTER RECIPE</span>
@@ -1713,7 +1707,7 @@
                 </div>
 
                 <div id="single-price-box-add">
-                  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                  <div style="grid-template-columns: 1fr 1fr; display:grid; gap:12px;">
                     <div>
                       <label>Price (INR ₹)</label>
                       <input type="number" id="dish-price" class="form-control" placeholder="e.g. 420">
@@ -1730,7 +1724,7 @@
 
                 <div id="variant-builder-box-add" style="display:none;">
                   <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:10px;">
-                    Har variant ka alag <strong>Name, Price, Dietary (Veg/Non-Veg), Image URL aur Description</strong> set karein[span_2](start_span)[span_2](end_span). Customer jab select karega, modal me photo aur detail real-time auto-change ho jayegi[span_3](start_span)[span_3](end_span)!
+                    Har variant ka alag <strong>Name, Price, Dietary (Veg/Non-Veg), Image URL aur Description</strong> set karein. Customer jab select karega, modal me photo aur detail real-time auto-change ho jayegi!
                   </p>
                   <div id="variant-rows-container-add"></div>
                   <button type="button" id="btn-add-variant-row-add" class="btn-outline" style="padding: 6px 14px; font-size:0.82rem; margin-top:8px;">
@@ -2009,7 +2003,7 @@
           </div>
 
           <div id="single-price-box-edit">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div style="grid-template-columns: 1fr 1fr; display:grid; gap:10px;">
               <div>
                 <label>Price (₹)</label>
                 <input type="number" id="edit-dish-price" class="form-control">
@@ -2026,7 +2020,7 @@
 
           <div id="variant-builder-box-edit" style="display:none;">
             <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">
-              Har variant ka alag <strong>Price, Dietary (Veg/Non-Veg), Image aur Description</strong> set karein[span_4](start_span)[span_4](end_span):
+              Har variant ka alag <strong>Price, Dietary (Veg/Non-Veg), Image aur Description</strong> set karein:
             </p>
             <div id="variant-rows-container-edit"></div>
             <button type="button" id="btn-add-variant-row-edit" class="btn-outline" style="padding: 5px 12px; font-size:0.8rem; margin-top:8px;">
@@ -2924,7 +2918,7 @@
     }
 
     // ========================================================
-    // SMART ADAPTIVE CARDS: NO EMPTY BLACK SQUARES (PHOTO 1 FORMAT)
+    // INTELLIGENT MULTI-VARIANT DIETARY FILTERING ENGINE
     // ========================================================
     window.renderPublicDishes = function() {
       const container = document.getElementById("dishes-container");
@@ -2932,10 +2926,23 @@
 
       const filtered = currentDishes.filter(dish => {
         const matchesCat = currentCategory === "all" || dish.category === currentCategory;
-        const matchesDiet = currentDiet === "all" || dish.dietary === currentDiet;
         const matchesSearch = !searchQuery || dish.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
                               dish.description?.toLowerCase().includes(searchQuery.toLowerCase()) || 
                               dish.category?.toLowerCase().includes(searchQuery.toLowerCase());
+
+        // MULTI-VARIANT DEEP DIETARY CHECK
+        let matchesDiet = true;
+        const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
+
+        if (currentDiet !== "all") {
+          if (hasVariants) {
+            // Check if AT LEAST ONE variation matches the selected dietary filter
+            matchesDiet = dish.variants.some(v => v.dietary === currentDiet);
+          } else {
+            matchesDiet = (dish.dietary || "veg") === currentDiet;
+          }
+        }
+
         return matchesCat && matchesDiet && matchesSearch;
       });
 
@@ -2951,10 +2958,24 @@
 
       container.innerHTML = filtered.map(dish => {
         const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
-        const initialVariant = hasVariants ? dish.variants[0] : null;
-        const priceDisplay = hasVariants ? `₹${initialVariant.price} onwards` : `₹${dish.price || 0}`;
-        const mainImg = (initialVariant && initialVariant.imageUrl) ? initialVariant.imageUrl : (dish.imageUrl || "");
-        const dietType = (initialVariant && initialVariant.dietary) ? initialVariant.dietary : (dish.dietary || "veg");
+        
+        // CONTEXT-AWARE DEFAULT VARIANT:
+        // Agar customer ne Non-Veg filter dabaya hai, toh non-veg variant pehle dikhayega!
+        let activeVariant = null;
+        if (hasVariants) {
+          if (currentDiet === "non-veg") {
+            activeVariant = dish.variants.find(v => v.dietary === "non-veg") || dish.variants[0];
+          } else if (currentDiet === "veg") {
+            activeVariant = dish.variants.find(v => v.dietary === "veg") || dish.variants[0];
+          } else {
+            activeVariant = dish.variants[0];
+          }
+        }
+
+        const priceDisplay = activeVariant ? `₹${activeVariant.price}` : `₹${dish.price || 0}`;
+        const mainImg = (activeVariant && activeVariant.imageUrl) ? activeVariant.imageUrl : (dish.imageUrl || "");
+        const dietType = (activeVariant && activeVariant.dietary) ? activeVariant.dietary : (dish.dietary || "veg");
+        const descSnippet = (activeVariant && activeVariant.description) ? activeVariant.description : (dish.description || 'Authentic traditional recipe prepared with fresh ingredients.');
 
         const hasValidImg = Boolean(mainImg && mainImg.trim());
 
@@ -2972,8 +2993,8 @@
             </div>
 
             <h3 class="card-dish-name">${dish.name}</h3>
-            <span class="card-price-tag">${priceDisplay}</span>
-            <p class="card-desc-snippet">${dish.description || 'Authentic traditional recipe prepared with fresh ingredients.'}</p>
+            <span class="card-price-tag">${hasVariants ? `${priceDisplay} onwards` : priceDisplay}</span>
+            <p class="card-desc-snippet">${descSnippet}</p>
           </div>
 
           ${hasValidImg ? `
@@ -2995,14 +3016,25 @@
     };
 
     // ========================================================
-    // BOTTOM SHEET CONTROLLER: NO EMPTY BLACK HEADER (PHOTO 2 FORMAT)
+    // BOTTOM SHEET MODAL (PHOTO 2 FORMAT)
     // ========================================================
     const sheetBackdrop = document.getElementById("dish-detail-sheet-backdrop");
     const sheetCloseBtn = document.getElementById("sheet-close-btn");
 
     function openDishDetailSheet(dish) {
       const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
-      let activeVariant = hasVariants ? dish.variants[0] : null;
+      
+      // Auto pick context variant matching active dietary filter
+      let activeVariant = null;
+      if (hasVariants) {
+        if (currentDiet === "non-veg") {
+          activeVariant = dish.variants.find(v => v.dietary === "non-veg") || dish.variants[0];
+        } else if (currentDiet === "veg") {
+          activeVariant = dish.variants.find(v => v.dietary === "veg") || dish.variants[0];
+        } else {
+          activeVariant = dish.variants[0];
+        }
+      }
 
       function updateSheetUI() {
         const titleEl = document.getElementById("sheet-dish-title");
@@ -3017,8 +3049,8 @@
         titleEl.textContent = dish.name;
         priceEl.textContent = `₹${activeVariant ? activeVariant.price : (dish.price || 0)}`;
 
-        const currentDiet = (activeVariant && activeVariant.dietary) ? activeVariant.dietary : (dish.dietary || 'veg');
-        dietDot.className = `dietary-dot ${currentDiet === 'veg' ? 'veg' : 'non-veg'}`;
+        const currentDietType = (activeVariant && activeVariant.dietary) ? activeVariant.dietary : (dish.dietary || 'veg');
+        dietDot.className = `dietary-dot ${currentDietType === 'veg' ? 'veg' : 'non-veg'}`;
 
         const currentDesc = (activeVariant && activeVariant.description) ? activeVariant.description : (dish.description || 'Crafted with authentic Pan-Asian ingredients and spices.');
         descEl.textContent = currentDesc;
@@ -3047,7 +3079,7 @@
       if (hasVariants) {
         variantsBox.style.display = "flex";
         variantsList.innerHTML = dish.variants.map((v, i) => `
-          <div class="sheet-variant-item-btn ${i === 0 ? 'active' : ''}" data-index="${i}">
+          <div class="sheet-variant-item-btn ${v === activeVariant ? 'active' : ''}" data-index="${i}">
             <div style="display:flex; align-items:center; gap:8px;">
               <span class="dietary-marker" style="width:14px; height:14px;">
                 <span class="dietary-dot ${v.dietary === 'veg' ? 'veg' : 'non-veg'}" style="width:6px; height:6px;"></span>
@@ -3091,7 +3123,18 @@
           dish.description?.toLowerCase().includes(adminSearchQuery.toLowerCase());
 
         const matchesCat = adminFilterCat === "all" || dish.category === adminFilterCat;
-        const matchesDiet = adminFilterDiet === "all" || dish.dietary === adminFilterDiet;
+
+        // Admin Multi-variant dietary check
+        let matchesDiet = true;
+        const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
+        if (adminFilterDiet !== "all") {
+          if (hasVariants) {
+            matchesDiet = dish.variants.some(v => v.dietary === adminFilterDiet);
+          } else {
+            matchesDiet = (dish.dietary || "veg") === adminFilterDiet;
+          }
+        }
+
         const matchesSpicy = adminFilterSpicy === "all" || (dish.spicyLevel || "none") === adminFilterSpicy;
         const matchesSweet = adminFilterSweet === "all" || (dish.sweetLevel || "none") === adminFilterSweet;
 
@@ -3526,6 +3569,7 @@
       });
     });
 
+    // CUSTOMER VEG / NON-VEG FILTER BUTTON CLICKS
     document.querySelectorAll(".filter-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
@@ -3535,7 +3579,7 @@
       });
     });
 
-    // 15. SEED DATA WITH INDIVIDUAL VARIANT IMAGES & DESCRIPTIONS
+    // 15. SEED DATA
     const seedData = [
       { 
         name: "Thai Green Curry with Jasmine Rice", 
@@ -3574,32 +3618,39 @@
         order: 1
       },
       { 
-        name: "Truffle Edamame Dim Sum", 
-        category: "Dim Sums", 
-        price: 445, 
+        name: "Black Bean Sauce Gravy", 
+        category: "Gravy Mains", 
+        price: 400, 
         variants: [
           { 
-            name: "4 Pcs", 
-            price: 445, 
+            name: "Veg", 
+            price: 400, 
             dietary: "veg", 
             imageUrl: "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=600&q=80", 
-            description: "4 pieces of crystal steamed dim sums filled with edamame and truffle aroma." 
+            description: "Mixed vegetables cooked in a savory, garlic-infused classic black bean sauce." 
           },
           { 
-            name: "8 Pcs", 
-            price: 825, 
-            dietary: "veg", 
-            imageUrl: "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=600&q=80", 
-            description: "Sharing basket of 8 crystal dumplings with house chili oil." 
+            name: "Chicken", 
+            price: 450, 
+            dietary: "non-veg", 
+            imageUrl: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80", 
+            description: "Juicy chicken slices tossed with crisp peppers in rich savory black bean sauce." 
+          },
+          { 
+            name: "Sea Food", 
+            price: 500, 
+            dietary: "non-veg", 
+            imageUrl: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=600&q=80", 
+            description: "Delicious Pan-Asian seafood delicacy featuring prawns and fish wok-tossed with umami black bean sauce." 
           }
         ],
         dietary: "veg", 
-        spicyLevel: "none",
+        spicyLevel: "mild",
         sweetLevel: "none",
-        isSignature: true, 
+        isSignature: false, 
         isBestseller: true, 
-        description: "Silky crystal skin filled with crushed edamame and black truffle essence.", 
-        imageUrl: "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=600&q=80",
+        description: "Savory garlic-infused black bean sauce gravy with your choice of protein.", 
+        imageUrl: "",
         order: 2
       }
     ];
