@@ -1105,26 +1105,36 @@
       white-space: nowrap;
     }
 
-    .variant-row {
+    /* ADVANCED VARIANT CARD BUILDER IN ADMIN */
+    .variant-card-box {
+      background: #191919;
+      border: 1px solid rgba(255, 185, 0, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin-bottom: 12px;
       display: flex;
+      flex-direction: column;
       gap: 8px;
-      margin-bottom: 8px;
-      align-items: center;
-      flex-wrap: wrap;
+      position: relative;
     }
 
-    .remove-variant-row-btn {
-      background: rgba(239, 83, 80, 0.2);
-      border: 1px solid #ef5350;
-      color: #ef5350;
-      width: 38px;
-      height: 38px;
-      border-radius: var(--radius-sm);
+    .variant-card-header {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      flex-shrink: 0;
+      margin-bottom: 4px;
+    }
+
+    .variant-card-header span {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--gold-primary);
+    }
+
+    .variant-grid-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 8px;
     }
 
     .modal-overlay {
@@ -1145,7 +1155,7 @@
       background: var(--surface-charcoal);
       border: 1px solid var(--border-gold);
       border-radius: var(--radius-md);
-      max-width: 620px;
+      max-width: 650px;
       width: 100%;
       padding: clamp(16px, 4vw, 26px);
       max-height: 90vh;
@@ -1208,8 +1218,6 @@
       .admin-navbar { flex-direction: column; align-items: stretch; }
       .admin-nav-left { justify-content: space-between; width: 100%; }
       .admin-nav-right { justify-content: flex-end; width: 100%; }
-      .variant-row { flex-direction: column; align-items: stretch; }
-      .remove-variant-row-btn { width: 100%; }
       #add-category-form { flex-direction: column; }
       .admin-filter-dropdowns-grid { grid-template-columns: 1fr 1fr; }
     }
@@ -1514,7 +1522,7 @@
         </div>
       </div>
 
-      <!-- TAB 2: ADD NEW DISH -->
+      <!-- TAB 2: ADD NEW DISH (WITH COMPREHENSIVE MULTI-VARIANT SYSTEM) -->
       <div class="admin-panel-section" id="tab-add">
         <div class="admin-card">
           <h3><i class="fa-solid fa-plus"></i> Add New Pan-Asian Dish</h3>
@@ -1522,44 +1530,52 @@
             <div style="grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); display:grid; gap:16px;">
               <div class="form-group">
                 <label>Dish Name</label>
-                <input type="text" id="dish-name" class="form-control" placeholder="e.g. Crispy Lotus Stem / Mango Sticky Rice" required>
+                <input type="text" id="dish-name" class="form-control" placeholder="e.g. Thai Green Curry / Khow Suey" required>
               </div>
               <div class="form-group">
                 <label>Category</label>
                 <select id="dish-category" class="form-control" required></select>
               </div>
 
+              <!-- PRICING & ADVANCED VARIATION BUILDER -->
               <div class="form-group" style="grid-column: 1 / -1; background: #111; padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-dark);">
-                <label style="color:var(--gold-primary); margin-bottom: 8px;">Pricing Strategy</label>
+                <label style="color:var(--gold-primary); margin-bottom: 8px;">Pricing Strategy & Variations</label>
                 <div style="display: flex; gap: 14px; align-items: center; margin-bottom: 12px; flex-wrap:wrap;">
                   <label style="cursor: pointer; display: flex; align-items: center; gap: 6px; text-transform:none; font-size:0.85rem;">
                     <input type="radio" name="pricing-mode-add" value="single" checked id="pricing-mode-single-add"> Single Standard Price
                   </label>
                   <label style="cursor: pointer; display: flex; align-items: center; gap: 6px; text-transform:none; font-size:0.85rem;">
-                    <input type="radio" name="pricing-mode-add" value="variants" id="pricing-mode-variants-add"> Multiple Variations (Half/Full)
+                    <input type="radio" name="pricing-mode-add" value="variants" id="pricing-mode-variants-add"> Multiple Variations (Veg/Chicken/Prawns, Half/Full)
                   </label>
                 </div>
 
+                <!-- Single Item Price & Dietary -->
                 <div id="single-price-box-add">
-                  <label>Price (INR ₹)</label>
-                  <input type="number" id="dish-price" class="form-control" placeholder="e.g. 420">
+                  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                    <div>
+                      <label>Price (INR ₹)</label>
+                      <input type="number" id="dish-price" class="form-control" placeholder="e.g. 420">
+                    </div>
+                    <div>
+                      <label>Dietary</label>
+                      <select id="dish-diet" class="form-control">
+                        <option value="veg">🟢 Pure Veg</option>
+                        <option value="non-veg">🔴 Non-Vegetarian</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
 
+                <!-- Multi Variations Cards Container -->
                 <div id="variant-builder-box-add" style="display:none;">
-                  <label>Variations & Prices</label>
+                  <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:10px;">
+                    Har variant ka alag <strong>Name, Price, Dietary (Veg/Non-Veg), Image URL aur Description</strong> set karein. Customer jab select karega, website par photo aur detail auto-change ho jayegi!
+                  </p>
                   <div id="variant-rows-container-add"></div>
                   <button type="button" id="btn-add-variant-row-add" class="btn-outline" style="padding: 6px 14px; font-size:0.82rem; margin-top:8px;">
-                    <i class="fa-solid fa-plus"></i> Add Variation
+                    <i class="fa-solid fa-plus"></i> Add Another Variation
                   </button>
                 </div>
-              </div>
-
-              <div class="form-group">
-                <label>Dietary</label>
-                <select id="dish-diet" class="form-control">
-                  <option value="veg">Vegetarian</option>
-                  <option value="non-veg">Non-Vegetarian</option>
-                </select>
               </div>
 
               <div class="form-group">
@@ -1595,11 +1611,11 @@
               </div>
 
               <div class="form-group" style="grid-column: 1 / -1;">
-                <label>Description</label>
+                <label>Default Description (Agar variation select na ho)</label>
                 <textarea id="dish-desc" class="form-control" rows="2" placeholder="Handcrafted with authentic Asian ingredients..."></textarea>
               </div>
               <div class="form-group" style="grid-column: 1 / -1;">
-                <label>Image URL (Direct Google Maps / ImgBB Link)</label>
+                <label>Default Image URL (Direct Google Maps / ImgBB Link)</label>
                 <input type="url" id="dish-img-url" class="form-control" placeholder="https://lh3.googleusercontent.com/... or https://i.ibb.co/...">
               </div>
             </div>
@@ -1608,12 +1624,12 @@
         </div>
       </div>
 
-      <!-- TAB 3: CATEGORY MANAGEMENT (WITH RE-ORDERING UP/DOWN) -->
+      <!-- TAB 3: CATEGORY MANAGEMENT -->
       <div class="admin-panel-section" id="tab-categories">
         <div class="admin-card">
           <h3><i class="fa-solid fa-layer-group"></i> Category Management</h3>
           <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:14px;">
-            Aap <strong>⬆️ Up</strong> aur <strong>⬇️ Down</strong> dabakar categories ko upar-neeche kar sakte hain. Website par live button order usi time update ho jayega[span_3](start_span)[span_3](end_span)!
+            Aap <strong>⬆️ Up</strong> aur <strong>⬇️ Down</strong> dabakar categories ko upar-neeche kar sakte hain[span_3](start_span)[span_3](end_span).
           </p>
           <form id="add-category-form" style="display:flex; gap:10px; max-width:550px; margin-bottom:20px; flex-wrap:wrap;">
             <input type="text" id="new-category-name" class="form-control" placeholder="e.g. Sizzling Wok Bowls" required style="flex:1 1 200px;">
@@ -1640,13 +1656,9 @@
       <div class="admin-panel-section" id="tab-social-orders">
         <div class="admin-card">
           <h3><i class="fa-solid fa-share-nodes"></i> WhatsApp, Instagram & Online Ordering (Swiggy/Zomato)</h3>
-          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:16px;">
-            Yahan se aap restaurant ka Swiggy/Zomato link, WhatsApp number aur Instagram direct profile live set kar sakte hain.
-          </p>
-
           <form id="social-ordering-form" style="max-width:700px;">
             <div class="form-group">
-              <label>WhatsApp Number (With Country Code, e.g. 919876543210)</label>
+              <label>WhatsApp Number (e.g. 919876543210)</label>
               <input type="text" id="input-whatsapp-num" class="form-control" placeholder="919876543210">
             </div>
             <div class="form-group">
@@ -1676,10 +1688,6 @@
       <div class="admin-panel-section" id="tab-location-manager">
         <div class="admin-card">
           <h3><i class="fa-solid fa-location-dot"></i> Restaurant Location & Google Maps Redirection</h3>
-          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:16px;">
-            Jab customer click karega toh direct Google Maps par navigation start ho jayega.
-          </p>
-
           <form id="location-settings-form" style="max-width:700px;">
             <div class="form-group">
               <label>Restaurant Display Name / Landmark</label>
@@ -1690,7 +1698,7 @@
               <textarea id="input-location-address" class="form-control" rows="2" required placeholder="Shop No, Street, Defence Colony, Sainikpuri..."></textarea>
             </div>
             <div class="form-group">
-              <label>Google Maps Link (Google Maps location share link)</label>
+              <label>Google Maps Link (Direct location share link)</label>
               <input type="url" id="input-location-map-url" class="form-control" placeholder="https://maps.app.goo.gl/... or https://maps.google.com/..." required>
             </div>
 
@@ -1810,7 +1818,7 @@
     </div>
   </div>
 
-  <!-- EDIT DISH MODAL -->
+  <!-- EDIT DISH MODAL (WITH ADVANCED MULTI-VARIANT CONTROLS) -->
   <div class="modal-overlay" id="edit-dish-modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -1829,7 +1837,7 @@
         </div>
 
         <div class="form-group" style="background: #111; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-dark);">
-          <label style="color:var(--gold-primary); margin-bottom: 6px;">Pricing Strategy</label>
+          <label style="color:var(--gold-primary); margin-bottom: 6px;">Pricing Strategy & Variations</label>
           <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 10px; flex-wrap:wrap;">
             <label style="cursor: pointer; display: flex; align-items: center; gap: 6px; text-transform:none; font-size:0.82rem;">
               <input type="radio" name="pricing-mode-edit" value="single" id="pricing-mode-single-edit"> Single Price
@@ -1840,25 +1848,30 @@
           </div>
 
           <div id="single-price-box-edit">
-            <label>Price (₹)</label>
-            <input type="number" id="edit-dish-price" class="form-control">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+              <div>
+                <label>Price (₹)</label>
+                <input type="number" id="edit-dish-price" class="form-control">
+              </div>
+              <div>
+                <label>Dietary</label>
+                <select id="edit-dish-diet" class="form-control">
+                  <option value="veg">🟢 Pure Veg</option>
+                  <option value="non-veg">🔴 Non-Vegetarian</option>
+                </select>
+              </div>
+            </div>
           </div>
 
           <div id="variant-builder-box-edit" style="display:none;">
-            <label>Variations & Portion Prices</label>
+            <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">
+              Har variant ka alag <strong>Price, Dietary (Veg/Non-Veg), Image aur Description</strong> set karein:
+            </p>
             <div id="variant-rows-container-edit"></div>
             <button type="button" id="btn-add-variant-row-edit" class="btn-outline" style="padding: 5px 12px; font-size:0.8rem; margin-top:8px;">
-              <i class="fa-solid fa-plus"></i> Add Variation
+              <i class="fa-solid fa-plus"></i> Add Another Variation
             </button>
           </div>
-        </div>
-
-        <div class="form-group">
-          <label>Dietary</label>
-          <select id="edit-dish-diet" class="form-control">
-            <option value="veg">Vegetarian</option>
-            <option value="non-veg">Non-Vegetarian</option>
-          </select>
         </div>
 
         <div class="form-group">
@@ -1894,12 +1907,12 @@
         </div>
 
         <div class="form-group">
-          <label>Description</label>
+          <label>Default Description</label>
           <textarea id="edit-dish-desc" class="form-control" rows="2"></textarea>
         </div>
         <div class="form-group">
-          <label>Image URL (Optional)</label>
-          <input type="url" id="edit-dish-img-url" class="form-control" placeholder="https://i.ibb.co/.../dish.jpg">
+          <label>Default Image URL</label>
+          <input type="url" id="edit-dish-img-url" class="form-control" placeholder="https://lh3.googleusercontent.com/... or https://i.ibb.co/...">
         </div>
         <div style="display:flex; gap:10px;">
           <button type="submit" class="btn-primary" style="flex:1;"><i class="fa-solid fa-check"></i> Save Changes</button>
@@ -2334,7 +2347,6 @@
           });
         });
 
-        // Numerical Order Sort
         categoriesList.sort((a, b) => a.order - b.order);
 
         localStorage.setItem("hokai_cache_categories", JSON.stringify(categoriesList));
@@ -2394,7 +2406,6 @@
         </tr>
       `).join('');
 
-      // Move Category Up
       document.querySelectorAll(".move-cat-up").forEach(btn => {
         btn.addEventListener("click", async () => {
           const idx = Number(btn.dataset.index);
@@ -2408,7 +2419,6 @@
         });
       });
 
-      // Move Category Down
       document.querySelectorAll(".move-cat-down").forEach(btn => {
         btn.addEventListener("click", async () => {
           const idx = Number(btn.dataset.index);
@@ -2728,7 +2738,6 @@
         });
       });
 
-      // Sort Menu Items By Custom Admin Order
       currentDishes.sort((a, b) => a.order - b.order);
 
       localStorage.setItem("hokai_cache_dishes", JSON.stringify(currentDishes));
@@ -2753,6 +2762,7 @@
       return '';
     }
 
+    // ADVANCED VARIANT SWITCHING ENGINE ON CUSTOMER MENU
     window.renderPublicDishes = function() {
       const container = document.getElementById("dishes-container");
       if (!container) return;
@@ -2777,51 +2787,62 @@
       }
 
       container.innerHTML = filtered.map(dish => {
-        const hasImg = Boolean(dish.imageUrl && dish.imageUrl.trim());
         const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
-        const initialPrice = hasVariants ? dish.variants[0].price : (dish.price || 0);
+        
+        // Initial selected state
+        const initialVariant = hasVariants ? dish.variants[0] : null;
+        const initialPrice = initialVariant ? initialVariant.price : (dish.price || 0);
+        const initialImg = (initialVariant && initialVariant.imageUrl) ? initialVariant.imageUrl : (dish.imageUrl || "");
+        const initialDesc = (initialVariant && initialVariant.description) ? initialVariant.description : (dish.description || "");
+        const initialDiet = (initialVariant && initialVariant.dietary) ? initialVariant.dietary : (dish.dietary || "veg");
+
+        const hasImg = Boolean(initialImg && initialImg.trim());
 
         return `
         <div class="dish-card" id="card-${dish.id}">
-          ${hasImg ? `
-            <div class="dish-thumb">
-              <img src="${dish.imageUrl}" alt="${dish.name}" loading="lazy" decoding="async">
-              <div class="dish-badges overlay-badges">
+          <div class="dish-thumb-wrapper" id="thumb-wrap-${dish.id}">
+            ${hasImg ? `
+              <div class="dish-thumb">
+                <img id="img-${dish.id}" src="${initialImg}" alt="${dish.name}" loading="lazy" decoding="async">
+                <div class="dish-badges overlay-badges">
+                  ${dish.isSignature ? `<span class="badge badge-signature">Chef's Special</span>` : ''}
+                  ${dish.isBestseller ? `<span class="badge badge-bestseller">Bestseller</span>` : ''}
+                  ${getSpicyBadgeHTML(dish.spicyLevel)}
+                  ${getSweetBadgeHTML(dish.sweetLevel)}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+
+          <div class="dish-body">
+            <div class="dish-top-meta">
+              <div class="dietary-marker">
+                <span class="dietary-dot ${initialDiet === 'veg' ? 'veg' : 'non-veg'}" id="diet-dot-${dish.id}"></span>
+              </div>
+              <div class="dish-badges" id="body-badges-${dish.id}" style="${hasImg ? 'display:none;' : 'margin-bottom:0;'}">
                 ${dish.isSignature ? `<span class="badge badge-signature">Chef's Special</span>` : ''}
                 ${dish.isBestseller ? `<span class="badge badge-bestseller">Bestseller</span>` : ''}
                 ${getSpicyBadgeHTML(dish.spicyLevel)}
                 ${getSweetBadgeHTML(dish.sweetLevel)}
               </div>
             </div>
-          ` : ''}
-
-          <div class="dish-body">
-            <div class="dish-top-meta">
-              <div class="dietary-marker">
-                <span class="dietary-dot ${dish.dietary === 'veg' ? 'veg' : 'non-veg'}"></span>
-              </div>
-              ${!hasImg ? `
-                <div class="dish-badges" style="margin-bottom:0;">
-                  ${dish.isSignature ? `<span class="badge badge-signature">Chef's Special</span>` : ''}
-                  ${dish.isBestseller ? `<span class="badge badge-bestseller">Bestseller</span>` : ''}
-                  ${getSpicyBadgeHTML(dish.spicyLevel)}
-                  ${getSweetBadgeHTML(dish.sweetLevel)}
-                </div>
-              ` : ''}
-            </div>
 
             <div class="dish-header-row">
               <h3 class="dish-name">${dish.name}</h3>
               <span class="dish-price" id="price-display-${dish.id}">₹${initialPrice}</span>
             </div>
-            <p class="dish-desc">${dish.description || 'Delicately crafted using traditional Asian spices.'}</p>
+            
+            <p class="dish-desc" id="desc-${dish.id}">${initialDesc || 'Delicately crafted using traditional Asian spices.'}</p>
             
             ${hasVariants ? `
               <div class="variant-selector-wrapper">
                 ${dish.variants.map((v, i) => `
                   <button type="button" class="variant-chip ${i === 0 ? 'active' : ''}" 
                     data-dish-id="${dish.id}" 
-                    data-price="${v.price}">
+                    data-price="${v.price}"
+                    data-image="${v.imageUrl || dish.imageUrl || ''}"
+                    data-desc="${encodeURIComponent(v.description || dish.description || '')}"
+                    data-diet="${v.dietary || dish.dietary || 'veg'}">
                     ${v.name}: ₹${v.price}
                   </button>
                 `).join('')}
@@ -2837,15 +2858,57 @@
       `;
       }).join('');
 
+      // REAL-TIME INSTANT SWITCHING LISTENER ON VARIANT CHIPS
       container.querySelectorAll(".variant-chip").forEach(chip => {
         chip.addEventListener("click", () => {
           const dishId = chip.dataset.dishId;
           const price = chip.dataset.price;
+          const imgUrl = chip.dataset.image;
+          const desc = decodeURIComponent(chip.dataset.desc);
+          const diet = chip.dataset.diet;
+
           const card = document.getElementById(`card-${dishId}`);
           card.querySelectorAll(".variant-chip").forEach(c => c.classList.remove("active"));
           chip.classList.add("active");
+
+          // 1. Switch Price
           const priceEl = document.getElementById(`price-display-${dishId}`);
           if (priceEl) priceEl.textContent = `₹${price}`;
+
+          // 2. Switch Description
+          const descEl = document.getElementById(`desc-${dishId}`);
+          if (descEl && desc) descEl.textContent = desc;
+
+          // 3. Switch Dietary Dot
+          const dietDot = document.getElementById(`diet-dot-${dishId}`);
+          if (dietDot) {
+            dietDot.className = `dietary-dot ${diet === 'veg' ? 'veg' : 'non-veg'}`;
+          }
+
+          // 4. Switch Dynamic Image (If variant has photo or fallback exists)
+          const thumbWrap = document.getElementById(`thumb-wrap-${dishId}`);
+          const imgEl = document.getElementById(`img-${dishId}`);
+          const bodyBadges = document.getElementById(`body-badges-${dishId}`);
+
+          if (imgUrl && imgUrl.trim()) {
+            if (imgEl) {
+              imgEl.src = imgUrl;
+            } else if (thumbWrap) {
+              const currentDish = currentDishes.find(d => d.id === dishId);
+              thumbWrap.innerHTML = `
+                <div class="dish-thumb">
+                  <img id="img-${dishId}" src="${imgUrl}" alt="dish" loading="lazy">
+                  <div class="dish-badges overlay-badges">
+                    ${currentDish?.isSignature ? `<span class="badge badge-signature">Chef's Special</span>` : ''}
+                    ${currentDish?.isBestseller ? `<span class="badge badge-bestseller">Bestseller</span>` : ''}
+                    ${getSpicyBadgeHTML(currentDish?.spicyLevel)}
+                    ${getSweetBadgeHTML(currentDish?.sweetLevel)}
+                  </div>
+                </div>
+              `;
+              if (bodyBadges) bodyBadges.style.display = "none";
+            }
+          }
         });
       });
     };
@@ -2884,7 +2947,7 @@
         const hasImg = Boolean(dish.imageUrl && dish.imageUrl.trim());
         const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
         const priceInfo = hasVariants ? 
-          `<span style="color:var(--gold-primary); font-weight:600;">${dish.variants.map(v => `${v.name}: ₹${v.price}`).join(', ')}</span>` : 
+          `<span style="color:var(--gold-primary); font-weight:600;">${dish.variants.map(v => `${v.name}: ₹${v.price} (${v.dietary === 'veg' ? 'Veg' : 'NonVeg'})`).join(', ')}</span>` : 
           `<span style="color:var(--gold-primary); font-weight:700;">₹${dish.price}</span>`;
 
         const spicyText = dish.spicyLevel && dish.spicyLevel !== 'none' ? ` | 🌶️ ${dish.spicyLevel.toUpperCase()}` : '';
@@ -2931,7 +2994,6 @@
       `;
       }).join('');
 
-      // Move Dish Up
       document.querySelectorAll(".move-dish-up").forEach(btn => {
         btn.addEventListener("click", async () => {
           const idx = Number(btn.dataset.index);
@@ -2945,7 +3007,6 @@
         });
       });
 
-      // Move Dish Down
       document.querySelectorAll(".move-dish-down").forEach(btn => {
         btn.addEventListener("click", async () => {
           const idx = Number(btn.dataset.index);
@@ -3026,7 +3087,86 @@
       showToast("Admin filters reset!");
     });
 
-    // 11. EDIT MODAL LOGIC
+    // 11. ADVANCED MULTI-VARIANT BUILDER ROW GENERATOR (NAME, PRICE, DIETARY, IMAGE, DESCRIPTION)
+    function createAdvancedVariantRowHTML(name = '', price = '', dietary = 'veg', imageUrl = '', description = '') {
+      return `
+        <div class="variant-card-box">
+          <div class="variant-card-header">
+            <span><i class="fa-solid fa-layer-group"></i> Variant Details</span>
+            <button type="button" class="remove-variant-row-btn" style="width:30px; height:30px;" onclick="this.closest('.variant-card-box').remove()"><i class="fa-solid fa-trash-can"></i></button>
+          </div>
+          <div class="variant-grid-row">
+            <div>
+              <label style="font-size:0.75rem; color:#888;">Variant Name</label>
+              <input type="text" class="form-control var-name-input" placeholder="e.g. Veg / Chicken / Half" value="${name}" required>
+            </div>
+            <div>
+              <label style="font-size:0.75rem; color:#888;">Price (₹)</label>
+              <input type="number" class="form-control var-price-input" placeholder="Price" value="${price}" required>
+            </div>
+            <div>
+              <label style="font-size:0.75rem; color:#888;">Dietary</label>
+              <select class="form-control var-diet-input">
+                <option value="veg" ${dietary === 'veg' ? 'selected' : ''}>🟢 Pure Veg</option>
+                <option value="non-veg" ${dietary === 'non-veg' ? 'selected' : ''}>🔴 Non-Veg</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:#888;">Variant Specific Image URL (Google Maps / ImgBB Link)</label>
+            <input type="url" class="form-control var-image-input" placeholder="https://lh3.googleusercontent.com/... or https://i.ibb.co/..." value="${imageUrl}">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:#888;">Variant Specific Description</label>
+            <textarea class="form-control var-desc-input" rows="2" placeholder="e.g. Boneless succulent chicken pieces tossed in wok...">${description}</textarea>
+          </div>
+        </div>
+      `;
+    }
+
+    // Single / Multi Toggle Handlers for Add Form
+    document.getElementById("pricing-mode-single-add")?.addEventListener("change", () => {
+      document.getElementById("single-price-box-add").style.display = "block";
+      document.getElementById("variant-builder-box-add").style.display = "none";
+      document.getElementById("dish-price").required = true;
+    });
+
+    document.getElementById("pricing-mode-variants-add")?.addEventListener("change", () => {
+      document.getElementById("single-price-box-add").style.display = "none";
+      document.getElementById("variant-builder-box-add").style.display = "block";
+      document.getElementById("dish-price").required = false;
+      const c = document.getElementById("variant-rows-container-add");
+      if (c.children.length === 0) {
+        c.innerHTML = createAdvancedVariantRowHTML("Veg", "", "veg", "", "") + createAdvancedVariantRowHTML("Chicken", "", "non-veg", "", "");
+      }
+    });
+
+    document.getElementById("btn-add-variant-row-add")?.addEventListener("click", () => {
+      document.getElementById("variant-rows-container-add").insertAdjacentHTML('beforeend', createAdvancedVariantRowHTML('', '', 'veg', '', ''));
+    });
+
+    // Single / Multi Toggle Handlers for Edit Modal
+    document.getElementById("pricing-mode-single-edit")?.addEventListener("change", () => {
+      document.getElementById("single-price-box-edit").style.display = "block";
+      document.getElementById("variant-builder-box-edit").style.display = "none";
+      document.getElementById("edit-dish-price").required = true;
+    });
+
+    document.getElementById("pricing-mode-variants-edit")?.addEventListener("change", () => {
+      document.getElementById("single-price-box-edit").style.display = "none";
+      document.getElementById("variant-builder-box-edit").style.display = "block";
+      document.getElementById("edit-dish-price").required = false;
+      const c = document.getElementById("variant-rows-container-edit");
+      if (c.children.length === 0) {
+        c.innerHTML = createAdvancedVariantRowHTML("Veg", "", "veg", "", "") + createAdvancedVariantRowHTML("Chicken", "", "non-veg", "", "");
+      }
+    });
+
+    document.getElementById("btn-add-variant-row-edit")?.addEventListener("click", () => {
+      document.getElementById("variant-rows-container-edit").insertAdjacentHTML('beforeend', createAdvancedVariantRowHTML('', '', 'veg', '', ''));
+    });
+
+    // 12. EDIT DISH MODAL LOGIC (READS ALL VARIANT DETAILS)
     const editModal = document.getElementById("edit-dish-modal");
     function openEditModal(dish) {
       document.getElementById("edit-dish-id").value = dish.id;
@@ -3046,7 +3186,10 @@
         document.getElementById("single-price-box-edit").style.display = "none";
         document.getElementById("variant-builder-box-edit").style.display = "block";
         document.getElementById("edit-dish-price").required = false;
-        document.getElementById("variant-rows-container-edit").innerHTML = dish.variants.map(v => createVariantRowHTML(v.name, v.price)).join('');
+        
+        document.getElementById("variant-rows-container-edit").innerHTML = dish.variants.map(v => 
+          createAdvancedVariantRowHTML(v.name, v.price, v.dietary || 'veg', v.imageUrl || '', v.description || '')
+        ).join('');
       } else {
         document.getElementById("pricing-mode-single-edit").checked = true;
         document.getElementById("single-price-box-edit").style.display = "block";
@@ -3070,15 +3213,31 @@
       const isVariants = document.getElementById("pricing-mode-variants-edit").checked;
       let variants = [];
       let basePrice = 0;
+      let defaultDiet = document.getElementById("edit-dish-diet").value;
 
       if (isVariants) {
-        const names = Array.from(document.querySelectorAll("#variant-rows-container-edit .var-name-input")).map(i => i.value.trim());
-        const prices = Array.from(document.querySelectorAll("#variant-rows-container-edit .var-price-input")).map(i => Number(i.value));
-        for (let i = 0; i < names.length; i++) {
-          if (names[i] && prices[i]) variants.push({ name: names[i], price: prices[i] });
-        }
+        const boxes = document.querySelectorAll("#variant-rows-container-edit .variant-card-box");
+        boxes.forEach(box => {
+          const vName = box.querySelector(".var-name-input")?.value.trim();
+          const vPrice = Number(box.querySelector(".var-price-input")?.value);
+          const vDiet = box.querySelector(".var-diet-input")?.value || 'veg';
+          const vImg = box.querySelector(".var-image-input")?.value.trim() || '';
+          const vDesc = box.querySelector(".var-desc-input")?.value.trim() || '';
+
+          if (vName && vPrice) {
+            variants.push({
+              name: vName,
+              price: vPrice,
+              dietary: vDiet,
+              imageUrl: vImg,
+              description: vDesc
+            });
+          }
+        });
+
         if (variants.length === 0) { showToast("Add at least one variation!", true); return; }
         basePrice = variants[0].price;
+        defaultDiet = variants[0].dietary;
       } else {
         basePrice = Number(document.getElementById("edit-dish-price").value);
       }
@@ -3088,7 +3247,7 @@
         category: document.getElementById("edit-dish-category").value,
         price: basePrice,
         variants: isVariants ? variants : [],
-        dietary: document.getElementById("edit-dish-diet").value,
+        dietary: defaultDiet,
         spicyLevel: document.getElementById("edit-dish-spicy-level").value,
         sweetLevel: document.getElementById("edit-dish-sweet-level").value,
         isSignature: document.getElementById("edit-dish-signature").checked,
@@ -3101,75 +3260,44 @@
       try {
         await updateDoc(doc(db, "menuItems", id), updatedData);
         editModal.classList.remove("open");
-        showToast("Dish updated real-time!");
+        showToast("Dish & all variations updated real-time!");
       } catch (err) {
         showToast("Update failed: " + err.message, true);
       }
     });
 
-    // 12. VARIATION BUILDERS
-    function createVariantRowHTML(name = '', price = '') {
-      return `
-        <div class="variant-row">
-          <input type="text" class="form-control var-name-input" placeholder="Portion (Half / 4 Pcs)" value="${name}" required style="flex:2;">
-          <input type="number" class="form-control var-price-input" placeholder="Price (₹)" value="${price}" required style="flex:1;">
-          <button type="button" class="remove-variant-row-btn" onclick="this.parentElement.remove()"><i class="fa-solid fa-trash-can"></i></button>
-        </div>
-      `;
-    }
-
-    document.getElementById("pricing-mode-single-add")?.addEventListener("change", () => {
-      document.getElementById("single-price-box-add").style.display = "block";
-      document.getElementById("variant-builder-box-add").style.display = "none";
-      document.getElementById("dish-price").required = true;
-    });
-
-    document.getElementById("pricing-mode-variants-add")?.addEventListener("change", () => {
-      document.getElementById("single-price-box-add").style.display = "none";
-      document.getElementById("variant-builder-box-add").style.display = "block";
-      document.getElementById("dish-price").required = false;
-      const c = document.getElementById("variant-rows-container-add");
-      if (c.children.length === 0) c.innerHTML = createVariantRowHTML("Half", "") + createVariantRowHTML("Full", "");
-    });
-
-    document.getElementById("btn-add-variant-row-add")?.addEventListener("click", () => {
-      document.getElementById("variant-rows-container-add").insertAdjacentHTML('beforeend', createVariantRowHTML('', ''));
-    });
-
-    document.getElementById("pricing-mode-single-edit")?.addEventListener("change", () => {
-      document.getElementById("single-price-box-edit").style.display = "block";
-      document.getElementById("variant-builder-box-edit").style.display = "none";
-      document.getElementById("edit-dish-price").required = true;
-    });
-
-    document.getElementById("pricing-mode-variants-edit")?.addEventListener("change", () => {
-      document.getElementById("single-price-box-edit").style.display = "none";
-      document.getElementById("variant-builder-box-edit").style.display = "block";
-      document.getElementById("edit-dish-price").required = false;
-      const c = document.getElementById("variant-rows-container-edit");
-      if (c.children.length === 0) c.innerHTML = createVariantRowHTML("Half", "") + createVariantRowHTML("Full", "");
-    });
-
-    document.getElementById("btn-add-variant-row-edit")?.addEventListener("click", () => {
-      document.getElementById("variant-rows-container-edit").insertAdjacentHTML('beforeend', createVariantRowHTML('', ''));
-    });
-
-    // 13. ADD DISH (WITH NUMERICAL POSITION ORDER)
+    // 13. ADD DISH (SAVES MULTI-VARIANT ARRAY WITH IMAGES & DESCRIPTIONS)
     document.getElementById("add-dish-form")?.addEventListener("submit", async (e) => {
       e.preventDefault();
       try {
         const isVariants = document.getElementById("pricing-mode-variants-add").checked;
         let variants = [];
         let basePrice = 0;
+        let defaultDiet = document.getElementById("dish-diet").value;
 
         if (isVariants) {
-          const names = Array.from(document.querySelectorAll("#variant-rows-container-add .var-name-input")).map(i => i.value.trim());
-          const prices = Array.from(document.querySelectorAll("#variant-rows-container-add .var-price-input")).map(i => Number(i.value));
-          for (let i = 0; i < names.length; i++) {
-            if (names[i] && prices[i]) variants.push({ name: names[i], price: prices[i] });
-          }
+          const boxes = document.querySelectorAll("#variant-rows-container-add .variant-card-box");
+          boxes.forEach(box => {
+            const vName = box.querySelector(".var-name-input")?.value.trim();
+            const vPrice = Number(box.querySelector(".var-price-input")?.value);
+            const vDiet = box.querySelector(".var-diet-input")?.value || 'veg';
+            const vImg = box.querySelector(".var-image-input")?.value.trim() || '';
+            const vDesc = box.querySelector(".var-desc-input")?.value.trim() || '';
+
+            if (vName && vPrice) {
+              variants.push({
+                name: vName,
+                price: vPrice,
+                dietary: vDiet,
+                imageUrl: vImg,
+                description: vDesc
+              });
+            }
+          });
+
           if (variants.length === 0) { showToast("Add at least one variation!", true); return; }
           basePrice = variants[0].price;
+          defaultDiet = variants[0].dietary;
         } else {
           basePrice = Number(document.getElementById("dish-price").value);
         }
@@ -3181,7 +3309,7 @@
           category: document.getElementById("dish-category").value,
           price: basePrice,
           variants: isVariants ? variants : [],
-          dietary: document.getElementById("dish-diet").value,
+          dietary: defaultDiet,
           spicyLevel: document.getElementById("dish-spicy-level").value,
           sweetLevel: document.getElementById("dish-sweet-level").value,
           isSignature: document.getElementById("dish-signature-checkbox").checked,
@@ -3199,7 +3327,7 @@
         document.getElementById("variant-builder-box-add").style.display = "none";
         document.getElementById("variant-rows-container-add").innerHTML = "";
 
-        showToast("Dish added successfully!");
+        showToast("Dish with advanced variations added successfully!");
         document.querySelector('[data-tab="tab-items"]').click();
       } catch (err) {
         showToast("Error adding dish: " + err.message, true);
@@ -3243,27 +3371,35 @@
       });
     });
 
-    // 15. SEED DATA
+    // 15. SEED DATA WITH INDIVIDUAL VARIANT IMAGES & DESCRIPTIONS
     const seedData = [
-      { 
-        name: "Truffle Edamame Dim Sum", 
-        category: "Dim Sums", 
-        price: 445, 
-        variants: [{ name: "4 Pcs", price: 445 }, { name: "8 Pcs", price: 825 }],
-        dietary: "veg", 
-        spicyLevel: "none",
-        sweetLevel: "none",
-        isSignature: true, 
-        isBestseller: true, 
-        description: "Silky crystal skin filled with crushed edamame and black truffle essence.", 
-        imageUrl: "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=600&q=80",
-        order: 1
-      },
       { 
         name: "Thai Green Curry with Jasmine Rice", 
         category: "Thai Curries", 
         price: 545, 
-        variants: [{ name: "Veg", price: 545 }, { name: "Chicken", price: 625 }, { name: "Prawns", price: 745 }],
+        variants: [
+          { 
+            name: "Veg", 
+            price: 545, 
+            dietary: "veg", 
+            imageUrl: "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=600&q=80", 
+            description: "Fresh farm vegetables, broccoli, bamboo shoots simmered in aromatic Thai coconut green curry." 
+          },
+          { 
+            name: "Chicken", 
+            price: 625, 
+            dietary: "non-veg", 
+            imageUrl: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80", 
+            description: "Tender chicken morsels slow-cooked in rich lemongrass and kaffir lime infused coconut broth." 
+          },
+          { 
+            name: "Prawns", 
+            price: 745, 
+            dietary: "non-veg", 
+            imageUrl: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=600&q=80", 
+            description: "Plump wild prawns prepared in traditional fiery sweet green basil curry." 
+          }
+        ],
         dietary: "veg", 
         spicyLevel: "medium",
         sweetLevel: "mild",
@@ -3271,40 +3407,43 @@
         isBestseller: true, 
         description: "Aromatic coconut milk, galangal, Thai sweet basil, kaffir lime and bamboo shoots.", 
         imageUrl: "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=600&q=80",
-        order: 2
+        order: 1
       },
       { 
-        name: "Tokyo Shoyu Ramen", 
-        category: "Ramen Bowls", 
-        price: 625, 
-        dietary: "non-veg", 
-        spicyLevel: "hot",
+        name: "Truffle Edamame Dim Sum", 
+        category: "Dim Sums", 
+        price: 445, 
+        variants: [
+          { 
+            name: "4 Pcs", 
+            price: 445, 
+            dietary: "veg", 
+            imageUrl: "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=600&q=80", 
+            description: "4 pieces of crystal steamed dim sums filled with edamame and truffle aroma." 
+          },
+          { 
+            name: "8 Pcs", 
+            price: 825, 
+            dietary: "veg", 
+            imageUrl: "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=600&q=80", 
+            description: "Sharing basket of 8 crystal dumplings with house chili oil." 
+          }
+        ],
+        dietary: "veg", 
+        spicyLevel: "none",
         sweetLevel: "none",
         isSignature: true, 
         isBestseller: true, 
-        description: "Rich chicken broth, springy ramen noodles, ajitsuke tamago egg, and nori sheets.", 
-        imageUrl: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80",
-        order: 3
-      },
-      { 
-        name: "Mango Sticky Rice with Coconut Cream", 
-        category: "Desserts", 
-        price: 380, 
-        dietary: "veg", 
-        spicyLevel: "none",
-        sweetLevel: "hot",
-        isSignature: true, 
-        isBestseller: true, 
-        description: "Authentic Thai sweet sticky rice topped with ripe mango slices and toasted sesame seeds.", 
-        imageUrl: "https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=600&q=80",
-        order: 4
+        description: "Silky crystal skin filled with crushed edamame and black truffle essence.", 
+        imageUrl: "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=600&q=80",
+        order: 2
       }
     ];
 
     document.getElementById("btn-seed-data")?.addEventListener("click", async () => {
       try {
         for (const item of seedData) await setDoc(doc(collection(db, "menuItems")), { ...item, createdAt: serverTimestamp() });
-        showToast("Database seeded!");
+        showToast("Database seeded with multi-variant items!");
       } catch (err) {
         showToast("Seeding failed: " + err.message, true);
       }
