@@ -6,7 +6,7 @@
   <title>HOKAI – Pan-Asian Kitchen | Where Asia Comes to the Table</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link rel="preconnect" href="https://lh3.googleusercontent.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   
@@ -65,8 +65,7 @@
       backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border-dark);
       width: 100%;
-      position: sticky;
-      top: 0;
+      position: relative;
       z-index: 1000;
     }
 
@@ -234,7 +233,7 @@
       line-height: 1.5;
     }
 
-    /* STICKY SEARCH BAR */
+    /* PERMANENT STICKY SEARCH BAR */
     .sticky-search-wrapper {
       position: -webkit-sticky !important;
       position: sticky !important;
@@ -332,6 +331,12 @@
       gap: 12px;
       flex: 1;
       overflow: hidden;
+    }
+
+    .rec-left i.lead-icon {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      flex-shrink: 0;
     }
 
     .rec-details {
@@ -1622,9 +1627,9 @@
   <!-- TOAST CONTAINER -->
   <div class="toast-container" id="toast-container"></div>
 
-  <!-- ==================== ULTRA-FAST SPEED SCRIPT ENGINE ==================== -->
+  <!-- ==================== SCRIPT ENGINE ==================== -->
   <script>
-    // 0. INSTANT LOCAL CACHE RENDERING (ZERO WAITING TIME ON LOAD)
+    // INSTANT LOCAL CACHE RENDERING
     const cachedCategories = JSON.parse(localStorage.getItem("hokai_cache_categories") || "[]");
     const cachedDishes = JSON.parse(localStorage.getItem("hokai_cache_dishes") || "[]");
     const cachedPromos = JSON.parse(localStorage.getItem("hokai_cache_promos") || "[]");
@@ -1664,7 +1669,6 @@
       });
     }
 
-    // Call instant render before even downloading Firebase
     window.addEventListener("DOMContentLoaded", fastInitRender);
   </script>
 
@@ -1999,6 +2003,7 @@
     });
 
     // 5. PROMOTIONAL BANNERS CAROUSEL & AUTO-CACHE
+    // (FIXED: NO scrollIntoView, ONLY INTERNAL SCROLL TO PREVENT PAGE JUMP)
     const promotionsCol = collection(db, "promotions");
     let sliderAutoPlayTimer = null;
     let currentSlideIndex = 0;
@@ -2055,7 +2060,13 @@
       if (!slides[idx]) return;
 
       currentSlideIndex = idx;
-      slides[idx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      
+      // FIXED: Only scroll the slider wrapper horizontally, NEVER scroll the entire window/page
+      const targetOffset = slides[idx].offsetLeft - wrapper.offsetLeft;
+      wrapper.scrollTo({
+        left: targetOffset,
+        behavior: 'smooth'
+      });
 
       document.querySelectorAll(".slider-dot").forEach((d, i) => {
         d.classList.toggle("active", i === idx);
