@@ -57,7 +57,6 @@
       font-family: inherit;
     }
 
-    /* TYPOGRAPHY */
     h1, h2, h3, h4, .brand-title {
       font-family: var(--font-heading);
       letter-spacing: 0.05em;
@@ -598,7 +597,7 @@
       padding-top: 24px;
     }
 
-    /* ADMIN INTERFACE OVERLAY */
+    /* ADMIN INTERFACE */
     #admin-root {
       display: none;
       min-height: 100vh;
@@ -740,27 +739,23 @@
       gap: 10px;
     }
 
-    .logo-uploader-box {
-      border: 2px dashed var(--border-gold);
-      background: rgba(255, 185, 0, 0.03);
+    /* LOGO PREVIEW & URL BOX */
+    .logo-url-manager-box {
+      border: 1px solid var(--border-gold);
+      background: rgba(255, 185, 0, 0.02);
       padding: 30px;
       border-radius: var(--radius-md);
-      text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .logo-uploader-box:hover {
-      background: rgba(255, 185, 0, 0.08);
+      gap: 20px;
+      max-width: 650px;
+      margin: 0 auto;
     }
 
     .logo-preview-square {
-      width: 110px;
-      height: 110px;
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
       border: 2px solid var(--gold-primary);
       background: #0A0A0A;
@@ -807,7 +802,6 @@
       to { transform: translateX(0); opacity: 1; }
     }
 
-    /* RESPONSIVE */
     @media (max-width: 900px) {
       nav.desktop-nav { display: none; }
       .hamburger-btn { display: block; }
@@ -913,7 +907,7 @@
 
       <!-- DISHES GRID -->
       <div class="menu-grid" id="dishes-container">
-        <!-- Rendered via JS dynamically -->
+        <!-- Dynamic JS Rendering -->
       </div>
     </section>
 
@@ -980,7 +974,7 @@
       </div>
     </div>
 
-    <!-- AUTHENTICATION FORM (Shown when logged out) -->
+    <!-- AUTHENTICATION FORM -->
     <div class="admin-auth-card" id="admin-login-box">
       <div style="text-align:center; margin-bottom:20px;">
         <i class="fa-solid fa-shield-halved" style="font-size:2.5rem; color:var(--gold-primary);"></i>
@@ -1001,43 +995,48 @@
       </form>
     </div>
 
-    <!-- PROTECTED CONSOLE BODY (Shown when authenticated) -->
+    <!-- PROTECTED CONSOLE BODY -->
     <div class="admin-container" id="admin-dashboard" style="display:none;">
       
       <!-- NAVIGATION TABS -->
       <div class="admin-tabs">
-        <button class="admin-tab-btn active" data-tab="tab-logo"><i class="fa-solid fa-image"></i> Brand Logo Management</button>
+        <button class="admin-tab-btn active" data-tab="tab-logo"><i class="fa-solid fa-link"></i> Brand Logo (ImgBB / URL)</button>
         <button class="admin-tab-btn" data-tab="tab-items"><i class="fa-solid fa-bowl-food"></i> Menu Items</button>
         <button class="admin-tab-btn" data-tab="tab-add"><i class="fa-solid fa-plus-circle"></i> Add New Dish</button>
         <button class="admin-tab-btn" data-tab="tab-seed"><i class="fa-solid fa-database"></i> Database Seed</button>
       </div>
 
-      <!-- TAB 1: REAL-TIME BRAND LOGO MANAGEMENT -->
+      <!-- TAB 1: REAL-TIME BRAND LOGO MANAGEMENT (URL / IMGBB) -->
       <div class="admin-panel-section active" id="tab-logo">
         <div class="admin-card">
-          <h3><i class="fa-solid fa-camera-rotate"></i> Real-time Phone / Storage Logo Uploader</h3>
+          <h3><i class="fa-solid fa-link"></i> Real-Time Brand Logo Link Updater</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px;">
-            Aap apne phone ya computer ki gallery/files se direct logo select karein. Yeh turant Firebase Storage me upload hoga aur public website, header, footer aur admin panel par **bina refresh kiye real-time** update ho jayega!
+            Aap <strong>ImgBB</strong> ya kisi bhi hosting website se apna image direct link copy karke yahan paste karein. Save karte hi bina reload kiye pure website ke Header, Footer aur Admin Bar me logo **real-time** me badal jayega!
           </p>
 
-          <div style="display:flex; flex-direction:column; align-items:center; gap:20px;">
-            <div class="logo-preview-square">
-              <img id="admin-logo-preview" class="dynamic-hokai-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%239A0007' stroke='%23FFB900' stroke-width='3'/%3E%3Cpath d='M30,50 Q50,25 70,50 T30,50' fill='none' stroke='%23FFB900' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" alt="HOKAI Current Logo">
-            </div>
-
-            <!-- Custom File Upload Button -->
-            <label class="logo-uploader-box" style="width:100%; max-width:480px;">
-              <i class="fa-solid fa-cloud-arrow-up" style="font-size:2.2rem; color:var(--gold-primary);"></i>
-              <div>
-                <strong style="color:#FFF; display:block; font-size:1.05rem;">Choose Logo from Phone / Device</strong>
-                <span style="color:var(--text-muted); font-size:0.85rem;">Supports PNG, JPG, WEBP, SVG (Max 5MB)</span>
+          <form id="logo-url-form">
+            <div class="logo-url-manager-box">
+              <div class="logo-preview-square">
+                <img id="admin-logo-preview" class="dynamic-hokai-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%239A0007' stroke='%23FFB900' stroke-width='3'/%3E%3Cpath d='M30,50 Q50,25 70,50 T30,50' fill='none' stroke='%23FFB900' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" alt="HOKAI Current Logo">
               </div>
-              <input type="file" id="logo-file-input" accept="image/*" style="display:none;">
-            </label>
 
-            <!-- Status Indicator -->
-            <div id="logo-upload-status" style="font-size:0.9rem; color:var(--gold-primary); font-weight:600; min-height:22px;"></div>
-          </div>
+              <div style="width: 100%;">
+                <label style="display:block; font-size:0.85rem; font-weight:600; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase;">
+                  Paste ImgBB Direct Image Link
+                </label>
+                <input type="url" id="logo-url-input" class="form-control" placeholder="https://i.ibb.co/.../logo.png" required>
+                <span style="font-size:0.8rem; color:#888; display:block; margin-top:6px;">
+                  Tip: ImgBB par upload karke 'Direct Link' (jo .png ya .jpg par khatam ho) copy karein.
+                </span>
+              </div>
+
+              <button type="submit" class="btn-primary" style="width: 100%;">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Update Logo Real-Time
+              </button>
+
+              <div id="logo-update-status" style="font-size:0.9rem; color:var(--gold-primary); font-weight:600; min-height:22px;"></div>
+            </div>
+          </form>
         </div>
       </div>
 
@@ -1073,7 +1072,7 @@
         <div class="admin-card">
           <h3><i class="fa-solid fa-plus"></i> Add New Pan-Asian Dish</h3>
           <form id="add-dish-form">
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
+            <div style="grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); display:grid; gap:20px;">
               <div class="form-group">
                 <label>Dish Name</label>
                 <input type="text" id="dish-name" class="form-control" placeholder="e.g. Truffle Edamame Dim Sum" required>
@@ -1111,8 +1110,8 @@
                 <textarea id="dish-desc" class="form-control" rows="3" placeholder="Handcrafted with aromatic truffle oil and fresh water chestnuts..."></textarea>
               </div>
               <div class="form-group" style="grid-column: 1 / -1;">
-                <label>Image URL (Optional or Unsplash Asian Food Photo)</label>
-                <input type="url" id="dish-img-url" class="form-control" placeholder="https://images.unsplash.com/...">
+                <label>Image URL (ImgBB or Asian Food Photo link)</label>
+                <input type="url" id="dish-img-url" class="form-control" placeholder="https://i.ibb.co/... or https://images.unsplash.com/...">
               </div>
             </div>
             <button type="submit" class="btn-primary" style="margin-top:10px;"><i class="fa-solid fa-cloud-arrow-up"></i> Save Dish to Cloud</button>
@@ -1151,17 +1150,10 @@
       collection, 
       doc, 
       setDoc, 
-      getDoc, 
       deleteDoc, 
       onSnapshot, 
       serverTimestamp 
     } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
-    import { 
-      getStorage, 
-      ref as storageRef, 
-      uploadBytes, 
-      getDownloadURL 
-    } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-storage.js";
 
     // 1. FIREBASE CONFIGURATION
     const firebaseConfig = {
@@ -1178,7 +1170,6 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const storage = getStorage(app);
 
     // TOAST NOTIFICATIONS
     function showToast(message, isError = false) {
@@ -1208,9 +1199,10 @@
     window.addEventListener('hashchange', handleRouting);
     handleRouting();
 
-    // 3. REAL-TIME LOGO SYNCHRONIZATION
-    // Firestore siteContent/branding listener
+    // 3. REAL-TIME LOGO SYNCHRONIZATION VIA FIRESTORE
     const brandingDocRef = doc(db, "siteContent", "branding");
+    const logoUrlInput = document.getElementById("logo-url-input");
+
     onSnapshot(brandingDocRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
@@ -1218,17 +1210,25 @@
           document.querySelectorAll('.dynamic-hokai-logo').forEach(img => {
             img.src = data.logoUrl;
           });
+          if (logoUrlInput && !logoUrlInput.value) {
+            logoUrlInput.value = data.logoUrl;
+          }
         }
       }
     }, (err) => console.log("Branding snapshot note:", err.message));
 
-    // LOGO FILE UPLOAD EVENT
-    const logoFileInput = document.getElementById("logo-file-input");
-    const logoStatus = document.getElementById("logo-upload-status");
+    // LOGO LINK SUBMIT EVENT
+    const logoUrlForm = document.getElementById("logo-url-form");
+    const logoStatus = document.getElementById("logo-update-status");
 
-    logoFileInput?.addEventListener("change", async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
+    logoUrlForm?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const enteredUrl = logoUrlInput.value.trim();
+
+      if (!enteredUrl) {
+        showToast("Please enter a valid image URL!", true);
+        return;
+      }
 
       if (!auth.currentUser) {
         showToast("Error: Please authenticate first!", true);
@@ -1236,19 +1236,10 @@
       }
 
       try {
-        logoStatus.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Uploading ${file.name} to cloud storage...`;
-        
-        // Storage reference
-        const fileExtension = file.name.split('.').pop() || 'png';
-        const fileRef = storageRef(storage, `branding/hokai_logo_${Date.now()}.${fileExtension}`);
-        
-        // Upload bytes
-        const uploadSnapshot = await uploadBytes(fileRef, file);
-        const downloadUrl = await getDownloadURL(uploadSnapshot.ref);
+        logoStatus.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Updating logo real-time...`;
 
-        // Update Firestore in siteContent collection
         await setDoc(brandingDocRef, {
-          logoUrl: downloadUrl,
+          logoUrl: enteredUrl,
           updatedAt: serverTimestamp(),
           updatedBy: auth.currentUser.email
         }, { merge: true });
@@ -1256,9 +1247,9 @@
         logoStatus.innerHTML = `<span style="color:#2e7d32;"><i class="fa-solid fa-check"></i> Logo successfully updated real-time!</span>`;
         showToast("HOKAI Logo updated live across website!");
       } catch (err) {
-        console.error("Upload error:", err);
+        console.error("Logo update error:", err);
         logoStatus.innerHTML = `<span style="color:#ef5350;">Failed: ${err.message}</span>`;
-        showToast("Upload failed: " + err.message, true);
+        showToast("Failed to update logo: " + err.message, true);
       }
     });
 
@@ -1406,7 +1397,7 @@
         </tr>
       `).join('');
 
-      // Attach delete handlers
+      // Delete handlers
       document.querySelectorAll(".delete-btn").forEach(btn => {
         btn.addEventListener("click", async () => {
           if (confirm("Are you sure you want to delete this dish?")) {
