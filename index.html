@@ -447,6 +447,9 @@
       position: relative;
       overflow: hidden;
       background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .dish-thumb img {
@@ -454,6 +457,21 @@
       height: 100%;
       object-fit: cover;
       transition: transform 0.5s ease;
+    }
+
+    .dish-thumb .no-img-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #444;
+      font-size: 0.8rem;
+    }
+
+    .dish-thumb .no-img-placeholder i {
+      font-size: 2.2rem;
+      color: #333;
     }
 
     .dish-card:hover .dish-thumb img {
@@ -467,6 +485,7 @@
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
+      z-index: 2;
     }
 
     .badge {
@@ -501,6 +520,7 @@
       align-items: center;
       justify-content: center;
       border: 1px solid rgba(255, 255, 255, 0.3);
+      z-index: 2;
     }
 
     .dietary-dot {
@@ -1100,7 +1120,7 @@
         </div>
       </div>
 
-      <!-- TAB 2: ADD NEW DISH -->
+      <!-- TAB 2: ADD NEW DISH (NO AUTOMATIC IMAGE INJECTION) -->
       <div class="admin-panel-section" id="tab-add">
         <div class="admin-card">
           <h3><i class="fa-solid fa-plus"></i> Add New Pan-Asian Dish</h3>
@@ -1132,8 +1152,8 @@
                 <textarea id="dish-desc" class="form-control" rows="3" placeholder="Handcrafted with aromatic truffle oil and fresh water chestnuts..."></textarea>
               </div>
               <div class="form-group" style="grid-column: 1 / -1;">
-                <label>Image URL (ImgBB Direct Image Link or Web URL)</label>
-                <input type="url" id="dish-img-url" class="form-control" placeholder="https://i.ibb.co/.../dish.jpg" required>
+                <label>Image URL (Optional - Jab link daalenge tabhi aayega)</label>
+                <input type="url" id="dish-img-url" class="form-control" placeholder="https://i.ibb.co/.../dish.jpg (Khaali chhodne par image nahi aayegi)">
               </div>
             </div>
             <button type="submit" class="btn-primary" style="margin-top:10px;"><i class="fa-solid fa-cloud-arrow-up"></i> Save Dish to Cloud</button>
@@ -1317,8 +1337,8 @@
           <textarea id="edit-dish-desc" class="form-control" rows="3"></textarea>
         </div>
         <div class="form-group">
-          <label>Image URL (ImgBB Direct Link)</label>
-          <input type="url" id="edit-dish-img-url" class="form-control" required>
+          <label>Image URL (Optional)</label>
+          <input type="url" id="edit-dish-img-url" class="form-control" placeholder="https://i.ibb.co/.../dish.jpg (Khaali chhodenge to image hat jayegi)">
         </div>
         <div style="display:flex; gap:12px;">
           <button type="submit" class="btn-primary" style="flex:1;"><i class="fa-solid fa-check"></i> Save Changes Real-Time</button>
@@ -1787,7 +1807,7 @@
       console.warn("Firestore menu items note:", err.message);
     });
 
-    // 10. RENDER PUBLIC MENU DISHES
+    // 10. RENDER PUBLIC MENU DISHES (NO DEFAULT/FALLBACK IMAGE UNLESS LINK PROVIDED)
     function renderPublicDishes() {
       const container = document.getElementById("dishes-container");
       if (!container) return;
@@ -1809,10 +1829,19 @@
         return;
       }
 
-      container.innerHTML = filtered.map(dish => `
+      container.innerHTML = filtered.map(dish => {
+        const hasImg = Boolean(dish.imageUrl && dish.imageUrl.trim());
+        return `
         <div class="dish-card">
-          <div class="dish-thumb">
-            <img src="${dish.imageUrl || 'https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=600&q=80'}" alt="${dish.name}" loading="lazy">
+          <div class="dish-thumb" style="${!hasImg ? 'background: #181818;' : ''}">
+            ${hasImg ? `
+              <img src="${dish.imageUrl}" alt="${dish.name}" loading="lazy">
+            ` : `
+              <div class="no-img-placeholder">
+                <i class="fa-solid fa-bowl-food"></i>
+                <span>No Image Available</span>
+              </div>
+            `}
             <div class="dish-badges">
               ${dish.isBestseller ? `<span class="badge badge-bestseller">Bestseller</span>` : ''}
               ${dish.isSignature ? `<span class="badge badge-signature">Chef's Signature</span>` : ''}
@@ -1833,7 +1862,8 @@
             </div>
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
     // 11. RENDER ADMIN DISHES TABLE (WITH EDIT & DELETE)
@@ -1849,10 +1879,18 @@
         return;
       }
 
-      tbody.innerHTML = currentDishes.map(dish => `
+      tbody.innerHTML = currentDishes.map(dish => {
+        const hasImg = Boolean(dish.imageUrl && dish.imageUrl.trim());
+        return `
         <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
           <td style="padding:10px 8px;">
-            <img src="${dish.imageUrl || 'https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=100&q=80'}" style="width:40px; height:40px; object-fit:cover; border-radius:6px;">
+            ${hasImg ? `
+              <img src="${dish.imageUrl}" style="width:40px; height:40px; object-fit:cover; border-radius:6px;">
+            ` : `
+              <div style="width:40px; height:40px; background:#222; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#666; font-size:0.8rem;">
+                <i class="fa-solid fa-image-slash"></i>
+              </div>
+            `}
           </td>
           <td style="padding:10px 8px; font-weight:600;">${dish.name}</td>
           <td style="padding:10px 8px; color:var(--text-muted);">${dish.category}</td>
@@ -1869,7 +1907,8 @@
             </div>
           </td>
         </tr>
-      `).join('');
+      `;
+      }).join('');
 
       // DELETE HANDLERS
       document.querySelectorAll(".delete-dish-trigger").forEach(btn => {
@@ -1914,13 +1953,15 @@
       const id = document.getElementById("edit-dish-id").value;
       if (!id) return;
 
+      const rawImg = document.getElementById("edit-dish-img-url").value.trim();
+
       const updatedData = {
         name: document.getElementById("edit-dish-name").value.trim(),
         category: document.getElementById("edit-dish-category").value,
         price: Number(document.getElementById("edit-dish-price").value),
         dietary: document.getElementById("edit-dish-diet").value,
         description: document.getElementById("edit-dish-desc").value.trim(),
-        imageUrl: document.getElementById("edit-dish-img-url").value.trim(),
+        imageUrl: rawImg || "", // No automatic fallback image
         updatedAt: serverTimestamp()
       };
 
@@ -1933,18 +1974,20 @@
       }
     });
 
-    // 13. ADD DISH EVENT
+    // 13. ADD DISH EVENT (NO AUTOMATIC IMAGE INJECTION)
     const addDishForm = document.getElementById("add-dish-form");
     addDishForm?.addEventListener("submit", async (e) => {
       e.preventDefault();
       try {
+        const rawImg = document.getElementById("dish-img-url").value.trim();
+
         const newDish = {
           name: document.getElementById("dish-name").value.trim(),
           category: document.getElementById("dish-category").value,
           price: Number(document.getElementById("dish-price").value),
           dietary: document.getElementById("dish-diet").value,
           description: document.getElementById("dish-desc").value.trim(),
-          imageUrl: document.getElementById("dish-img-url").value.trim() || 'https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=600&q=80',
+          imageUrl: rawImg || "", // Agar link nahi dala toh blank rahega, koi auto image nahi aayegi
           createdAt: serverTimestamp()
         };
 
@@ -1959,7 +2002,7 @@
       }
     });
 
-    // 14. DATABASE SEED DATA
+    // 14. DATABASE SEED DATA (Only seeded dishes will have master pictures)
     const seedData = [
       { name: "Truffle Edamame Dim Sum", category: "Dim Sums", price: 445, dietary: "veg", isSignature: true, isBestseller: true, description: "Silky crystal skin filled with crushed edamame and black truffle essence.", imageUrl: "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=600&q=80" },
       { name: "Chicken & Prawn Sui Mai", category: "Dim Sums", price: 475, dietary: "non-veg", isSignature: false, isBestseller: true, description: "Traditional open Cantonese dumplings with tobiko caviar crown.", imageUrl: "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?auto=format&fit=crop&w=600&q=80" },
