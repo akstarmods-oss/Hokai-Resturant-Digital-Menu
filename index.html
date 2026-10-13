@@ -504,7 +504,7 @@
       font-weight: 600;
     }
 
-    /* CLEAN COMPACT MENU CARDS (NO ONWARDS, NO EMPTY SQUARE) */
+    /* CLEAN COMPACT MENU CARDS */
     .menu-grid {
       display: flex;
       flex-direction: column;
@@ -642,7 +642,7 @@
       transform: scale(1.08);
     }
 
-    /* BOTTOM SHEET MODAL (PHOTO 2 STYLE) */
+    /* BOTTOM SHEET MODAL */
     .dish-detail-sheet-backdrop {
       display: none;
       position: fixed;
@@ -1396,7 +1396,6 @@
           <button type="button" class="search-clear-btn" id="search-clear-btn"><i class="fa-solid fa-xmark"></i></button>
         </div>
 
-        <!-- PLAY STORE STYLE RECOMMENDATION DROPDOWN -->
         <div class="search-suggestions-box" id="search-suggestions-box"></div>
       </div>
     </div>
@@ -1433,7 +1432,7 @@
         <button class="cat-btn active" data-cat="all">All Categories</button>
       </div>
 
-      <!-- DISHES LIST GRID (SWIGGY STYLE PHOTO 1) -->
+      <!-- DISHES LIST GRID -->
       <div class="menu-grid" id="dishes-container"></div>
     </section>
 
@@ -1482,7 +1481,7 @@
           </a>
         </div>
 
-        <!-- COL 3: ONLINE ORDERING (SWIGGY / ZOMATO) -->
+        <!-- COL 3: ONLINE ORDERING -->
         <div class="footer-col">
           <h4>Order Online</h4>
           <p style="margin-bottom:10px;">Get your favourite Pan-Asian delicacies delivered fresh to your doorstep:</p>
@@ -2117,7 +2116,6 @@
     let currentDiet = "all";
     let searchQuery = "";
 
-    // Admin Real-time Filter State
     let adminSearchQuery = "";
     let adminFilterCat = "all";
     let adminFilterDiet = "all";
@@ -2778,7 +2776,7 @@
       }
     });
 
-    // 8. ROTATING PLACEHOLDER & PLAY STORE STYLE RECOMMENDATIONS
+    // 8. ROTATING PLACEHOLDER & SEARCH
     let searchRotateTimer = null;
     let rotateItemIndex = 0;
     const searchInput = document.getElementById("dish-search-input");
@@ -2919,8 +2917,24 @@
       return '';
     }
 
+    // HELPER: VARIANT DIETARY PARSER (Checks tag + Name like Chicken, Sea Food, Prawns)
+    function isVariantNonVeg(v) {
+      if (!v) return false;
+      const tag = (v.dietary || '').toLowerCase().replace(/[^a-z]/g, '');
+      if (tag === 'nonveg') return true;
+
+      const name = (v.name || '').toLowerCase();
+      const nonVegKeywords = ['chicken', 'seafood', 'sea food', 'prawn', 'prawns', 'fish', 'egg', 'mutton', 'pork', 'crab', 'duck'];
+      return nonVegKeywords.some(kw => name.includes(kw));
+    }
+
+    function isVariantVeg(v) {
+      if (!v) return true;
+      return !isVariantNonVeg(v);
+    }
+
     // ========================================================
-    // INTELLIGENT MULTI-VARIANT DIETARY FILTERING ENGINE
+    // BULLETPROOF DUAL-SCAN DIETARY FILTERING ENGINE
     // ========================================================
     window.renderPublicDishes = function() {
       const container = document.getElementById("dishes-container");
@@ -2932,15 +2946,22 @@
                               dish.description?.toLowerCase().includes(searchQuery.toLowerCase()) || 
                               dish.category?.toLowerCase().includes(searchQuery.toLowerCase());
 
-        // UNIVERSAL DIETARY CHECK ACROSS ALL VARIATIONS & MAIN ITEM
         let matchesDiet = true;
         const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
 
-        if (currentDiet !== "all") {
+        if (currentDiet === "non-veg") {
           if (hasVariants) {
-            matchesDiet = dish.variants.some(v => v.dietary === currentDiet);
+            matchesDiet = dish.variants.some(v => isVariantNonVeg(v));
           } else {
-            matchesDiet = (dish.dietary || "veg") === currentDiet;
+            const mainTag = (dish.dietary || '').toLowerCase().replace(/[^a-z]/g, '');
+            matchesDiet = mainTag === 'nonveg';
+          }
+        } else if (currentDiet === "veg") {
+          if (hasVariants) {
+            matchesDiet = dish.variants.some(v => isVariantVeg(v));
+          } else {
+            const mainTag = (dish.dietary || 'veg').toLowerCase().replace(/[^a-z]/g, '');
+            matchesDiet = mainTag === 'veg';
           }
         }
 
@@ -2960,22 +2981,23 @@
       container.innerHTML = filtered.map(dish => {
         const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
         
-        // CONTEXT-AWARE DEFAULT VARIANT (Veg filter = Veg variant, Non-Veg filter = Non-Veg variant)
         let activeVariant = null;
         if (hasVariants) {
           if (currentDiet === "non-veg") {
-            activeVariant = dish.variants.find(v => v.dietary === "non-veg") || dish.variants[0];
+            activeVariant = dish.variants.find(v => isVariantNonVeg(v)) || dish.variants[0];
           } else if (currentDiet === "veg") {
-            activeVariant = dish.variants.find(v => v.dietary === "veg") || dish.variants[0];
+            activeVariant = dish.variants.find(v => isVariantVeg(v)) || dish.variants[0];
           } else {
             activeVariant = dish.variants[0];
           }
         }
 
-        // EXACT PRICE WITHOUT ANY EXTRA WORD
         const priceDisplay = activeVariant ? `₹${activeVariant.price}` : `₹${dish.price || 0}`;
         const mainImg = (activeVariant && activeVariant.imageUrl) ? activeVariant.imageUrl : (dish.imageUrl || "");
-        const dietType = (activeVariant && activeVariant.dietary) ? activeVariant.dietary : (dish.dietary || "veg");
+        
+        const isNonVegNow = activeVariant ? isVariantNonVeg(activeVariant) : (dish.dietary === 'non-veg');
+        const dietType = isNonVegNow ? 'non-veg' : 'veg';
+        
         const descSnippet = (activeVariant && activeVariant.description) ? activeVariant.description : (dish.description || 'Authentic traditional recipe prepared with fresh ingredients.');
 
         const hasValidImg = Boolean(mainImg && mainImg.trim());
@@ -3028,9 +3050,9 @@
       let activeVariant = null;
       if (hasVariants) {
         if (currentDiet === "non-veg") {
-          activeVariant = dish.variants.find(v => v.dietary === "non-veg") || dish.variants[0];
+          activeVariant = dish.variants.find(v => isVariantNonVeg(v)) || dish.variants[0];
         } else if (currentDiet === "veg") {
-          activeVariant = dish.variants.find(v => v.dietary === "veg") || dish.variants[0];
+          activeVariant = dish.variants.find(v => isVariantVeg(v)) || dish.variants[0];
         } else {
           activeVariant = dish.variants[0];
         }
@@ -3049,8 +3071,8 @@
         titleEl.textContent = dish.name;
         priceEl.textContent = `₹${activeVariant ? activeVariant.price : (dish.price || 0)}`;
 
-        const currentDietType = (activeVariant && activeVariant.dietary) ? activeVariant.dietary : (dish.dietary || 'veg');
-        dietDot.className = `dietary-dot ${currentDietType === 'veg' ? 'veg' : 'non-veg'}`;
+        const isNonVegNow = activeVariant ? isVariantNonVeg(activeVariant) : (dish.dietary === 'non-veg');
+        dietDot.className = `dietary-dot ${isNonVegNow ? 'non-veg' : 'veg'}`;
 
         const currentDesc = (activeVariant && activeVariant.description) ? activeVariant.description : (dish.description || 'Crafted with authentic Pan-Asian ingredients and spices.');
         descEl.textContent = currentDesc;
@@ -3078,17 +3100,20 @@
 
       if (hasVariants) {
         variantsBox.style.display = "flex";
-        variantsList.innerHTML = dish.variants.map((v, i) => `
+        variantsList.innerHTML = dish.variants.map((v, i) => {
+          const isVNonVeg = isVariantNonVeg(v);
+          return `
           <div class="sheet-variant-item-btn ${v === activeVariant ? 'active' : ''}" data-index="${i}">
             <div style="display:flex; align-items:center; gap:8px;">
               <span class="dietary-marker" style="width:14px; height:14px;">
-                <span class="dietary-dot ${v.dietary === 'veg' ? 'veg' : 'non-veg'}" style="width:6px; height:6px;"></span>
+                <span class="dietary-dot ${isVNonVeg ? 'non-veg' : 'veg'}" style="width:6px; height:6px;"></span>
               </span>
               <span>${v.name}</span>
             </div>
             <span style="color:var(--gold-primary); font-weight:700;">₹${v.price}</span>
           </div>
-        `).join('');
+        `;
+        }).join('');
 
         variantsList.querySelectorAll(".sheet-variant-item-btn").forEach(btn => {
           btn.addEventListener("click", () => {
@@ -3124,15 +3149,12 @@
 
         const matchesCat = adminFilterCat === "all" || dish.category === adminFilterCat;
 
-        // Admin Multi-variant dietary check
         let matchesDiet = true;
         const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
-        if (adminFilterDiet !== "all") {
-          if (hasVariants) {
-            matchesDiet = dish.variants.some(v => v.dietary === adminFilterDiet);
-          } else {
-            matchesDiet = (dish.dietary || "veg") === adminFilterDiet;
-          }
+        if (adminFilterDiet === "non-veg") {
+          matchesDiet = hasVariants ? dish.variants.some(v => isVariantNonVeg(v)) : (dish.dietary === 'non-veg');
+        } else if (adminFilterDiet === "veg") {
+          matchesDiet = hasVariants ? dish.variants.some(v => isVariantVeg(v)) : (dish.dietary === 'veg');
         }
 
         const matchesSpicy = adminFilterSpicy === "all" || (dish.spicyLevel || "none") === adminFilterSpicy;
@@ -3156,7 +3178,7 @@
         const hasImg = Boolean(dish.imageUrl && dish.imageUrl.trim());
         const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
         const priceInfo = hasVariants ? 
-          `<span style="color:var(--gold-primary); font-weight:600;">${dish.variants.map(v => `${v.name}: ₹${v.price} (${v.dietary === 'veg' ? 'Veg' : 'NonVeg'})`).join(', ')}</span>` : 
+          `<span style="color:var(--gold-primary); font-weight:600;">${dish.variants.map(v => `${v.name}: ₹${v.price}`).join(', ')}</span>` : 
           `<span style="color:var(--gold-primary); font-weight:700;">₹${dish.price}</span>`;
 
         const spicyText = dish.spicyLevel && dish.spicyLevel !== 'none' ? ` | 🌶️ ${dish.spicyLevel.toUpperCase()}` : '';
@@ -3395,7 +3417,7 @@
         document.getElementById("edit-dish-price").required = false;
         
         document.getElementById("variant-rows-container-edit").innerHTML = dish.variants.map(v => 
-          createAdvancedVariantRowHTML(v.name, v.price, v.dietary || 'veg', v.imageUrl || '', v.description || '')
+          createAdvancedVariantRowHTML(v.name, v.price, v.dietary || (isVariantNonVeg(v) ? 'non-veg' : 'veg'), v.imageUrl || '', v.description || '')
         ).join('');
       } else {
         document.getElementById("pricing-mode-single-edit").checked = true;
@@ -3582,42 +3604,6 @@
     // 15. SEED DATA
     const seedData = [
       { 
-        name: "Thai Green Curry with Jasmine Rice", 
-        category: "Thai Curries", 
-        price: 545, 
-        variants: [
-          { 
-            name: "Veg", 
-            price: 545, 
-            dietary: "veg", 
-            imageUrl: "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=600&q=80", 
-            description: "Fresh farm vegetables, broccoli, bamboo shoots simmered in aromatic Thai coconut green curry." 
-          },
-          { 
-            name: "Chicken", 
-            price: 625, 
-            dietary: "non-veg", 
-            imageUrl: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80", 
-            description: "Tender chicken morsels slow-cooked in rich lemongrass and kaffir lime infused coconut broth." 
-          },
-          { 
-            name: "Prawns", 
-            price: 745, 
-            dietary: "non-veg", 
-            imageUrl: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=600&q=80", 
-            description: "Plump wild prawns prepared in traditional fiery sweet green basil curry." 
-          }
-        ],
-        dietary: "veg", 
-        spicyLevel: "medium",
-        sweetLevel: "mild",
-        isSignature: true, 
-        isBestseller: true, 
-        description: "Aromatic coconut milk, galangal, Thai sweet basil, kaffir lime and bamboo shoots.", 
-        imageUrl: "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=600&q=80",
-        order: 1
-      },
-      { 
         name: "Black Bean Sauce Gravy", 
         category: "Gravy Mains", 
         price: 400, 
@@ -3651,7 +3637,7 @@
         isBestseller: true, 
         description: "Savory garlic-infused black bean sauce gravy with your choice of protein.", 
         imageUrl: "",
-        order: 2
+        order: 1
       }
     ];
 
