@@ -890,7 +890,6 @@
       gap: 8px;
     }
 
-    /* REAL-TIME ADMIN FILTER TOOLBAR */
     .admin-filter-bar {
       background: #101010;
       border: 1px solid var(--border-dark);
@@ -1057,6 +1056,23 @@
       align-items: center;
       gap: 6px;
       flex-wrap: wrap;
+    }
+
+    .move-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #FFF;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.76rem;
+      transition: var(--transition);
+    }
+
+    .move-btn:hover {
+      background: var(--gold-primary);
+      color: #000;
+      border-color: var(--gold-primary);
     }
 
     .edit-btn {
@@ -1425,7 +1441,7 @@
         <button class="admin-tab-btn" data-tab="tab-seed"><i class="fa-solid fa-database"></i> Seed</button>
       </div>
 
-      <!-- TAB 1: MENU ITEMS LIST (WITH SEARCH & MULTI-FILTERS) -->
+      <!-- TAB 1: MENU ITEMS LIST -->
       <div class="admin-panel-section active" id="tab-items">
         <div class="admin-card">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
@@ -1441,19 +1457,16 @@
             </div>
 
             <div class="admin-filter-dropdowns-grid">
-              <!-- Category Filter -->
               <select id="admin-filter-category" class="admin-filter-select">
                 <option value="all">All Categories</option>
               </select>
 
-              <!-- Dietary Filter -->
               <select id="admin-filter-diet" class="admin-filter-select">
                 <option value="all">All Dietary</option>
                 <option value="veg">🟢 Pure Veg</option>
                 <option value="non-veg">🔴 Non-Veg</option>
               </select>
 
-              <!-- Spicy Level Filter -->
               <select id="admin-filter-spicy" class="admin-filter-select">
                 <option value="all">All Spice Levels</option>
                 <option value="none">Not Spicy</option>
@@ -1462,7 +1475,6 @@
                 <option value="hot">🌶️🌶️🌶️ Hot</option>
               </select>
 
-              <!-- Sweet Level Filter -->
               <select id="admin-filter-sweet" class="admin-filter-select">
                 <option value="all">All Sweet Levels</option>
                 <option value="none">Not Sweet</option>
@@ -1471,14 +1483,12 @@
                 <option value="hot">🍯🍯🍯 Extra Sweet</option>
               </select>
 
-              <!-- Badges Filter -->
               <select id="admin-filter-badge" class="admin-filter-select">
                 <option value="all">All Badges</option>
                 <option value="signature">⭐ Chef's Special</option>
                 <option value="bestseller">🔥 Bestseller</option>
               </select>
 
-              <!-- Reset Button -->
               <button type="button" id="btn-reset-admin-filters" class="btn-reset-filters">
                 <i class="fa-solid fa-arrows-rotate"></i> Reset
               </button>
@@ -1490,6 +1500,7 @@
               <thead>
                 <tr>
                   <th style="width:50px;">Photo</th>
+                  <th>Order</th>
                   <th>Name</th>
                   <th>Category</th>
                   <th>Price / Variants</th>
@@ -1597,10 +1608,13 @@
         </div>
       </div>
 
-      <!-- TAB 3: CATEGORY MANAGEMENT -->
+      <!-- TAB 3: CATEGORY MANAGEMENT (WITH RE-ORDERING UP/DOWN) -->
       <div class="admin-panel-section" id="tab-categories">
         <div class="admin-card">
           <h3><i class="fa-solid fa-layer-group"></i> Category Management</h3>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:14px;">
+            Aap <strong>⬆️ Up</strong> aur <strong>⬇️ Down</strong> dabakar categories ko upar-neeche kar sakte hain. Website par live button order usi time update ho jayega[span_3](start_span)[span_3](end_span)!
+          </p>
           <form id="add-category-form" style="display:flex; gap:10px; max-width:550px; margin-bottom:20px; flex-wrap:wrap;">
             <input type="text" id="new-category-name" class="form-control" placeholder="e.g. Sizzling Wok Bowls" required style="flex:1 1 200px;">
             <button type="submit" class="btn-primary" style="white-space:nowrap;"><i class="fa-solid fa-plus"></i> Add Category</button>
@@ -1611,6 +1625,7 @@
               <thead>
                 <tr>
                   <th style="width:40px;">#</th>
+                  <th>Order</th>
                   <th>Category Name</th>
                   <th>Actions</th>
                 </tr>
@@ -2292,7 +2307,7 @@
       }
     });
 
-    // 6. CATEGORIES REAL-TIME
+    // 6. CATEGORIES REAL-TIME & POSITION SORTING (UP / DOWN)
     const categoriesCol = collection(db, "categories");
 
     onSnapshot(categoriesCol, async (snapshot) => {
@@ -2303,13 +2318,25 @@
           "Seafood Appetizers", "Gravy Mains", "Thai Curries", 
           "Fried Rice & Noodles", "Ramen Bowls", "Desserts"
         ];
+        let ord = 1;
         for (const name of seedDefaults) {
           const id = name.toLowerCase().replace(/[^a-z0-9]/g, '-');
-          await setDoc(doc(db, "categories", id), { name: name, createdAt: serverTimestamp() });
+          await setDoc(doc(db, "categories", id), { name: name, order: ord++, createdAt: serverTimestamp() });
         }
       } else {
         categoriesList = [];
-        snapshot.forEach(docSnap => categoriesList.push({ id: docSnap.id, name: docSnap.data().name }));
+        snapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          categoriesList.push({ 
+            id: docSnap.id, 
+            name: data.name, 
+            order: data.order !== undefined ? data.order : 999 
+          });
+        });
+
+        // Numerical Order Sort
+        categoriesList.sort((a, b) => a.order - b.order);
+
         localStorage.setItem("hokai_cache_categories", JSON.stringify(categoriesList));
         renderCategoryDropdowns();
         renderCategoryButtons();
@@ -2351,6 +2378,12 @@
       tbody.innerHTML = categoriesList.map((c, index) => `
         <tr>
           <td style="color:var(--text-muted);">${index + 1}</td>
+          <td>
+            <div style="display:inline-flex; gap:4px;">
+              <button class="move-btn move-cat-up" data-index="${index}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
+              <button class="move-btn move-cat-down" data-index="${index}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+            </div>
+          </td>
           <td style="font-weight:600;">${c.name}</td>
           <td>
             <div class="action-btn-group">
@@ -2360,6 +2393,34 @@
           </td>
         </tr>
       `).join('');
+
+      // Move Category Up
+      document.querySelectorAll(".move-cat-up").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const idx = Number(btn.dataset.index);
+          if (idx <= 0) return;
+          const current = categoriesList[idx];
+          const previous = categoriesList[idx - 1];
+
+          await updateDoc(doc(db, "categories", current.id), { order: idx - 1 });
+          await updateDoc(doc(db, "categories", previous.id), { order: idx });
+          showToast(`"${current.name}" moved up!`);
+        });
+      });
+
+      // Move Category Down
+      document.querySelectorAll(".move-cat-down").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const idx = Number(btn.dataset.index);
+          if (idx >= categoriesList.length - 1) return;
+          const current = categoriesList[idx];
+          const next = categoriesList[idx + 1];
+
+          await updateDoc(doc(db, "categories", current.id), { order: idx + 1 });
+          await updateDoc(doc(db, "categories", next.id), { order: idx });
+          showToast(`"${current.name}" moved down!`);
+        });
+      });
 
       document.querySelectorAll(".edit-cat-btn").forEach(btn => {
         btn.addEventListener("click", () => {
@@ -2415,7 +2476,8 @@
       if (!catName) return;
       try {
         const id = catName.toLowerCase().replace(/[^a-z0-9]/g, '-');
-        await setDoc(doc(db, "categories", id), { name: catName, createdAt: serverTimestamp() });
+        const nextOrder = categoriesList.length + 1;
+        await setDoc(doc(db, "categories", id), { name: catName, order: nextOrder, createdAt: serverTimestamp() });
         document.getElementById("new-category-name").value = "";
         showToast(`Category "${catName}" added real-time!`);
       } catch (err) {
@@ -2652,12 +2714,23 @@
       }
     });
 
-    // 9. MENU ITEMS LISTENER & REAL-TIME CACHE
+    // 9. MENU ITEMS LISTENER & REAL-TIME CACHE WITH NUMERICAL POSITION SORT
     const dishesCol = collection(db, "menuItems");
 
     onSnapshot(dishesCol, (snapshot) => {
       currentDishes = [];
-      snapshot.forEach(docSnap => currentDishes.push({ id: docSnap.id, ...docSnap.data() }));
+      snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        currentDishes.push({ 
+          id: docSnap.id, 
+          ...data,
+          order: data.order !== undefined ? data.order : 999 
+        });
+      });
+
+      // Sort Menu Items By Custom Admin Order
+      currentDishes.sort((a, b) => a.order - b.order);
+
       localStorage.setItem("hokai_cache_dishes", JSON.stringify(currentDishes));
       renderPublicDishes();
       renderAdminTable();
@@ -2716,7 +2789,8 @@
               <div class="dish-badges overlay-badges">
                 ${dish.isSignature ? `<span class="badge badge-signature">Chef's Special</span>` : ''}
                 ${dish.isBestseller ? `<span class="badge badge-bestseller">Bestseller</span>` : ''}
-                ${getSpicyBadgeHTML(dish.spicyLevel)}${getSweetBadgeHTML(dish.sweetLevel)}
+                ${getSpicyBadgeHTML(dish.spicyLevel)}
+                ${getSweetBadgeHTML(dish.sweetLevel)}
               </div>
             </div>
           ` : ''}
@@ -2730,7 +2804,8 @@
                 <div class="dish-badges" style="margin-bottom:0;">
                   ${dish.isSignature ? `<span class="badge badge-signature">Chef's Special</span>` : ''}
                   ${dish.isBestseller ? `<span class="badge badge-bestseller">Bestseller</span>` : ''}
-                  ${getSpicyBadgeHTML(dish.spicyLevel)}${getSweetBadgeHTML(dish.sweetLevel)}
+                  ${getSpicyBadgeHTML(dish.spicyLevel)}
+                  ${getSweetBadgeHTML(dish.sweetLevel)}
                 </div>
               ` : ''}
             </div>
@@ -2775,33 +2850,22 @@
       });
     };
 
-    // 10. REAL-TIME ADMIN TABLE WITH ADVANCED MULTI-FILTERING
+    // 10. REAL-TIME ADMIN TABLE WITH ADVANCED MULTI-FILTERING & DISH POSITION RE-ORDERING
     window.renderAdminTable = function() {
       const tbody = document.getElementById("admin-items-table-body");
       const counter = document.getElementById("menu-counter");
       if (!tbody) return;
 
       const filtered = currentDishes.filter(dish => {
-        // Search Filter
         const matchesSearch = !adminSearchQuery || 
           dish.name?.toLowerCase().includes(adminSearchQuery.toLowerCase()) || 
           dish.description?.toLowerCase().includes(adminSearchQuery.toLowerCase());
 
-        // Category Filter
         const matchesCat = adminFilterCat === "all" || dish.category === adminFilterCat;
-
-        // Dietary Filter
         const matchesDiet = adminFilterDiet === "all" || dish.dietary === adminFilterDiet;
+        const matchesSpicy = adminFilterSpicy === "all" || (dish.spicyLevel || "none") === adminFilterSpicy;
+        const matchesSweet = adminFilterSweet === "all" || (dish.sweetLevel || "none") === adminFilterSweet;
 
-        // Spicy Level Filter
-        const dishSpice = dish.spicyLevel || "none";
-        const matchesSpicy = adminFilterSpicy === "all" || dishSpice === adminFilterSpicy;
-
-        // Sweet Level Filter
-        const dishSweet = dish.sweetLevel || "none";
-        const matchesSweet = adminFilterSweet === "all" || dishSweet === adminFilterSweet;
-
-        // Badges Filter
         let matchesBadge = true;
         if (adminFilterBadge === "signature") matchesBadge = Boolean(dish.isSignature);
         if (adminFilterBadge === "bestseller") matchesBadge = Boolean(dish.isBestseller);
@@ -2812,11 +2876,11 @@
       counter.textContent = `${filtered.length} of ${currentDishes.length} Items`;
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="padding:22px; text-align:center; color:#777;">No matching dishes found with active filters.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="padding:22px; text-align:center; color:#777;">No matching dishes found with active filters.</td></tr>`;
         return;
       }
 
-      tbody.innerHTML = filtered.map(dish => {
+      tbody.innerHTML = filtered.map((dish, index) => {
         const hasImg = Boolean(dish.imageUrl && dish.imageUrl.trim());
         const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
         const priceInfo = hasVariants ? 
@@ -2836,6 +2900,12 @@
                 <i class="fa-solid fa-bowl-food"></i>
               </div>
             `}
+          </td>
+          <td>
+            <div style="display:inline-flex; gap:4px;">
+              <button class="move-btn move-dish-up" data-id="${dish.id}" data-index="${index}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
+              <button class="move-btn move-dish-down" data-id="${dish.id}" data-index="${index}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+            </div>
           </td>
           <td style="font-weight:600;">
             ${dish.name}
@@ -2860,6 +2930,34 @@
         </tr>
       `;
       }).join('');
+
+      // Move Dish Up
+      document.querySelectorAll(".move-dish-up").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const idx = Number(btn.dataset.index);
+          if (idx <= 0) return;
+          const current = filtered[idx];
+          const previous = filtered[idx - 1];
+
+          await updateDoc(doc(db, "menuItems", current.id), { order: idx - 1 });
+          await updateDoc(doc(db, "menuItems", previous.id), { order: idx });
+          showToast(`"${current.name}" moved up!`);
+        });
+      });
+
+      // Move Dish Down
+      document.querySelectorAll(".move-dish-down").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const idx = Number(btn.dataset.index);
+          if (idx >= filtered.length - 1) return;
+          const current = filtered[idx];
+          const next = filtered[idx + 1];
+
+          await updateDoc(doc(db, "menuItems", current.id), { order: idx + 1 });
+          await updateDoc(doc(db, "menuItems", next.id), { order: idx });
+          showToast(`"${current.name}" moved down!`);
+        });
+      });
 
       document.querySelectorAll(".delete-dish-trigger").forEach(btn => {
         btn.addEventListener("click", async () => {
@@ -3056,7 +3154,7 @@
       document.getElementById("variant-rows-container-edit").insertAdjacentHTML('beforeend', createVariantRowHTML('', ''));
     });
 
-    // 13. ADD DISH
+    // 13. ADD DISH (WITH NUMERICAL POSITION ORDER)
     document.getElementById("add-dish-form")?.addEventListener("submit", async (e) => {
       e.preventDefault();
       try {
@@ -3076,6 +3174,8 @@
           basePrice = Number(document.getElementById("dish-price").value);
         }
 
+        const nextOrder = currentDishes.length + 1;
+
         const newDish = {
           name: document.getElementById("dish-name").value.trim(),
           category: document.getElementById("dish-category").value,
@@ -3088,6 +3188,7 @@
           isBestseller: document.getElementById("dish-bestseller-checkbox").checked,
           description: document.getElementById("dish-desc").value.trim(),
           imageUrl: document.getElementById("dish-img-url").value.trim() || "",
+          order: nextOrder,
           createdAt: serverTimestamp()
         };
 
@@ -3155,7 +3256,8 @@
         isSignature: true, 
         isBestseller: true, 
         description: "Silky crystal skin filled with crushed edamame and black truffle essence.", 
-        imageUrl: "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=600&q=80" 
+        imageUrl: "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=600&q=80",
+        order: 1
       },
       { 
         name: "Thai Green Curry with Jasmine Rice", 
@@ -3168,7 +3270,8 @@
         isSignature: true, 
         isBestseller: true, 
         description: "Aromatic coconut milk, galangal, Thai sweet basil, kaffir lime and bamboo shoots.", 
-        imageUrl: "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=600&q=80" 
+        imageUrl: "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=600&q=80",
+        order: 2
       },
       { 
         name: "Tokyo Shoyu Ramen", 
@@ -3180,7 +3283,8 @@
         isSignature: true, 
         isBestseller: true, 
         description: "Rich chicken broth, springy ramen noodles, ajitsuke tamago egg, and nori sheets.", 
-        imageUrl: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80" 
+        imageUrl: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80",
+        order: 3
       },
       { 
         name: "Mango Sticky Rice with Coconut Cream", 
@@ -3192,7 +3296,8 @@
         isSignature: true, 
         isBestseller: true, 
         description: "Authentic Thai sweet sticky rice topped with ripe mango slices and toasted sesame seeds.", 
-        imageUrl: "https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=600&q=80" 
+        imageUrl: "https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=600&q=80",
+        order: 4
       }
     ];
 
