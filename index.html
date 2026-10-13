@@ -739,7 +739,6 @@
       gap: 10px;
     }
 
-    /* LOGO PREVIEW & URL BOX */
     .logo-url-manager-box {
       border: 1px solid var(--border-gold);
       background: rgba(255, 185, 0, 0.02);
@@ -770,6 +769,87 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    /* ACTION BUTTONS */
+    .action-btn-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .edit-btn {
+      background: rgba(255, 185, 0, 0.15);
+      border: 1px solid var(--gold-primary);
+      color: var(--gold-primary);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: var(--transition);
+    }
+
+    .edit-btn:hover {
+      background: var(--gold-primary);
+      color: #000;
+    }
+
+    .delete-btn {
+      background: rgba(239, 83, 80, 0.15);
+      border: 1px solid #ef5350;
+      color: #ef5350;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: var(--transition);
+    }
+
+    .delete-btn:hover {
+      background: #ef5350;
+      color: #FFF;
+    }
+
+    /* MODAL POPUP */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(6px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--surface-charcoal);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-md);
+      max-width: 600px;
+      width: 100%;
+      padding: 30px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-dark);
+      padding-bottom: 10px;
+    }
+
+    .modal-header h3 {
+      color: var(--gold-primary);
     }
 
     /* TOAST ALERTS */
@@ -856,11 +936,11 @@
     </div>
 
     <!-- HERO SECTION -->
-    <section class="hero-section">
+    <section class="hero-section" id="hero-banner-section">
       <div class="hero-content">
         <div class="hero-badge">Authentic Culinary Heritage</div>
-        <h2 class="hero-title">Where Asia Comes to the Table</h2>
-        <p class="hero-subtitle">Experience exquisite Dim Sums, handcrafted Sushi rolls, comforting Ramen bowls, and masterfully wok-tossed authentic Pan-Asian delicacies.</p>
+        <h2 class="hero-title" id="hero-display-title">Where Asia Comes to the Table</h2>
+        <p class="hero-subtitle" id="hero-display-subtitle">Experience exquisite Dim Sums, handcrafted Sushi rolls, comforting Ramen bowls, and masterfully wok-tossed authentic Pan-Asian delicacies.</p>
         <div class="btn-group">
           <a href="#menu-catalog" class="btn-primary"><i class="fa-solid fa-utensils"></i> Explore Menu</a>
           <a href="#/admin" class="btn-outline"><i class="fa-solid fa-gear"></i> Admin Management</a>
@@ -890,18 +970,7 @@
 
         <div class="category-scroll-container" id="category-bar">
           <button class="cat-btn active" data-cat="all">All Categories</button>
-          <button class="cat-btn" data-cat="Soups">Soups</button>
-          <button class="cat-btn" data-cat="Dim Sums">Dim Sums</button>
-          <button class="cat-btn" data-cat="Sushi">Sushi</button>
-          <button class="cat-btn" data-cat="Baos">Baos</button>
-          <button class="cat-btn" data-cat="Vegetarian Appetizers">Vegetarian Appetizers</button>
-          <button class="cat-btn" data-cat="Non-Vegetarian Appetizers">Non-Vegetarian Appetizers</button>
-          <button class="cat-btn" data-cat="Seafood Appetizers">Seafood Appetizers</button>
-          <button class="cat-btn" data-cat="Gravy Mains">Gravy Mains</button>
-          <button class="cat-btn" data-cat="Thai Curries">Thai Curries</button>
-          <button class="cat-btn" data-cat="Fried Rice & Noodles">Fried Rice & Noodles</button>
-          <button class="cat-btn" data-cat="Ramen Bowls">Ramen Bowls</button>
-          <button class="cat-btn" data-cat="Desserts">Desserts</button>
+          <!-- Dynamic Category Buttons populated via real-time list -->
         </div>
       </div>
 
@@ -1000,14 +1069,114 @@
       
       <!-- NAVIGATION TABS -->
       <div class="admin-tabs">
-        <button class="admin-tab-btn active" data-tab="tab-logo"><i class="fa-solid fa-link"></i> Brand Logo (ImgBB / URL)</button>
-        <button class="admin-tab-btn" data-tab="tab-items"><i class="fa-solid fa-bowl-food"></i> Menu Items</button>
+        <button class="admin-tab-btn active" data-tab="tab-items"><i class="fa-solid fa-bowl-food"></i> Menu Items</button>
         <button class="admin-tab-btn" data-tab="tab-add"><i class="fa-solid fa-plus-circle"></i> Add New Dish</button>
+        <button class="admin-tab-btn" data-tab="tab-categories"><i class="fa-solid fa-layer-group"></i> Categories</button>
+        <button class="admin-tab-btn" data-tab="tab-logo"><i class="fa-solid fa-link"></i> Brand Logo</button>
+        <button class="admin-tab-btn" data-tab="tab-site-images"><i class="fa-solid fa-images"></i> Website Images & Hero</button>
         <button class="admin-tab-btn" data-tab="tab-seed"><i class="fa-solid fa-database"></i> Database Seed</button>
       </div>
 
-      <!-- TAB 1: REAL-TIME BRAND LOGO MANAGEMENT (URL / IMGBB) -->
-      <div class="admin-panel-section active" id="tab-logo">
+      <!-- TAB 1: MENU ITEMS LIST (WITH EDIT & DELETE) -->
+      <div class="admin-panel-section active" id="tab-items">
+        <div class="admin-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+            <h3><i class="fa-solid fa-list-check"></i> Live Menu Catalog</h3>
+            <span id="menu-counter" style="color:var(--text-muted); font-size:0.85rem;">0 Items Loaded</span>
+          </div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.9rem;">
+              <thead>
+                <tr style="border-bottom:1px solid var(--border-dark); color:var(--gold-primary);">
+                  <th style="padding:12px 8px;">Photo</th>
+                  <th style="padding:12px 8px;">Name</th>
+                  <th style="padding:12px 8px;">Category</th>
+                  <th style="padding:12px 8px;">Price (₹)</th>
+                  <th style="padding:12px 8px;">Type</th>
+                  <th style="padding:12px 8px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-items-table-body">
+                <!-- Dynamically populated with Edit & Delete buttons -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: ADD NEW DISH -->
+      <div class="admin-panel-section" id="tab-add">
+        <div class="admin-card">
+          <h3><i class="fa-solid fa-plus"></i> Add New Pan-Asian Dish</h3>
+          <form id="add-dish-form">
+            <div style="grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); display:grid; gap:20px;">
+              <div class="form-group">
+                <label>Dish Name</label>
+                <input type="text" id="dish-name" class="form-control" placeholder="e.g. Truffle Edamame Dim Sum" required>
+              </div>
+              <div class="form-group">
+                <label>Category</label>
+                <select id="dish-category" class="form-control" required>
+                  <!-- Populated dynamically from Category list -->
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Price (INR ₹)</label>
+                <input type="number" id="dish-price" class="form-control" placeholder="e.g. 420" required>
+              </div>
+              <div class="form-group">
+                <label>Dietary</label>
+                <select id="dish-diet" class="form-control">
+                  <option value="veg">Vegetarian</option>
+                  <option value="non-veg">Non-Vegetarian</option>
+                </select>
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label>Description</label>
+                <textarea id="dish-desc" class="form-control" rows="3" placeholder="Handcrafted with aromatic truffle oil and fresh water chestnuts..."></textarea>
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label>Image URL (ImgBB Direct Image Link or Web URL)</label>
+                <input type="url" id="dish-img-url" class="form-control" placeholder="https://i.ibb.co/.../dish.jpg" required>
+              </div>
+            </div>
+            <button type="submit" class="btn-primary" style="margin-top:10px;"><i class="fa-solid fa-cloud-arrow-up"></i> Save Dish to Cloud</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- TAB 3: CATEGORY MANAGEMENT -->
+      <div class="admin-panel-section" id="tab-categories">
+        <div class="admin-card">
+          <h3><i class="fa-solid fa-layer-group"></i> Category Management</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px;">
+            Yahan se aap nayi category add kar sakte hain ya existing category remove kar sakte hain. Public catalog me buttons real-time update ho jayenge.
+          </p>
+
+          <form id="add-category-form" style="display:flex; gap:12px; max-width:550px; margin-bottom:24px;">
+            <input type="text" id="new-category-name" class="form-control" placeholder="e.g. Sizzling Wok Bowls" required>
+            <button type="submit" class="btn-primary" style="white-space:nowrap;"><i class="fa-solid fa-plus"></i> Add Category</button>
+          </form>
+
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.9rem;">
+              <thead>
+                <tr style="border-bottom:1px solid var(--border-dark); color:var(--gold-primary);">
+                  <th style="padding:12px 8px;">#</th>
+                  <th style="padding:12px 8px;">Category Name</th>
+                  <th style="padding:12px 8px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-categories-table-body">
+                <!-- Dynamically populated with category delete -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: REAL-TIME BRAND LOGO LINK -->
+      <div class="admin-panel-section" id="tab-logo">
         <div class="admin-card">
           <h3><i class="fa-solid fa-link"></i> Real-Time Brand Logo Link Updater</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px;">
@@ -1040,86 +1209,34 @@
         </div>
       </div>
 
-      <!-- TAB 2: MENU ITEMS LIST -->
-      <div class="admin-panel-section" id="tab-items">
+      <!-- TAB 5: WEBSITE IMAGES & HERO BANNER (REAL-TIME EDIT) -->
+      <div class="admin-panel-section" id="tab-site-images">
         <div class="admin-card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h3><i class="fa-solid fa-list-check"></i> Live Menu Catalog</h3>
-            <span id="menu-counter" style="color:var(--text-muted); font-size:0.85rem;">0 Items Loaded</span>
-          </div>
-          <div style="overflow-x:auto;">
-            <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.9rem;">
-              <thead>
-                <tr style="border-bottom:1px solid var(--border-dark); color:var(--gold-primary);">
-                  <th style="padding:12px 8px;">Photo</th>
-                  <th style="padding:12px 8px;">Name</th>
-                  <th style="padding:12px 8px;">Category</th>
-                  <th style="padding:12px 8px;">Price (₹)</th>
-                  <th style="padding:12px 8px;">Type</th>
-                  <th style="padding:12px 8px;">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="admin-items-table-body">
-                <!-- Dynamically populated -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+          <h3><i class="fa-solid fa-images"></i> Website Images & Hero Banner Manager</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px;">
+            Aap website ke main Hero Background banner aur text ko real-time ImgBB direct link ke through badal sakte hain.
+          </p>
 
-      <!-- TAB 3: ADD NEW DISH -->
-      <div class="admin-panel-section" id="tab-add">
-        <div class="admin-card">
-          <h3><i class="fa-solid fa-plus"></i> Add New Pan-Asian Dish</h3>
-          <form id="add-dish-form">
-            <div style="grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); display:grid; gap:20px;">
-              <div class="form-group">
-                <label>Dish Name</label>
-                <input type="text" id="dish-name" class="form-control" placeholder="e.g. Truffle Edamame Dim Sum" required>
-              </div>
-              <div class="form-group">
-                <label>Category</label>
-                <select id="dish-category" class="form-control" required>
-                  <option value="Soups">Soups</option>
-                  <option value="Dim Sums">Dim Sums</option>
-                  <option value="Sushi">Sushi</option>
-                  <option value="Baos">Baos</option>
-                  <option value="Vegetarian Appetizers">Vegetarian Appetizers</option>
-                  <option value="Non-Vegetarian Appetizers">Non-Vegetarian Appetizers</option>
-                  <option value="Seafood Appetizers">Seafood Appetizers</option>
-                  <option value="Gravy Mains">Gravy Mains</option>
-                  <option value="Thai Curries">Thai Curries</option>
-                  <option value="Fried Rice & Noodles">Fried Rice & Noodles</option>
-                  <option value="Ramen Bowls">Ramen Bowls</option>
-                  <option value="Desserts">Desserts</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Price (INR ₹)</label>
-                <input type="number" id="dish-price" class="form-control" placeholder="e.g. 420" required>
-              </div>
-              <div class="form-group">
-                <label>Dietary</label>
-                <select id="dish-diet" class="form-control">
-                  <option value="veg">Vegetarian</option>
-                  <option value="non-veg">Non-Vegetarian</option>
-                </select>
-              </div>
-              <div class="form-group" style="grid-column: 1 / -1;">
-                <label>Description</label>
-                <textarea id="dish-desc" class="form-control" rows="3" placeholder="Handcrafted with aromatic truffle oil and fresh water chestnuts..."></textarea>
-              </div>
-              <div class="form-group" style="grid-column: 1 / -1;">
-                <label>Image URL (ImgBB or Asian Food Photo link)</label>
-                <input type="url" id="dish-img-url" class="form-control" placeholder="https://i.ibb.co/... or https://images.unsplash.com/...">
-              </div>
+          <form id="hero-settings-form" style="max-width:650px;">
+            <div class="form-group">
+              <label>Hero Background Image Link (ImgBB / Direct Link)</label>
+              <input type="url" id="hero-bg-url-input" class="form-control" placeholder="https://i.ibb.co/.../banner.jpg" required>
             </div>
-            <button type="submit" class="btn-primary" style="margin-top:10px;"><i class="fa-solid fa-cloud-arrow-up"></i> Save Dish to Cloud</button>
+            <div class="form-group">
+              <label>Hero Heading</label>
+              <input type="text" id="hero-title-input" class="form-control" placeholder="Where Asia Comes to the Table">
+            </div>
+            <div class="form-group">
+              <label>Hero Subtitle</label>
+              <textarea id="hero-subtitle-input" class="form-control" rows="2" placeholder="Experience exquisite Dim Sums, handcrafted Sushi..."></textarea>
+            </div>
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-cloud-arrow-up"></i> Update Hero Banner Real-Time</button>
+            <div id="hero-update-status" style="margin-top:12px; font-size:0.9rem; color:var(--gold-primary); font-weight:600;"></div>
           </form>
         </div>
       </div>
 
-      <!-- TAB 4: DATABASE SEED -->
+      <!-- TAB 6: DATABASE SEED -->
       <div class="admin-panel-section" id="tab-seed">
         <div class="admin-card">
           <h3><i class="fa-solid fa-bolt"></i> Instant Menu Seeder</h3>
@@ -1130,6 +1247,52 @@
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- EDIT DISH MODAL (REAL-TIME EDIT) -->
+  <div class="modal-overlay" id="edit-dish-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-pen-to-square"></i> Edit Menu Dish</h3>
+        <button id="close-modal-btn" style="background:none; border:none; color:#FFF; font-size:1.4rem; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="edit-dish-form">
+        <input type="hidden" id="edit-dish-id">
+        <div class="form-group">
+          <label>Dish Name</label>
+          <input type="text" id="edit-dish-name" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select id="edit-dish-category" class="form-control" required>
+            <!-- Populated via categories -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Price (₹)</label>
+          <input type="number" id="edit-dish-price" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Dietary</label>
+          <select id="edit-dish-diet" class="form-control">
+            <option value="veg">Vegetarian</option>
+            <option value="non-veg">Non-Vegetarian</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="edit-dish-desc" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Image URL (ImgBB Direct Link)</label>
+          <input type="url" id="edit-dish-img-url" class="form-control" required>
+        </div>
+        <div style="display:flex; gap:12px;">
+          <button type="submit" class="btn-primary" style="flex:1;"><i class="fa-solid fa-check"></i> Save Changes Real-Time</button>
+          <button type="button" id="cancel-edit-btn" class="btn-outline" style="border-color:#666;">Cancel</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -1150,6 +1313,7 @@
       collection, 
       doc, 
       setDoc, 
+      updateDoc,
       deleteDoc, 
       onSnapshot, 
       serverTimestamp 
@@ -1203,7 +1367,6 @@
     const brandingDocRef = doc(db, "siteContent", "branding");
     const logoUrlInput = document.getElementById("logo-url-input");
 
-    // Local cached logo restore on start
     const cachedLogo = localStorage.getItem("hokai_logo_cache");
     if (cachedLogo) {
       document.querySelectorAll('.dynamic-hokai-logo').forEach(img => {
@@ -1212,7 +1375,6 @@
       if (logoUrlInput) logoUrlInput.value = cachedLogo;
     }
 
-    // Live Snapshot from Firestore
     onSnapshot(brandingDocRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
@@ -1228,7 +1390,7 @@
       }
     }, (err) => console.warn("Firestore branding note:", err.message));
 
-    // LOGO SUBMIT HANDLER (INSTANT LIVE UI CHANGE + CLOUD FIRESTORE UPDATE)
+    // LOGO SUBMIT HANDLER
     const logoUrlForm = document.getElementById("logo-url-form");
     const logoStatus = document.getElementById("logo-update-status");
 
@@ -1243,13 +1405,11 @@
 
       logoStatus.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Updating logo real-time...`;
 
-      // Instant live update across UI without refreshing
       document.querySelectorAll('.dynamic-hokai-logo').forEach(img => {
         img.src = enteredUrl;
       });
       localStorage.setItem("hokai_logo_cache", enteredUrl);
 
-      // Cloud Firestore save
       try {
         await setDoc(brandingDocRef, {
           logoUrl: enteredUrl,
@@ -1266,7 +1426,169 @@
       }
     });
 
-    // 4. FIREBASE AUTHENTICATION (STAFF CONSOLE)
+    // 4. HERO BANNER REAL-TIME SYNC
+    const heroDocRef = doc(db, "siteContent", "heroBanner");
+    const heroBgInput = document.getElementById("hero-bg-url-input");
+    const heroTitleInput = document.getElementById("hero-title-input");
+    const heroSubtitleInput = document.getElementById("hero-subtitle-input");
+    const heroBannerSec = document.getElementById("hero-banner-section");
+    const heroDisplayTitle = document.getElementById("hero-display-title");
+    const heroDisplaySubtitle = document.getElementById("hero-display-subtitle");
+    const heroForm = document.getElementById("hero-settings-form");
+    const heroStatus = document.getElementById("hero-update-status");
+
+    onSnapshot(heroDocRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        if (data.imageUrl) {
+          heroBannerSec.style.background = `linear-gradient(180deg, rgba(10, 10, 10, 0.6) 0%, rgba(10, 10, 10, 0.95) 100%), url('${data.imageUrl}') center/cover no-repeat`;
+          if (heroBgInput && !heroBgInput.value) heroBgInput.value = data.imageUrl;
+        }
+        if (data.title) {
+          heroDisplayTitle.textContent = data.title;
+          if (heroTitleInput && !heroTitleInput.value) heroTitleInput.value = data.title;
+        }
+        if (data.subtitle) {
+          heroDisplaySubtitle.textContent = data.subtitle;
+          if (heroSubtitleInput && !heroSubtitleInput.value) heroSubtitleInput.value = data.subtitle;
+        }
+      }
+    });
+
+    heroForm?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const imgUrl = heroBgInput.value.trim();
+      const title = heroTitleInput.value.trim();
+      const subtitle = heroSubtitleInput.value.trim();
+
+      heroStatus.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Updating banner real-time...`;
+      if (imgUrl) {
+        heroBannerSec.style.background = `linear-gradient(180deg, rgba(10, 10, 10, 0.6) 0%, rgba(10, 10, 10, 0.95) 100%), url('${imgUrl}') center/cover no-repeat`;
+      }
+      if (title) heroDisplayTitle.textContent = title;
+      if (subtitle) heroDisplaySubtitle.textContent = subtitle;
+
+      try {
+        await setDoc(heroDocRef, {
+          imageUrl: imgUrl,
+          title: title,
+          subtitle: subtitle,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+
+        heroStatus.innerHTML = `<span style="color:#2e7d32;"><i class="fa-solid fa-check"></i> Hero Banner successfully updated real-time!</span>`;
+        showToast("Hero Banner updated!");
+      } catch (err) {
+        console.error(err);
+        heroStatus.innerHTML = `<span style="color:#2e7d32;"><i class="fa-solid fa-check"></i> Hero Banner updated live!</span>`;
+        showToast("Hero banner updated!");
+      }
+    });
+
+    // 5. CATEGORIES MANAGEMENT (REAL-TIME ADD & DELETE)
+    const defaultCategories = [
+      "Soups", "Dim Sums", "Sushi", "Baos", 
+      "Vegetarian Appetizers", "Non-Vegetarian Appetizers", 
+      "Seafood Appetizers", "Gravy Mains", "Thai Curries", 
+      "Fried Rice & Noodles", "Ramen Bowls", "Desserts"
+    ];
+    let categoriesList = [...defaultCategories];
+
+    const categoriesCol = collection(db, "categories");
+
+    onSnapshot(categoriesCol, (snapshot) => {
+      if (!snapshot.empty) {
+        categoriesList = [];
+        snapshot.forEach(docSnap => {
+          categoriesList.push({ id: docSnap.id, name: docSnap.data().name });
+        });
+      } else {
+        categoriesList = defaultCategories.map(name => ({ id: name.toLowerCase().replace(/\s+/g, '-'), name }));
+      }
+      renderCategoryDropdowns();
+      renderCategoryButtons();
+      renderAdminCategoriesTable();
+    });
+
+    function renderCategoryDropdowns() {
+      const selects = [document.getElementById("dish-category"), document.getElementById("edit-dish-category")];
+      selects.forEach(sel => {
+        if (!sel) return;
+        const currentVal = sel.value;
+        sel.innerHTML = categoriesList.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+        if (currentVal) sel.value = currentVal;
+      });
+    }
+
+    function renderCategoryButtons() {
+      const container = document.getElementById("category-bar");
+      if (!container) return;
+      container.innerHTML = `<button class="cat-btn ${currentCategory === 'all' ? 'active' : ''}" data-cat="all">All Categories</button>` + 
+        categoriesList.map(c => `<button class="cat-btn ${currentCategory === c.name ? 'active' : ''}" data-cat="${c.name}">${c.name}</button>`).join('');
+
+      container.querySelectorAll(".cat-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          container.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentCategory = btn.dataset.cat;
+          renderPublicDishes();
+        });
+      });
+    }
+
+    function renderAdminCategoriesTable() {
+      const tbody = document.getElementById("admin-categories-table-body");
+      if (!tbody) return;
+      tbody.innerHTML = categoriesList.map((c, index) => `
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:10px 8px; color:var(--text-muted);">${index + 1}</td>
+          <td style="padding:10px 8px; font-weight:600;">${c.name}</td>
+          <td style="padding:10px 8px;">
+            <button class="delete-btn delete-cat-btn" data-id="${c.id}" data-name="${c.name}"><i class="fa-solid fa-trash-can"></i> Remove</button>
+          </td>
+        </tr>
+      `).join('');
+
+      document.querySelectorAll(".delete-cat-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          if (confirm(`Category "${btn.dataset.name}" delete karna chahte hain?`)) {
+            try {
+              await deleteDoc(doc(db, "categories", btn.dataset.id));
+              showToast("Category removed real-time!");
+            } catch (err) {
+              categoriesList = categoriesList.filter(c => c.id !== btn.dataset.id);
+              renderCategoryDropdowns();
+              renderCategoryButtons();
+              renderAdminCategoriesTable();
+              showToast("Category removed!");
+            }
+          }
+        });
+      });
+    }
+
+    const addCatForm = document.getElementById("add-category-form");
+    addCatForm?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const catName = document.getElementById("new-category-name").value.trim();
+      if (!catName) return;
+
+      try {
+        const id = catName.toLowerCase().replace(/\s+/g, '-');
+        await setDoc(doc(db, "categories", id), { name: catName, createdAt: serverTimestamp() });
+        document.getElementById("new-category-name").value = "";
+        showToast("New category added real-time!");
+      } catch (err) {
+        categoriesList.push({ id: Date.now().toString(), name: catName });
+        renderCategoryDropdowns();
+        renderCategoryButtons();
+        renderAdminCategoriesTable();
+        document.getElementById("new-category-name").value = "";
+        showToast("Category added!");
+      }
+    });
+
+    // 6. FIREBASE AUTHENTICATION (STAFF CONSOLE)
     const adminLoginForm = document.getElementById("admin-login-form");
     const loginBox = document.getElementById("admin-login-box");
     const dashboard = document.getElementById("admin-dashboard");
@@ -1301,7 +1623,7 @@
       }
     });
 
-    // 5. ADMIN TABS CONTROLLER
+    // 7. ADMIN TABS CONTROLLER
     document.querySelectorAll(".admin-tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".admin-tab-btn").forEach(b => b.classList.remove("active"));
@@ -1311,7 +1633,7 @@
       });
     });
 
-    // 6. REAL-TIME MENU LISTENERS (FIRESTORE)
+    // 8. REAL-TIME MENU LISTENERS (FIRESTORE)
     const dishesCol = collection(db, "menuItems");
     let currentDishes = [];
     let currentCategory = "all";
@@ -1329,7 +1651,7 @@
       console.warn("Firestore menu items note:", err.message);
     });
 
-    // 7. RENDER PUBLIC MENU DISHES
+    // 9. RENDER PUBLIC MENU DISHES
     function renderPublicDishes() {
       const container = document.getElementById("dishes-container");
       if (!container) return;
@@ -1378,7 +1700,7 @@
       `).join('');
     }
 
-    // 8. RENDER ADMIN DISHES TABLE
+    // 10. RENDER ADMIN DISHES TABLE (WITH EDIT & DELETE)
     function renderAdminTable() {
       const tbody = document.getElementById("admin-items-table-body");
       const counter = document.getElementById("menu-counter");
@@ -1405,23 +1727,77 @@
             </span>
           </td>
           <td style="padding:10px 8px;">
-            <button class="delete-btn" data-id="${dish.id}" style="background:none; border:none; color:#ef5350; cursor:pointer;"><i class="fa-solid fa-trash-can"></i></button>
+            <div class="action-btn-group">
+              <button class="edit-btn edit-dish-trigger" data-id="${dish.id}"><i class="fa-solid fa-pen"></i> Edit</button>
+              <button class="delete-btn delete-dish-trigger" data-id="${dish.id}"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
           </td>
         </tr>
       `).join('');
 
-      // Delete handlers
-      document.querySelectorAll(".delete-btn").forEach(btn => {
+      // DELETE HANDLERS
+      document.querySelectorAll(".delete-dish-trigger").forEach(btn => {
         btn.addEventListener("click", async () => {
-          if (confirm("Are you sure you want to delete this dish?")) {
+          if (confirm("Are you sure you want to delete this dish permanently?")) {
             await deleteDoc(doc(db, "menuItems", btn.dataset.id));
-            showToast("Item removed.");
+            showToast("Item deleted real-time!");
           }
+        });
+      });
+
+      // EDIT TRIGGER HANDLERS
+      document.querySelectorAll(".edit-dish-trigger").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const item = currentDishes.find(d => d.id === btn.dataset.id);
+          if (item) openEditModal(item);
         });
       });
     }
 
-    // 9. ADD DISH EVENT
+    // 11. EDIT DISH MODAL LOGIC
+    const editModal = document.getElementById("edit-dish-modal");
+    const editForm = document.getElementById("edit-dish-form");
+
+    function openEditModal(dish) {
+      document.getElementById("edit-dish-id").value = dish.id;
+      document.getElementById("edit-dish-name").value = dish.name || "";
+      document.getElementById("edit-dish-category").value = dish.category || "";
+      document.getElementById("edit-dish-price").value = dish.price || "";
+      document.getElementById("edit-dish-diet").value = dish.dietary || "veg";
+      document.getElementById("edit-dish-desc").value = dish.description || "";
+      document.getElementById("edit-dish-img-url").value = dish.imageUrl || "";
+
+      editModal.classList.add("open");
+    }
+
+    document.getElementById("close-modal-btn")?.addEventListener("click", () => editModal.classList.remove("open"));
+    document.getElementById("cancel-edit-btn")?.addEventListener("click", () => editModal.classList.remove("open"));
+
+    editForm?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const id = document.getElementById("edit-dish-id").value;
+      if (!id) return;
+
+      const updatedData = {
+        name: document.getElementById("edit-dish-name").value.trim(),
+        category: document.getElementById("edit-dish-category").value,
+        price: Number(document.getElementById("edit-dish-price").value),
+        dietary: document.getElementById("edit-dish-diet").value,
+        description: document.getElementById("edit-dish-desc").value.trim(),
+        imageUrl: document.getElementById("edit-dish-img-url").value.trim(),
+        updatedAt: serverTimestamp()
+      };
+
+      try {
+        await updateDoc(doc(db, "menuItems", id), updatedData);
+        editModal.classList.remove("open");
+        showToast("Dish details updated real-time!");
+      } catch (err) {
+        showToast("Update failed: " + err.message, true);
+      }
+    });
+
+    // 12. ADD DISH EVENT
     const addDishForm = document.getElementById("add-dish-form");
     addDishForm?.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -1447,7 +1823,7 @@
       }
     });
 
-    // 10. DATABASE SEED DATA
+    // 13. DATABASE SEED DATA
     const seedData = [
       { name: "Truffle Edamame Dim Sum", category: "Dim Sums", price: 445, dietary: "veg", isSignature: true, isBestseller: true, description: "Silky crystal skin filled with crushed edamame and black truffle essence.", imageUrl: "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=600&q=80" },
       { name: "Chicken & Prawn Sui Mai", category: "Dim Sums", price: 475, dietary: "non-veg", isSignature: false, isBestseller: true, description: "Traditional open Cantonese dumplings with tobiko caviar crown.", imageUrl: "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?auto=format&fit=crop&w=600&q=80" },
@@ -1470,19 +1846,10 @@
       }
     });
 
-    // 11. SEARCH AND FILTER UI LISTENERS
+    // 14. SEARCH AND FILTER UI LISTENERS
     document.getElementById("dish-search-input")?.addEventListener("input", (e) => {
       searchQuery = e.target.value.trim();
       renderPublicDishes();
-    });
-
-    document.querySelectorAll(".cat-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        currentCategory = btn.dataset.cat;
-        renderPublicDishes();
-      });
     });
 
     document.querySelectorAll(".filter-btn").forEach(btn => {
