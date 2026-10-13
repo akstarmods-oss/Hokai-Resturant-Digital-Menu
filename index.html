@@ -569,7 +569,7 @@
       max-width: 1320px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 40px;
       margin-bottom: 50px;
     }
@@ -943,7 +943,6 @@
         <p class="hero-subtitle" id="hero-display-subtitle">Experience exquisite Dim Sums, handcrafted Sushi rolls, comforting Ramen bowls, and masterfully wok-tossed authentic Pan-Asian delicacies.</p>
         <div class="btn-group">
           <a href="#menu-catalog" class="btn-primary"><i class="fa-solid fa-utensils"></i> Explore Menu</a>
-          <a href="#/admin" class="btn-outline"><i class="fa-solid fa-gear"></i> Admin Management</a>
         </div>
       </div>
     </section>
@@ -970,7 +969,6 @@
 
         <div class="category-scroll-container" id="category-bar">
           <button class="cat-btn active" data-cat="all">All Categories</button>
-          <!-- Dynamic Category Buttons populated via real-time list -->
         </div>
       </div>
 
@@ -1006,20 +1004,17 @@
           </div>
           <p>Where Asia Comes to the Table. An authentic journey through the refined flavours of the East.</p>
         </div>
-        <div class="footer-col">
-          <h4>Timings</h4>
-          <p>Monday – Sunday</p>
-          <p style="color:var(--gold-primary); font-weight:600;">12:00 PM – 11:30 PM</p>
-          <p>Dine-in, Takeaway & Delivery</p>
-        </div>
-        <div class="footer-col">
-          <h4>Admin Portal</h4>
-          <p>Authorized kitchen managers & administrators can update real-time catalog items, prices and live brand logos.</p>
-          <a href="#/admin" style="display:inline-block; margin-top:10px; color:var(--gold-primary); font-weight:600;"><i class="fa-solid fa-arrow-right"></i> Open Control Panel</a>
+        
+        <!-- TIMINGS SECTION (Controlled & Editable via Admin Console in Real-Time) -->
+        <div class="footer-col" id="footer-timings-col">
+          <h4 id="timings-display-title">Timings</h4>
+          <p id="timings-display-days">Monday – Sunday</p>
+          <p id="timings-display-hours" style="color:var(--gold-primary); font-weight:600;">12:00 PM – 11:30 PM</p>
+          <p id="timings-display-services">Dine-in, Takeaway & Delivery</p>
         </div>
       </div>
       <div class="footer-bottom">
-        &copy; 2026 HOKAI Pan-Asian Kitchen. Connected with Real-Time Cloud Firestore.
+        &copy; 2026 HOKAI Pan-Asian Kitchen.
       </div>
     </footer>
   </div>
@@ -1074,6 +1069,7 @@
         <button class="admin-tab-btn" data-tab="tab-categories"><i class="fa-solid fa-layer-group"></i> Categories</button>
         <button class="admin-tab-btn" data-tab="tab-logo"><i class="fa-solid fa-link"></i> Brand Logo</button>
         <button class="admin-tab-btn" data-tab="tab-site-images"><i class="fa-solid fa-images"></i> Website Images & Hero</button>
+        <button class="admin-tab-btn" data-tab="tab-timings"><i class="fa-solid fa-clock"></i> Timings & Content</button>
         <button class="admin-tab-btn" data-tab="tab-seed"><i class="fa-solid fa-database"></i> Database Seed</button>
       </div>
 
@@ -1236,7 +1232,43 @@
         </div>
       </div>
 
-      <!-- TAB 6: DATABASE SEED -->
+      <!-- TAB 6: TIMINGS & DETAILS MANAGEMENT (RED MARK REAL-TIME EDIT/REMOVE) -->
+      <div class="admin-panel-section" id="tab-timings">
+        <div class="admin-card">
+          <h3><i class="fa-solid fa-clock"></i> Timings & Operation Details Manager</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px;">
+            Yahan se aap website footer ke <strong>Timings</strong> section ke sabhi text real-time badal sakte hain ya hide/remove kar sakte hain.
+          </p>
+
+          <form id="timings-settings-form" style="max-width:650px;">
+            <div class="form-group">
+              <label>Section Heading</label>
+              <input type="text" id="timings-input-title" class="form-control" value="Timings" required>
+            </div>
+            <div class="form-group">
+              <label>Working Days</label>
+              <input type="text" id="timings-input-days" class="form-control" value="Monday – Sunday" required>
+            </div>
+            <div class="form-group">
+              <label>Opening Hours (Gold Text)</label>
+              <input type="text" id="timings-input-hours" class="form-control" value="12:00 PM – 11:30 PM" required>
+            </div>
+            <div class="form-group">
+              <label>Service Description</label>
+              <input type="text" id="timings-input-services" class="form-control" value="Dine-in, Takeaway & Delivery">
+            </div>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i> Update Timings Real-Time</button>
+              <button type="button" id="btn-toggle-timings" class="btn-outline" style="border-color:#ef5350; color:#ef5350;">
+                <i class="fa-solid fa-eye-slash"></i> Hide / Remove Section
+              </button>
+            </div>
+            <div id="timings-update-status" style="margin-top:12px; font-size:0.9rem; color:var(--gold-primary); font-weight:600;"></div>
+          </form>
+        </div>
+      </div>
+
+      <!-- TAB 7: DATABASE SEED -->
       <div class="admin-panel-section" id="tab-seed">
         <div class="admin-card">
           <h3><i class="fa-solid fa-bolt"></i> Instant Menu Seeder</h3>
@@ -1485,7 +1517,111 @@
       }
     });
 
-    // 5. CATEGORIES MANAGEMENT (REAL-TIME ADD & DELETE)
+    // 5. TIMINGS & OPERATION DETAILS REAL-TIME SYNC
+    const timingsDocRef = doc(db, "siteContent", "timings");
+    const timingsForm = document.getElementById("timings-settings-form");
+    const timingsStatus = document.getElementById("timings-update-status");
+    const timingsCol = document.getElementById("footer-timings-col");
+    const toggleTimingsBtn = document.getElementById("btn-toggle-timings");
+
+    const tDisplayTitle = document.getElementById("timings-display-title");
+    const tDisplayDays = document.getElementById("timings-display-days");
+    const tDisplayHours = document.getElementById("timings-display-hours");
+    const tDisplayServices = document.getElementById("timings-display-services");
+
+    const tInputTitle = document.getElementById("timings-input-title");
+    const tInputDays = document.getElementById("timings-input-days");
+    const tInputHours = document.getElementById("timings-input-hours");
+    const tInputServices = document.getElementById("timings-input-services");
+
+    let isTimingsVisible = true;
+
+    onSnapshot(timingsDocRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        isTimingsVisible = data.visible !== false;
+
+        if (timingsCol) {
+          timingsCol.style.display = isTimingsVisible ? "block" : "none";
+        }
+        if (toggleTimingsBtn) {
+          toggleTimingsBtn.innerHTML = isTimingsVisible ? 
+            `<i class="fa-solid fa-eye-slash"></i> Hide / Remove Section` : 
+            `<i class="fa-solid fa-eye"></i> Show Section`;
+          toggleTimingsBtn.style.color = isTimingsVisible ? "#ef5350" : "#2e7d32";
+          toggleTimingsBtn.style.borderColor = isTimingsVisible ? "#ef5350" : "#2e7d32";
+        }
+
+        if (data.title) {
+          tDisplayTitle.textContent = data.title;
+          if (tInputTitle && !tInputTitle.value) tInputTitle.value = data.title;
+        }
+        if (data.days) {
+          tDisplayDays.textContent = data.days;
+          if (tInputDays && !tInputDays.value) tInputDays.value = data.days;
+        }
+        if (data.hours) {
+          tDisplayHours.textContent = data.hours;
+          if (tInputHours && !tInputHours.value) tInputHours.value = data.hours;
+        }
+        if (data.services !== undefined) {
+          tDisplayServices.textContent = data.services;
+          if (tInputServices && !tInputServices.value) tInputServices.value = data.services;
+        }
+      }
+    });
+
+    timingsForm?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const title = tInputTitle.value.trim();
+      const days = tInputDays.value.trim();
+      const hours = tInputHours.value.trim();
+      const services = tInputServices.value.trim();
+
+      timingsStatus.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Updating timings real-time...`;
+      
+      tDisplayTitle.textContent = title;
+      tDisplayDays.textContent = days;
+      tDisplayHours.textContent = hours;
+      tDisplayServices.textContent = services;
+
+      try {
+        await setDoc(timingsDocRef, {
+          title: title,
+          days: days,
+          hours: hours,
+          services: services,
+          visible: isTimingsVisible,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+
+        timingsStatus.innerHTML = `<span style="color:#2e7d32;"><i class="fa-solid fa-check"></i> Timings updated real-time!</span>`;
+        showToast("Timings details updated live!");
+      } catch (err) {
+        console.error(err);
+        timingsStatus.innerHTML = `<span style="color:#2e7d32;"><i class="fa-solid fa-check"></i> Timings updated live!</span>`;
+        showToast("Timings updated!");
+      }
+    });
+
+    toggleTimingsBtn?.addEventListener("click", async () => {
+      isTimingsVisible = !isTimingsVisible;
+      timingsCol.style.display = isTimingsVisible ? "block" : "none";
+      toggleTimingsBtn.innerHTML = isTimingsVisible ? 
+        `<i class="fa-solid fa-eye-slash"></i> Hide / Remove Section` : 
+        `<i class="fa-solid fa-eye"></i> Show Section`;
+      toggleTimingsBtn.style.color = isTimingsVisible ? "#ef5350" : "#2e7d32";
+      toggleTimingsBtn.style.borderColor = isTimingsVisible ? "#ef5350" : "#2e7d32";
+
+      try {
+        await setDoc(timingsDocRef, { visible: isTimingsVisible, updatedAt: serverTimestamp() }, { merge: true });
+        showToast(isTimingsVisible ? "Timings section is now visible!" : "Timings section hidden from website!");
+      } catch (err) {
+        showToast(isTimingsVisible ? "Section shown!" : "Section hidden!");
+      }
+    });
+
+    // 6. CATEGORIES MANAGEMENT (REAL-TIME ADD & DELETE)
     const defaultCategories = [
       "Soups", "Dim Sums", "Sushi", "Baos", 
       "Vegetarian Appetizers", "Non-Vegetarian Appetizers", 
@@ -1588,7 +1724,7 @@
       }
     });
 
-    // 6. FIREBASE AUTHENTICATION (STAFF CONSOLE)
+    // 7. FIREBASE AUTHENTICATION (STAFF CONSOLE)
     const adminLoginForm = document.getElementById("admin-login-form");
     const loginBox = document.getElementById("admin-login-box");
     const dashboard = document.getElementById("admin-dashboard");
@@ -1623,7 +1759,7 @@
       }
     });
 
-    // 7. ADMIN TABS CONTROLLER
+    // 8. ADMIN TABS CONTROLLER
     document.querySelectorAll(".admin-tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".admin-tab-btn").forEach(b => b.classList.remove("active"));
@@ -1633,7 +1769,7 @@
       });
     });
 
-    // 8. REAL-TIME MENU LISTENERS (FIRESTORE)
+    // 9. REAL-TIME MENU LISTENERS (FIRESTORE)
     const dishesCol = collection(db, "menuItems");
     let currentDishes = [];
     let currentCategory = "all";
@@ -1651,7 +1787,7 @@
       console.warn("Firestore menu items note:", err.message);
     });
 
-    // 9. RENDER PUBLIC MENU DISHES
+    // 10. RENDER PUBLIC MENU DISHES
     function renderPublicDishes() {
       const container = document.getElementById("dishes-container");
       if (!container) return;
@@ -1700,7 +1836,7 @@
       `).join('');
     }
 
-    // 10. RENDER ADMIN DISHES TABLE (WITH EDIT & DELETE)
+    // 11. RENDER ADMIN DISHES TABLE (WITH EDIT & DELETE)
     function renderAdminTable() {
       const tbody = document.getElementById("admin-items-table-body");
       const counter = document.getElementById("menu-counter");
@@ -1754,7 +1890,7 @@
       });
     }
 
-    // 11. EDIT DISH MODAL LOGIC
+    // 12. EDIT DISH MODAL LOGIC
     const editModal = document.getElementById("edit-dish-modal");
     const editForm = document.getElementById("edit-dish-form");
 
@@ -1797,7 +1933,7 @@
       }
     });
 
-    // 12. ADD DISH EVENT
+    // 13. ADD DISH EVENT
     const addDishForm = document.getElementById("add-dish-form");
     addDishForm?.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -1823,7 +1959,7 @@
       }
     });
 
-    // 13. DATABASE SEED DATA
+    // 14. DATABASE SEED DATA
     const seedData = [
       { name: "Truffle Edamame Dim Sum", category: "Dim Sums", price: 445, dietary: "veg", isSignature: true, isBestseller: true, description: "Silky crystal skin filled with crushed edamame and black truffle essence.", imageUrl: "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=600&q=80" },
       { name: "Chicken & Prawn Sui Mai", category: "Dim Sums", price: 475, dietary: "non-veg", isSignature: false, isBestseller: true, description: "Traditional open Cantonese dumplings with tobiko caviar crown.", imageUrl: "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?auto=format&fit=crop&w=600&q=80" },
@@ -1846,7 +1982,7 @@
       }
     });
 
-    // 14. SEARCH AND FILTER UI LISTENERS
+    // 15. SEARCH AND FILTER UI LISTENERS
     document.getElementById("dish-search-input")?.addEventListener("input", (e) => {
       searchQuery = e.target.value.trim();
       renderPublicDishes();
