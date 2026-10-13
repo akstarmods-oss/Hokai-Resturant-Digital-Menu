@@ -564,8 +564,37 @@
       font-size: 0.88rem;
       color: var(--text-muted);
       line-height: 1.5;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       flex-grow: 1;
+    }
+
+    /* VARIATIONS UI STYLES */
+    .variant-selector-wrapper {
+      margin-bottom: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .variant-chip {
+      background: var(--surface-elevated);
+      border: 1px solid rgba(255, 185, 0, 0.3);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .variant-chip.active, .variant-chip:hover {
+      background: var(--gold-primary);
+      color: #0A0A0A;
+      font-weight: 700;
+      border-color: var(--gold-primary);
     }
 
     .dish-meta-row {
@@ -830,6 +859,27 @@
       color: #FFF;
     }
 
+    /* VARIATION BUILDER ROWS IN ADMIN */
+    .variant-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+
+    .remove-variant-row-btn {
+      background: rgba(239, 83, 80, 0.2);
+      border: 1px solid #ef5350;
+      color: #ef5350;
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
     /* MODAL POPUP */
     .modal-overlay {
       display: none;
@@ -851,7 +901,7 @@
       background: var(--surface-charcoal);
       border: 1px solid var(--border-gold);
       border-radius: var(--radius-md);
-      max-width: 600px;
+      max-width: 650px;
       width: 100%;
       padding: 30px;
       max-height: 90vh;
@@ -1025,7 +1075,7 @@
           <p>Where Asia Comes to the Table. An authentic journey through the refined flavours of the East.</p>
         </div>
         
-        <!-- TIMINGS SECTION (Controlled & Editable via Admin Console in Real-Time) -->
+        <!-- TIMINGS SECTION -->
         <div class="footer-col" id="footer-timings-col">
           <h4 id="timings-display-title">Timings</h4>
           <p id="timings-display-days">Monday – Sunday</p>
@@ -1093,7 +1143,7 @@
         <button class="admin-tab-btn" data-tab="tab-seed"><i class="fa-solid fa-database"></i> Database Seed</button>
       </div>
 
-      <!-- TAB 1: MENU ITEMS LIST (WITH EDIT & DELETE) -->
+      <!-- TAB 1: MENU ITEMS LIST -->
       <div class="admin-panel-section active" id="tab-items">
         <div class="admin-card">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
@@ -1107,7 +1157,7 @@
                   <th style="padding:12px 8px;">Photo</th>
                   <th style="padding:12px 8px;">Name</th>
                   <th style="padding:12px 8px;">Category</th>
-                  <th style="padding:12px 8px;">Price (₹)</th>
+                  <th style="padding:12px 8px;">Price (₹) / Variants</th>
                   <th style="padding:12px 8px;">Type</th>
                   <th style="padding:12px 8px;">Actions</th>
                 </tr>
@@ -1120,7 +1170,7 @@
         </div>
       </div>
 
-      <!-- TAB 2: ADD NEW DISH (NO AUTOMATIC IMAGE INJECTION) -->
+      <!-- TAB 2: ADD NEW DISH (WITH VARIATION BUILDER) -->
       <div class="admin-panel-section" id="tab-add">
         <div class="admin-card">
           <h3><i class="fa-solid fa-plus"></i> Add New Pan-Asian Dish</h3>
@@ -1128,7 +1178,7 @@
             <div style="grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); display:grid; gap:20px;">
               <div class="form-group">
                 <label>Dish Name</label>
-                <input type="text" id="dish-name" class="form-control" placeholder="e.g. Truffle Edamame Dim Sum" required>
+                <input type="text" id="dish-name" class="form-control" placeholder="e.g. Crispy Lotus Stem / Thai Green Curry" required>
               </div>
               <div class="form-group">
                 <label>Category</label>
@@ -1136,10 +1186,37 @@
                   <!-- Populated dynamically from Category list -->
                 </select>
               </div>
-              <div class="form-group">
-                <label>Price (INR ₹)</label>
-                <input type="number" id="dish-price" class="form-control" placeholder="e.g. 420" required>
+
+              <!-- Price Strategy Switch -->
+              <div class="form-group" style="grid-column: 1 / -1; background: #111; padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-dark);">
+                <label style="color:var(--gold-primary); margin-bottom: 10px;">Pricing Strategy</label>
+                <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 14px;">
+                  <label style="cursor: pointer; display: flex; align-items: center; gap: 6px; text-transform:none; font-size:0.9rem;">
+                    <input type="radio" name="pricing-mode-add" value="single" checked id="pricing-mode-single-add"> Single Standard Price
+                  </label>
+                  <label style="cursor: pointer; display: flex; align-items: center; gap: 6px; text-transform:none; font-size:0.9rem;">
+                    <input type="radio" name="pricing-mode-add" value="variants" id="pricing-mode-variants-add"> Multiple Variations (Half/Full, 4Pcs/8Pcs, Chicken/Veg)
+                  </label>
+                </div>
+
+                <!-- Single Price Input -->
+                <div id="single-price-box-add">
+                  <label>Price (INR ₹)</label>
+                  <input type="number" id="dish-price" class="form-control" placeholder="e.g. 420">
+                </div>
+
+                <!-- Multi Variations Box -->
+                <div id="variant-builder-box-add" style="display:none;">
+                  <label>Dish Variations & Portion Prices</label>
+                  <div id="variant-rows-container-add">
+                    <!-- Variant rows inserted here -->
+                  </div>
+                  <button type="button" id="btn-add-variant-row-add" class="btn-outline" style="padding: 6px 14px; font-size:0.85rem; margin-top:8px;">
+                    <i class="fa-solid fa-plus"></i> Add Another Variation
+                  </button>
+                </div>
               </div>
+
               <div class="form-group">
                 <label>Dietary</label>
                 <select id="dish-diet" class="form-control">
@@ -1147,6 +1224,7 @@
                   <option value="non-veg">Non-Vegetarian</option>
                 </select>
               </div>
+
               <div class="form-group" style="grid-column: 1 / -1;">
                 <label>Description</label>
                 <textarea id="dish-desc" class="form-control" rows="3" placeholder="Handcrafted with aromatic truffle oil and fresh water chestnuts..."></textarea>
@@ -1252,7 +1330,7 @@
         </div>
       </div>
 
-      <!-- TAB 6: TIMINGS & DETAILS MANAGEMENT (RED MARK REAL-TIME EDIT/REMOVE) -->
+      <!-- TAB 6: TIMINGS & DETAILS MANAGEMENT -->
       <div class="admin-panel-section" id="tab-timings">
         <div class="admin-card">
           <h3><i class="fa-solid fa-clock"></i> Timings & Operation Details Manager</h3>
@@ -1302,11 +1380,11 @@
     </div>
   </div>
 
-  <!-- EDIT DISH MODAL (REAL-TIME EDIT) -->
+  <!-- EDIT DISH MODAL (REAL-TIME EDIT WITH VARIATIONS) -->
   <div class="modal-overlay" id="edit-dish-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3><i class="fa-solid fa-pen-to-square"></i> Edit Menu Dish</h3>
+        <h3><i class="fa-solid fa-pen-to-square"></i> Edit Menu Dish & Variations</h3>
         <button id="close-modal-btn" style="background:none; border:none; color:#FFF; font-size:1.4rem; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <form id="edit-dish-form">
@@ -1321,10 +1399,33 @@
             <!-- Populated via categories -->
           </select>
         </div>
-        <div class="form-group">
-          <label>Price (₹)</label>
-          <input type="number" id="edit-dish-price" class="form-control" required>
+
+        <!-- Pricing Strategy in Edit Modal -->
+        <div class="form-group" style="background: #111; padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-dark);">
+          <label style="color:var(--gold-primary); margin-bottom: 8px;">Pricing Strategy</label>
+          <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 12px;">
+            <label style="cursor: pointer; display: flex; align-items: center; gap: 6px; text-transform:none; font-size:0.9rem;">
+              <input type="radio" name="pricing-mode-edit" value="single" id="pricing-mode-single-edit"> Single Price
+            </label>
+            <label style="cursor: pointer; display: flex; align-items: center; gap: 6px; text-transform:none; font-size:0.9rem;">
+              <input type="radio" name="pricing-mode-edit" value="variants" id="pricing-mode-variants-edit"> Multiple Variations
+            </label>
+          </div>
+
+          <div id="single-price-box-edit">
+            <label>Price (₹)</label>
+            <input type="number" id="edit-dish-price" class="form-control">
+          </div>
+
+          <div id="variant-builder-box-edit" style="display:none;">
+            <label>Variations & Portion Prices</label>
+            <div id="variant-rows-container-edit"></div>
+            <button type="button" id="btn-add-variant-row-edit" class="btn-outline" style="padding: 6px 14px; font-size:0.85rem; margin-top:8px;">
+              <i class="fa-solid fa-plus"></i> Add Another Variation
+            </button>
+          </div>
         </div>
+
         <div class="form-group">
           <label>Dietary</label>
           <select id="edit-dish-diet" class="form-control">
@@ -1789,7 +1890,70 @@
       });
     });
 
-    // 9. REAL-TIME MENU LISTENERS (FIRESTORE)
+    // 9. VARIATION LOGIC BUILDER UTILITIES
+    function createVariantRowHTML(name = '', price = '') {
+      return `
+        <div class="variant-row">
+          <input type="text" class="form-control var-name-input" placeholder="e.g. Half / 4 Pcs / Chicken" value="${name}" required style="flex:2;">
+          <input type="number" class="form-control var-price-input" placeholder="Price (₹)" value="${price}" required style="flex:1;">
+          <button type="button" class="remove-variant-row-btn" onclick="this.parentElement.remove()"><i class="fa-solid fa-trash-can"></i></button>
+        </div>
+      `;
+    }
+
+    // Add Dish Form Pricing Switch
+    const pricingSingleRadioAdd = document.getElementById("pricing-mode-single-add");
+    const pricingVariantsRadioAdd = document.getElementById("pricing-mode-variants-add");
+    const singlePriceBoxAdd = document.getElementById("single-price-box-add");
+    const variantBuilderBoxAdd = document.getElementById("variant-builder-box-add");
+    const variantRowsContainerAdd = document.getElementById("variant-rows-container-add");
+
+    pricingSingleRadioAdd?.addEventListener("change", () => {
+      singlePriceBoxAdd.style.display = "block";
+      variantBuilderBoxAdd.style.display = "none";
+      document.getElementById("dish-price").required = true;
+    });
+
+    pricingVariantsRadioAdd?.addEventListener("change", () => {
+      singlePriceBoxAdd.style.display = "none";
+      variantBuilderBoxAdd.style.display = "block";
+      document.getElementById("dish-price").required = false;
+      if (variantRowsContainerAdd.children.length === 0) {
+        variantRowsContainerAdd.innerHTML = createVariantRowHTML("Half", "") + createVariantRowHTML("Full", "");
+      }
+    });
+
+    document.getElementById("btn-add-variant-row-add")?.addEventListener("click", () => {
+      variantRowsContainerAdd.insertAdjacentHTML('beforeend', createVariantRowHTML('', ''));
+    });
+
+    // Edit Modal Pricing Switch
+    const pricingSingleRadioEdit = document.getElementById("pricing-mode-single-edit");
+    const pricingVariantsRadioEdit = document.getElementById("pricing-mode-variants-edit");
+    const singlePriceBoxEdit = document.getElementById("single-price-box-edit");
+    const variantBuilderBoxEdit = document.getElementById("variant-builder-box-edit");
+    const variantRowsContainerEdit = document.getElementById("variant-rows-container-edit");
+
+    pricingSingleRadioEdit?.addEventListener("change", () => {
+      singlePriceBoxEdit.style.display = "block";
+      variantBuilderBoxEdit.style.display = "none";
+      document.getElementById("edit-dish-price").required = true;
+    });
+
+    pricingVariantsRadioEdit?.addEventListener("change", () => {
+      singlePriceBoxEdit.style.display = "none";
+      variantBuilderBoxEdit.style.display = "block";
+      document.getElementById("edit-dish-price").required = false;
+      if (variantRowsContainerEdit.children.length === 0) {
+        variantRowsContainerEdit.innerHTML = createVariantRowHTML("Half", "") + createVariantRowHTML("Full", "");
+      }
+    });
+
+    document.getElementById("btn-add-variant-row-edit")?.addEventListener("click", () => {
+      variantRowsContainerEdit.insertAdjacentHTML('beforeend', createVariantRowHTML('', ''));
+    });
+
+    // 10. REAL-TIME MENU LISTENERS (FIRESTORE)
     const dishesCol = collection(db, "menuItems");
     let currentDishes = [];
     let currentCategory = "all";
@@ -1807,7 +1971,7 @@
       console.warn("Firestore menu items note:", err.message);
     });
 
-    // 10. RENDER PUBLIC MENU DISHES (NO DEFAULT/FALLBACK IMAGE UNLESS LINK PROVIDED)
+    // 11. RENDER PUBLIC MENU DISHES (WITH VARIANT CHIPS)
     function renderPublicDishes() {
       const container = document.getElementById("dishes-container");
       if (!container) return;
@@ -1831,8 +1995,11 @@
 
       container.innerHTML = filtered.map(dish => {
         const hasImg = Boolean(dish.imageUrl && dish.imageUrl.trim());
+        const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
+        const initialPrice = hasVariants ? dish.variants[0].price : (dish.price || 0);
+
         return `
-        <div class="dish-card">
+        <div class="dish-card" id="card-${dish.id}">
           <div class="dish-thumb" style="${!hasImg ? 'background: #181818;' : ''}">
             ${hasImg ? `
               <img src="${dish.imageUrl}" alt="${dish.name}" loading="lazy">
@@ -1853,9 +2020,22 @@
           <div class="dish-body">
             <div class="dish-header-row">
               <h3 class="dish-name">${dish.name}</h3>
-              <span class="dish-price">₹${dish.price}</span>
+              <span class="dish-price" id="price-display-${dish.id}">₹${initialPrice}</span>
             </div>
             <p class="dish-desc">${dish.description || 'Delicately crafted using traditional Asian spices.'}</p>
+            
+            ${hasVariants ? `
+              <div class="variant-selector-wrapper">
+                ${dish.variants.map((v, i) => `
+                  <button type="button" class="variant-chip ${i === 0 ? 'active' : ''}" 
+                    data-dish-id="${dish.id}" 
+                    data-price="${v.price}">
+                    ${v.name}: ₹${v.price}
+                  </button>
+                `).join('')}
+              </div>
+            ` : ''}
+
             <div class="dish-meta-row">
               <span><i class="fa-solid fa-tag"></i> ${dish.category}</span>
               <span style="color:#2e7d32; font-weight:600;"><i class="fa-solid fa-circle-check"></i> Available</span>
@@ -1864,9 +2044,24 @@
         </div>
       `;
       }).join('');
+
+      // Event listener for variant buttons
+      container.querySelectorAll(".variant-chip").forEach(chip => {
+        chip.addEventListener("click", (e) => {
+          const dishId = chip.dataset.dishId;
+          const price = chip.dataset.price;
+          const card = document.getElementById(`card-${dishId}`);
+          
+          card.querySelectorAll(".variant-chip").forEach(c => c.classList.remove("active"));
+          chip.classList.add("active");
+
+          const priceEl = document.getElementById(`price-display-${dishId}`);
+          if (priceEl) priceEl.textContent = `₹${price}`;
+        });
+      });
     }
 
-    // 11. RENDER ADMIN DISHES TABLE (WITH EDIT & DELETE)
+    // 12. RENDER ADMIN DISHES TABLE
     function renderAdminTable() {
       const tbody = document.getElementById("admin-items-table-body");
       const counter = document.getElementById("menu-counter");
@@ -1881,6 +2076,12 @@
 
       tbody.innerHTML = currentDishes.map(dish => {
         const hasImg = Boolean(dish.imageUrl && dish.imageUrl.trim());
+        const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
+        
+        const priceInfo = hasVariants ? 
+          `<span style="color:var(--gold-primary); font-weight:600;">${dish.variants.map(v => `${v.name}: ₹${v.price}`).join(', ')}</span>` : 
+          `<span style="color:var(--gold-primary); font-weight:700;">₹${dish.price}</span>`;
+
         return `
         <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
           <td style="padding:10px 8px;">
@@ -1894,7 +2095,7 @@
           </td>
           <td style="padding:10px 8px; font-weight:600;">${dish.name}</td>
           <td style="padding:10px 8px; color:var(--text-muted);">${dish.category}</td>
-          <td style="padding:10px 8px; color:var(--gold-primary); font-weight:700;">₹${dish.price}</td>
+          <td style="padding:10px 8px;">${priceInfo}</td>
           <td style="padding:10px 8px;">
             <span style="font-size:0.75rem; padding:3px 8px; border-radius:4px; ${dish.dietary === 'veg' ? 'background:rgba(46,125,50,0.2); color:#4caf50;' : 'background:rgba(198,40,40,0.2); color:#ef5350;'}">
               ${dish.dietary === 'veg' ? 'VEG' : 'NON-VEG'}
@@ -1929,7 +2130,7 @@
       });
     }
 
-    // 12. EDIT DISH MODAL LOGIC
+    // 13. EDIT DISH MODAL LOGIC (SUPPORTS VARIATIONS)
     const editModal = document.getElementById("edit-dish-modal");
     const editForm = document.getElementById("edit-dish-form");
 
@@ -1937,10 +2138,26 @@
       document.getElementById("edit-dish-id").value = dish.id;
       document.getElementById("edit-dish-name").value = dish.name || "";
       document.getElementById("edit-dish-category").value = dish.category || "";
-      document.getElementById("edit-dish-price").value = dish.price || "";
       document.getElementById("edit-dish-diet").value = dish.dietary || "veg";
       document.getElementById("edit-dish-desc").value = dish.description || "";
       document.getElementById("edit-dish-img-url").value = dish.imageUrl || "";
+
+      const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
+      if (hasVariants) {
+        pricingVariantsRadioEdit.checked = true;
+        singlePriceBoxEdit.style.display = "none";
+        variantBuilderBoxEdit.style.display = "block";
+        document.getElementById("edit-dish-price").required = false;
+
+        variantRowsContainerEdit.innerHTML = dish.variants.map(v => createVariantRowHTML(v.name, v.price)).join('');
+      } else {
+        pricingSingleRadioEdit.checked = true;
+        singlePriceBoxEdit.style.display = "block";
+        variantBuilderBoxEdit.style.display = "none";
+        document.getElementById("edit-dish-price").value = dish.price || "";
+        document.getElementById("edit-dish-price").required = true;
+        variantRowsContainerEdit.innerHTML = "";
+      }
 
       editModal.classList.add("open");
     }
@@ -1953,41 +2170,85 @@
       const id = document.getElementById("edit-dish-id").value;
       if (!id) return;
 
+      const isVariants = pricingVariantsRadioEdit.checked;
+      let variants = [];
+      let basePrice = 0;
+
+      if (isVariants) {
+        const names = Array.from(variantRowsContainerEdit.querySelectorAll(".var-name-input")).map(i => i.value.trim());
+        const prices = Array.from(variantRowsContainerEdit.querySelectorAll(".var-price-input")).map(i => Number(i.value));
+        for (let i = 0; i < names.length; i++) {
+          if (names[i] && prices[i]) {
+            variants.push({ name: names[i], price: prices[i] });
+          }
+        }
+        if (variants.length === 0) {
+          showToast("Please add at least one variation!", true);
+          return;
+        }
+        basePrice = variants[0].price;
+      } else {
+        basePrice = Number(document.getElementById("edit-dish-price").value);
+      }
+
       const rawImg = document.getElementById("edit-dish-img-url").value.trim();
 
       const updatedData = {
         name: document.getElementById("edit-dish-name").value.trim(),
         category: document.getElementById("edit-dish-category").value,
-        price: Number(document.getElementById("edit-dish-price").value),
+        price: basePrice,
+        variants: isVariants ? variants : [],
         dietary: document.getElementById("edit-dish-diet").value,
         description: document.getElementById("edit-dish-desc").value.trim(),
-        imageUrl: rawImg || "", // No automatic fallback image
+        imageUrl: rawImg || "",
         updatedAt: serverTimestamp()
       };
 
       try {
         await updateDoc(doc(db, "menuItems", id), updatedData);
         editModal.classList.remove("open");
-        showToast("Dish details updated real-time!");
+        showToast("Dish details & variations updated real-time!");
       } catch (err) {
         showToast("Update failed: " + err.message, true);
       }
     });
 
-    // 13. ADD DISH EVENT (NO AUTOMATIC IMAGE INJECTION)
+    // 14. ADD DISH EVENT (WITH VARIATIONS)
     const addDishForm = document.getElementById("add-dish-form");
     addDishForm?.addEventListener("submit", async (e) => {
       e.preventDefault();
       try {
+        const isVariants = pricingVariantsRadioAdd.checked;
+        let variants = [];
+        let basePrice = 0;
+
+        if (isVariants) {
+          const names = Array.from(variantRowsContainerAdd.querySelectorAll(".var-name-input")).map(i => i.value.trim());
+          const prices = Array.from(variantRowsContainerAdd.querySelectorAll(".var-price-input")).map(i => Number(i.value));
+          for (let i = 0; i < names.length; i++) {
+            if (names[i] && prices[i]) {
+              variants.push({ name: names[i], price: prices[i] });
+            }
+          }
+          if (variants.length === 0) {
+            showToast("Please add at least one variation!", true);
+            return;
+          }
+          basePrice = variants[0].price;
+        } else {
+          basePrice = Number(document.getElementById("dish-price").value);
+        }
+
         const rawImg = document.getElementById("dish-img-url").value.trim();
 
         const newDish = {
           name: document.getElementById("dish-name").value.trim(),
           category: document.getElementById("dish-category").value,
-          price: Number(document.getElementById("dish-price").value),
+          price: basePrice,
+          variants: isVariants ? variants : [],
           dietary: document.getElementById("dish-diet").value,
           description: document.getElementById("dish-desc").value.trim(),
-          imageUrl: rawImg || "", // Agar link nahi dala toh blank rahega, koi auto image nahi aayegi
+          imageUrl: rawImg || "",
           createdAt: serverTimestamp()
         };
 
@@ -1995,22 +2256,52 @@
         await setDoc(newDocRef, newDish);
 
         addDishForm.reset();
-        showToast("New dish added successfully!");
+        pricingSingleRadioAdd.checked = true;
+        singlePriceBoxAdd.style.display = "block";
+        variantBuilderBoxAdd.style.display = "none";
+        variantRowsContainerAdd.innerHTML = "";
+
+        showToast("New dish with variations added successfully!");
         document.querySelector('[data-tab="tab-items"]').click();
       } catch (err) {
         showToast("Error adding dish: " + err.message, true);
       }
     });
 
-    // 14. DATABASE SEED DATA (Only seeded dishes will have master pictures)
+    // 15. DATABASE SEED DATA (WITH VARIATIONS EXAMPLE)
     const seedData = [
-      { name: "Truffle Edamame Dim Sum", category: "Dim Sums", price: 445, dietary: "veg", isSignature: true, isBestseller: true, description: "Silky crystal skin filled with crushed edamame and black truffle essence.", imageUrl: "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=600&q=80" },
-      { name: "Chicken & Prawn Sui Mai", category: "Dim Sums", price: 475, dietary: "non-veg", isSignature: false, isBestseller: true, description: "Traditional open Cantonese dumplings with tobiko caviar crown.", imageUrl: "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?auto=format&fit=crop&w=600&q=80" },
-      { name: "Spicy Salmon Uramaki Roll", category: "Sushi", price: 625, dietary: "non-veg", isSignature: true, isBestseller: true, description: "Atlantic salmon, sriracha mayo, cucumber, tossed in toasted sesame seeds.", imageUrl: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80" },
-      { name: "Avocado & Crispy Asparagus Sushi", category: "Sushi", price: 545, dietary: "veg", isSignature: false, isBestseller: false, description: "Tempura asparagus and Hass avocado roll served with ginger gari and wasabi.", imageUrl: "https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?auto=format&fit=crop&w=600&q=80" },
-      { name: "Thai Green Curry with Jasmine Rice", category: "Thai Curries", price: 595, dietary: "veg", isSignature: true, isBestseller: true, description: "Aromatic coconut milk, galangal, Thai sweet basil, kaffir lime and bamboo shoots.", imageUrl: "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=600&q=80" },
-      { name: "Tokyo Shoyu Ramen", category: "Ramen Bowls", price: 625, dietary: "non-veg", isSignature: true, isBestseller: true, description: "Rich chicken broth, springy ramen noodles, ajitsuke tamago egg, and nori sheets.", imageUrl: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80" },
-      { name: "Matcha Lava Cake", category: "Desserts", price: 395, dietary: "veg", isSignature: true, isBestseller: false, description: "Warm molten green tea matcha cake served with Madagascar vanilla bean ice cream.", imageUrl: "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80" }
+      { 
+        name: "Truffle Edamame Dim Sum", 
+        category: "Dim Sums", 
+        price: 445, 
+        variants: [{ name: "4 Pcs", price: 445 }, { name: "8 Pcs", price: 825 }],
+        dietary: "veg", 
+        isSignature: true, 
+        isBestseller: true, 
+        description: "Silky crystal skin filled with crushed edamame and black truffle essence.", 
+        imageUrl: "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=600&q=80" 
+      },
+      { 
+        name: "Thai Green Curry with Jasmine Rice", 
+        category: "Thai Curries", 
+        price: 545, 
+        variants: [{ name: "Veg", price: 545 }, { name: "Chicken", price: 625 }, { name: "Prawns", price: 745 }],
+        dietary: "veg", 
+        isSignature: true, 
+        isBestseller: true, 
+        description: "Aromatic coconut milk, galangal, Thai sweet basil, kaffir lime and bamboo shoots.", 
+        imageUrl: "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=600&q=80" 
+      },
+      { 
+        name: "Tokyo Shoyu Ramen", 
+        category: "Ramen Bowls", 
+        price: 625, 
+        dietary: "non-veg", 
+        isSignature: true, 
+        isBestseller: true, 
+        description: "Rich chicken broth, springy ramen noodles, ajitsuke tamago egg, and nori sheets.", 
+        imageUrl: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80" 
+      }
     ];
 
     document.getElementById("btn-seed-data")?.addEventListener("click", async () => {
@@ -2019,13 +2310,13 @@
           const itemRef = doc(collection(db, "menuItems"));
           await setDoc(itemRef, { ...item, createdAt: serverTimestamp() });
         }
-        showToast("Database seeded with genuine Pan-Asian catalog!");
+        showToast("Database seeded with variation items!");
       } catch (err) {
         showToast("Seeding failed: " + err.message, true);
       }
     });
 
-    // 15. SEARCH AND FILTER UI LISTENERS
+    // 16. SEARCH AND FILTER UI LISTENERS
     document.getElementById("dish-search-input")?.addEventListener("input", (e) => {
       searchQuery = e.target.value.trim();
       renderPublicDishes();
