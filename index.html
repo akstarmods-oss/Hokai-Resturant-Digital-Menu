@@ -316,146 +316,15 @@
       padding-left: 10px;
     }
 
-    /* ONLINE ORDER BADGES & QUICK ACTIONS BAR */
-    .quick-ordering-strip {
-      max-width: 1320px;
-      margin: 12px auto 0 auto;
-      padding: 0 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .order-platforms {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .platform-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 14px;
-      border-radius: var(--radius-full);
-      font-size: 0.8rem;
-      font-weight: 700;
-      transition: var(--transition);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
-    }
-
-    .platform-swiggy {
-      background: #fc8019;
-      color: #fff;
-    }
-
-    .platform-zomato {
-      background: #cb202d;
-      color: #fff;
-    }
-
-    .platform-btn:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.1);
-    }
-
-    .quick-social-icons {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .social-round-btn {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: var(--surface-charcoal);
-      border: 1px solid var(--border-dark);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-white);
-      font-size: 0.9rem;
-      transition: var(--transition);
-    }
-
-    .social-round-btn:hover {
-      background: var(--gold-primary);
-      color: #000;
-      border-color: var(--gold-primary);
-      transform: translateY(-2px);
-    }
-
-    .social-round-btn.whatsapp:hover { background: #25D366; color: #fff; border-color: #25D366; }
-    .social-round-btn.instagram:hover { background: #E1306C; color: #fff; border-color: #E1306C; }
-
-    /* LOCATION HERO STRIP */
-    .location-banner-strip {
-      background: rgba(255, 185, 0, 0.04);
-      border: 1px solid var(--border-gold);
-      border-radius: var(--radius-md);
-      padding: 10px 16px;
-      margin-top: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .location-banner-strip:hover {
-      background: rgba(255, 185, 0, 0.08);
-      border-color: var(--gold-primary);
-    }
-
-    .location-info-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .location-info-left i {
-      color: var(--gold-primary);
-      font-size: 1.2rem;
-    }
-
-    .location-text strong {
-      font-size: 0.88rem;
-      display: block;
-      color: var(--text-white);
-    }
-
-    .location-text span {
-      font-size: 0.76rem;
-      color: var(--text-muted);
-    }
-
-    .map-badge-btn {
-      background: var(--gold-primary);
-      color: #000;
-      padding: 5px 12px;
-      border-radius: var(--radius-full);
-      font-size: 0.75rem;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
     /* HERO SECTION */
     .hero-section {
       position: relative;
-      min-height: 30vh;
+      min-height: 32vh;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 26px 16px;
+      padding: 28px 16px;
       background: linear-gradient(180deg, rgba(10, 10, 10, 0.65) 0%, rgba(10, 10, 10, 0.98) 100%),
                   url('https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
     }
@@ -635,7 +504,7 @@
       font-weight: 600;
     }
 
-    /* DISH GRID */
+    /* DISH GRID & DYNAMIC SMART CARD */
     .menu-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
@@ -817,7 +686,7 @@
       color: var(--text-muted);
     }
 
-    /* FOOTER */
+    /* FOOTER & CONTACT HUB */
     footer.site-footer {
       background: #050505;
       border-top: 1px solid var(--border-dark);
@@ -835,6 +704,74 @@
 
     .footer-col h4 { color: var(--gold-primary); margin-bottom: 14px; font-size: 1.05rem; }
     .footer-col p, .footer-col li { font-size: 0.86rem; color: var(--text-muted); line-height: 1.7; }
+
+    .footer-social-icons {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .social-round-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--surface-charcoal);
+      border: 1px solid var(--border-dark);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-white);
+      font-size: 0.95rem;
+      transition: var(--transition);
+    }
+
+    .social-round-btn:hover {
+      background: var(--gold-primary);
+      color: #000;
+      border-color: var(--gold-primary);
+      transform: translateY(-2px);
+    }
+
+    .social-round-btn.whatsapp:hover { background: #25D366; color: #fff; border-color: #25D366; }
+    .social-round-btn.instagram:hover { background: #E1306C; color: #fff; border-color: #E1306C; }
+
+    .platform-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+      transition: var(--transition);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+      margin-right: 8px;
+      margin-top: 6px;
+    }
+
+    .platform-swiggy { background: #fc8019; color: #fff; }
+    .platform-zomato { background: #cb202d; color: #fff; }
+    .platform-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+    .footer-maps-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold-primary);
+      color: #000;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      margin-top: 10px;
+      transition: var(--transition);
+    }
+
+    .footer-maps-badge:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+    }
 
     .footer-bottom {
       max-width: 1320px;
@@ -1173,7 +1110,6 @@
     @media (max-width: 860px) {
       nav.desktop-nav { display: none; }
       .hamburger-btn { display: block; }
-      .sticky-search-wrapper { top: 56px; }
     }
 
     @media (max-width: 600px) {
@@ -1247,41 +1183,6 @@
       </div>
     </div>
 
-    <!-- QUICK ORDERING & SOCIAL PLATFORMS STRIP -->
-    <div class="quick-ordering-strip">
-      <div class="order-platforms">
-        <span style="font-size:0.75rem; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Order Online:</span>
-        <a id="btn-swiggy-link" href="#" target="_blank" class="platform-btn platform-swiggy" style="display:none;">
-          <i class="fa-solid fa-bag-shopping"></i> Swiggy
-        </a>
-        <a id="btn-zomato-link" href="#" target="_blank" class="platform-btn platform-zomato" style="display:none;">
-          <i class="fa-solid fa-utensils"></i> Zomato
-        </a>
-      </div>
-      <div class="quick-social-icons">
-        <a id="btn-whatsapp-icon" href="#" target="_blank" class="social-round-btn whatsapp" title="Chat on WhatsApp" style="display:none;"><i class="fa-brands fa-whatsapp"></i></a>
-        <a id="btn-instagram-icon" href="#" target="_blank" class="social-round-btn instagram" title="Follow on Instagram" style="display:none;"><i class="fa-brands fa-instagram"></i></a>
-        <a id="btn-phone-icon" href="#" class="social-round-btn" title="Call Restaurant" style="display:none;"><i class="fa-solid fa-phone"></i></a>
-        <a id="btn-map-icon" href="#" target="_blank" class="social-round-btn" title="Open Google Maps"><i class="fa-solid fa-location-dot"></i></a>
-      </div>
-    </div>
-
-    <!-- LOCATION STRIP (CLICK OPENS DIRECT GOOGLE MAP) -->
-    <div style="max-width:1320px; margin:0 auto; padding:0 16px;">
-      <a id="public-location-anchor" href="#" target="_blank" class="location-banner-strip">
-        <div class="location-info-left">
-          <i class="fa-solid fa-location-crosshairs"></i>
-          <div class="location-text">
-            <strong id="display-location-name">HOKAI Restaurant Location</strong>
-            <span id="display-location-address">Click to open directions in Google Maps</span>
-          </div>
-        </div>
-        <div class="map-badge-badge">
-          <span class="map-badge-btn"><i class="fa-solid fa-diamond-turn-right"></i> Navigate</span>
-        </div>
-      </a>
-    </div>
-
     <!-- HERO SECTION -->
     <section class="hero-section" id="hero-banner-section">
       <div class="hero-content">
@@ -1329,9 +1230,11 @@
       </div>
     </section>
 
-    <!-- FOOTER WITH LIVE SOCIAL LINKS & MAP ADDRESS -->
+    <!-- FOOTER WITH LOCATION, GOOGLE MAPS, ONLINE ORDERING & SOCIALS -->
     <footer class="site-footer" id="contact-section">
       <div class="footer-grid">
+        
+        <!-- COL 1: BRANDING & DIRECT SOCIALS -->
         <div class="footer-col">
           <div class="brand-logo-group" style="margin-bottom: 14px;">
             <div class="logo-container">
@@ -1343,27 +1246,46 @@
             </div>
           </div>
           <p>Where Asia Comes to the Table. An authentic journey through the refined flavours of the East.</p>
-          <div class="quick-social-icons" style="margin-top:14px;">
-            <a id="footer-whatsapp-link" href="#" target="_blank" class="social-round-btn whatsapp" style="display:none;"><i class="fa-brands fa-whatsapp"></i></a>
-            <a id="footer-instagram-link" href="#" target="_blank" class="social-round-btn instagram" style="display:none;"><i class="fa-brands fa-instagram"></i></a>
-            <a id="footer-phone-link" href="#" class="social-round-btn" style="display:none;"><i class="fa-solid fa-phone"></i></a>
+          
+          <div class="footer-social-icons">
+            <a id="footer-whatsapp-link" href="#" target="_blank" class="social-round-btn whatsapp" title="Chat on WhatsApp" style="display:none;"><i class="fa-brands fa-whatsapp"></i></a>
+            <a id="footer-instagram-link" href="#" target="_blank" class="social-round-btn instagram" title="Follow on Instagram" style="display:none;"><i class="fa-brands fa-instagram"></i></a>
+            <a id="footer-phone-link" href="#" class="social-round-btn" title="Call Us" style="display:none;"><i class="fa-solid fa-phone"></i></a>
           </div>
         </div>
 
+        <!-- COL 2: LOCATION & GOOGLE MAPS DIRECT NAVIGATION -->
         <div class="footer-col">
-          <h4>Location & Map</h4>
-          <p id="footer-display-address" style="margin-bottom:8px;">Defence Colony / Live Address</p>
-          <a id="footer-maps-btn" href="#" target="_blank" style="color:var(--gold-primary); font-size:0.85rem; font-weight:700; display:inline-flex; align-items:center; gap:6px;">
+          <h4>Location & Navigation</h4>
+          <p id="display-location-name" style="font-weight:700; color:#FFF; margin-bottom:4px;">HOKAI Pan-Asian Kitchen</p>
+          <p id="display-location-address" style="margin-bottom:12px; font-size:0.84rem;">218/1, Plot no 106, Defence Colony, Sainikpuri, Secunderabad, Telangana 500094</p>
+          <a id="footer-maps-btn" href="https://maps.google.com" target="_blank" class="footer-maps-badge">
             <i class="fa-solid fa-location-arrow"></i> Open in Google Maps
           </a>
         </div>
+
+        <!-- COL 3: ONLINE ORDERING (SWIGGY / ZOMATO) -->
+        <div class="footer-col">
+          <h4>Order Online</h4>
+          <p style="margin-bottom:10px;">Get your favourite Pan-Asian delicacies delivered fresh to your doorstep:</p>
+          <div id="footer-ordering-platforms">
+            <a id="btn-swiggy-link" href="#" target="_blank" class="platform-btn platform-swiggy" style="display:none;">
+              <i class="fa-solid fa-bag-shopping"></i> Swiggy
+            </a>
+            <a id="btn-zomato-link" href="#" target="_blank" class="platform-btn platform-zomato" style="display:none;">
+              <i class="fa-solid fa-utensils"></i> Zomato
+            </a>
+          </div>
+        </div>
         
+        <!-- COL 4: WORKING HOURS -->
         <div class="footer-col" id="footer-timings-col">
           <h4 id="timings-display-title">Timings</h4>
           <p id="timings-display-days">Monday – Sunday</p>
           <p id="timings-display-hours" style="color:var(--gold-primary); font-weight:600;">12:00 PM – 11:30 PM</p>
           <p id="timings-display-services">Dine-in, Takeaway & Delivery</p>
         </div>
+
       </div>
       <div class="footer-bottom">
         &copy; 2026 HOKAI Pan-Asian Kitchen.
@@ -1569,7 +1491,7 @@
         </div>
       </div>
 
-      <!-- TAB 4: SOCIAL & ONLINE ORDERING HUB MANAGER (NEW) -->
+      <!-- TAB 4: SOCIAL & ONLINE ORDERING HUB MANAGER -->
       <div class="admin-panel-section" id="tab-social-orders">
         <div class="admin-card">
           <h3><i class="fa-solid fa-share-nodes"></i> WhatsApp, Instagram & Online Ordering (Swiggy/Zomato)</h3>
@@ -1605,7 +1527,7 @@
         </div>
       </div>
 
-      <!-- TAB 5: MAPS LOCATION & ADDRESS MANAGER (NEW) -->
+      <!-- TAB 5: MAPS LOCATION & ADDRESS MANAGER -->
       <div class="admin-panel-section" id="tab-location-manager">
         <div class="admin-card">
           <h3><i class="fa-solid fa-location-dot"></i> Restaurant Location & Google Maps Redirection</h3>
@@ -1620,7 +1542,7 @@
             </div>
             <div class="form-group">
               <label>Full Physical Address</label>
-              <textarea id="input-location-address" class="form-control" rows="2" required placeholder="Shop No, Street, Defence Colony, New Delhi"></textarea>
+              <textarea id="input-location-address" class="form-control" rows="2" required placeholder="Shop No, Street, Defence Colony, Sainikpuri..."></textarea>
             </div>
             <div class="form-group">
               <label>Google Maps Link (Google Maps location share link)</label>
@@ -2010,7 +1932,7 @@
       }
     });
 
-    // 2. SOCIAL LINKS & ONLINE ORDERING (SWIGGY, ZOMATO, WHATSAPP, INSTAGRAM)
+    // 2. SOCIAL LINKS & ONLINE ORDERING (SWIGGY, ZOMATO, WHATSAPP, INSTAGRAM, PHONE)
     const socialDocRef = doc(db, "siteContent", "socialOrders");
 
     onSnapshot(socialDocRef, (docSnap) => {
@@ -2038,38 +1960,32 @@
         }
 
         // WhatsApp
-        const waTop = document.getElementById("btn-whatsapp-icon");
         const waFoot = document.getElementById("footer-whatsapp-link");
         if (d.whatsappNum) {
           const cleanNum = d.whatsappNum.replace(/[^0-9]/g, '');
           const waUrl = `https://wa.me/${cleanNum}?text=Hello%20HOKAI,%20I%20would%20like%20to%20place%20an%20order`;
-          waTop.href = waUrl; waTop.style.display = "inline-flex";
           waFoot.href = waUrl; waFoot.style.display = "inline-flex";
           document.getElementById("input-whatsapp-num").value = d.whatsappNum;
         } else {
-          waTop.style.display = "none"; waFoot.style.display = "none";
+          waFoot.style.display = "none";
         }
 
         // Instagram
-        const igTop = document.getElementById("btn-instagram-icon");
         const igFoot = document.getElementById("footer-instagram-link");
         if (d.instagramUrl) {
-          igTop.href = d.instagramUrl; igTop.style.display = "inline-flex";
           igFoot.href = d.instagramUrl; igFoot.style.display = "inline-flex";
           document.getElementById("input-instagram-url").value = d.instagramUrl;
         } else {
-          igTop.style.display = "none"; igFoot.style.display = "none";
+          igFoot.style.display = "none";
         }
 
         // Phone
-        const phTop = document.getElementById("btn-phone-icon");
         const phFoot = document.getElementById("footer-phone-link");
         if (d.phoneNum) {
-          phTop.href = `tel:${d.phoneNum}`; phTop.style.display = "inline-flex";
           phFoot.href = `tel:${d.phoneNum}`; phFoot.style.display = "inline-flex";
           document.getElementById("input-phone-num").value = d.phoneNum;
         } else {
-          phTop.style.display = "none"; phFoot.style.display = "none";
+          phFoot.style.display = "none";
         }
       }
     });
@@ -2105,11 +2021,8 @@
         const mapUrl = d.mapUrl || "https://maps.google.com";
 
         document.getElementById("display-location-name").textContent = d.title || "HOKAI Pan-Asian Kitchen";
-        document.getElementById("display-location-address").textContent = d.address || "Click for directions in Google Maps";
-        document.getElementById("footer-display-address").textContent = d.address || "Restaurant Address";
+        document.getElementById("display-location-address").textContent = d.address || "218/1, Plot no 106, Defence Colony, Sainikpuri, Secunderabad, Telangana 500094";
 
-        document.getElementById("public-location-anchor").href = mapUrl;
-        document.getElementById("btn-map-icon").href = mapUrl;
         document.getElementById("footer-maps-btn").href = mapUrl;
 
         document.getElementById("input-location-title").value = d.title || "";
@@ -2491,7 +2404,7 @@
       }
     });
 
-    // 8. ROTATING PLACEHOLDER & PLAY STORE STYLE SEARCH
+    // 8. ROTATING PLACEHOLDER & PLAY STORE STYLE RECOMMENDATIONS
     let searchRotateTimer = null;
     let rotateItemIndex = 0;
     const searchInput = document.getElementById("dish-search-input");
