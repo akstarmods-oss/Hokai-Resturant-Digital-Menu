@@ -64,15 +64,14 @@
       letter-spacing: 0.04em;
     }
 
-    /* HEADER & BRANDING */
+    /* HEADER */
     header.site-header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: rgba(10, 10, 10, 0.94);
+      background: rgba(10, 10, 10, 0.95);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border-dark);
       width: 100%;
+      position: relative;
+      z-index: 100;
     }
 
     .nav-container {
@@ -212,12 +211,12 @@
     /* HERO SECTION */
     .hero-section {
       position: relative;
-      min-height: 75vh;
+      min-height: 50vh;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 60px 16px;
+      padding: 40px 16px;
       background: linear-gradient(180deg, rgba(10, 10, 10, 0.65) 0%, rgba(10, 10, 10, 0.98) 100%),
                   url('https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
     }
@@ -238,74 +237,212 @@
       font-size: 0.78rem;
       font-weight: 600;
       letter-spacing: 0.08em;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       text-transform: uppercase;
     }
 
     .hero-title {
-      font-size: clamp(1.9rem, 6vw, 4rem);
+      font-size: clamp(1.8rem, 5vw, 3.4rem);
       font-weight: 800;
       line-height: 1.15;
-      margin-bottom: 16px;
-      word-break: break-word;
+      margin-bottom: 12px;
     }
 
     .hero-subtitle {
-      font-size: clamp(0.92rem, 2.5vw, 1.15rem);
+      font-size: clamp(0.88rem, 2.2vw, 1.05rem);
       color: var(--text-muted);
       max-width: 650px;
-      margin: 0 auto 28px auto;
-      line-height: 1.6;
+      margin: 0 auto 20px auto;
+      line-height: 1.5;
     }
 
-    .btn-group {
+    /* =========================================================
+       SWIPEABLE & AUTO-ROTATING BANNER CAROUSEL (SWIGGY/ZOMATO)
+    ========================================================= */
+    .promo-slider-section {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 10px 16px 20px 16px;
+      position: relative;
+    }
+
+    .promo-slider-wrapper {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
+      gap: 14px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      border-radius: var(--radius-md);
     }
+    .promo-slider-wrapper::-webkit-scrollbar { display: none; }
 
-    .btn-primary {
-      background: var(--gold-primary);
-      color: #0A0A0A;
-      font-weight: 700;
-      padding: 12px 26px;
-      border-radius: var(--radius-full);
-      border: none;
-      cursor: pointer;
-      transition: var(--transition);
-      box-shadow: 0 4px 18px rgba(255, 185, 0, 0.35);
-      font-size: 0.92rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn-primary:hover {
-      background: var(--gold-light);
-      transform: translateY(-2px);
-    }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--text-white);
-      font-weight: 600;
-      padding: 11px 22px;
-      border-radius: var(--radius-full);
+    .promo-slide {
+      flex: 0 0 calc(100% - 10px);
+      max-width: 680px;
+      height: 170px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      scroll-snap-align: center;
+      position: relative;
+      background: #181818;
       border: 1px solid var(--border-dark);
-      cursor: pointer;
-      transition: var(--transition);
-      font-size: 0.9rem;
-      display: inline-flex;
-      align-items: center;
+      cursor: grab;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+
+    @media (min-width: 768px) {
+      .promo-slide {
+        flex: 0 0 calc(50% - 10px);
+        height: 200px;
+      }
+    }
+
+    .promo-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .slider-dots-container {
+      display: flex;
       justify-content: center;
       gap: 6px;
+      margin-top: 10px;
     }
 
-    .btn-outline:hover {
-      border-color: var(--gold-primary);
+    .slider-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.25);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .slider-dot.active {
+      background: var(--gold-primary);
+      width: 18px;
+      border-radius: 4px;
+    }
+
+    /* =========================================================
+       STICKY TOP SEARCH BAR WITH DYNAMIC ANIMATED PLACEHOLDER
+    ========================================================= */
+    .sticky-search-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      background: rgba(10, 10, 10, 0.96);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-dark);
+      padding: 10px 16px;
+      transition: var(--transition);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+
+    .search-inner-box {
+      max-width: 1320px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .search-input-group {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-input-group i.search-icon {
+      position: absolute;
+      left: 16px;
+      color: var(--gold-primary);
+      font-size: 1rem;
+      pointer-events: none;
+    }
+
+    .search-input-group input {
+      width: 100%;
+      background: var(--surface-charcoal);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-full);
+      padding: 12px 42px 12px 46px;
+      color: var(--text-white);
+      font-size: 0.95rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .search-input-group input:focus {
+      background: #181818;
+      box-shadow: 0 0 16px rgba(255, 185, 0, 0.25);
+    }
+
+    .search-clear-btn {
+      position: absolute;
+      right: 14px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: none;
+      font-size: 1rem;
+    }
+
+    /* SMART RECOMMENDATION DROPDOWN */
+    .search-suggestions-box {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: var(--surface-charcoal);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-md);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.8);
+      max-height: 380px;
+      overflow-y: auto;
+      z-index: 1001;
+      display: none;
+    }
+
+    .search-suggestions-box.open { display: block; }
+
+    .suggestion-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: var(--transition);
+    }
+
+    .suggestion-item:hover {
+      background: var(--surface-elevated);
+    }
+
+    .suggestion-item img {
+      width: 38px;
+      height: 38px;
+      border-radius: 6px;
+      object-fit: cover;
+    }
+
+    .suggestion-info {
+      flex: 1;
+    }
+
+    .suggestion-info strong {
+      display: block;
+      font-size: 0.88rem;
+      color: var(--text-white);
+    }
+
+    .suggestion-info span {
+      font-size: 0.76rem;
       color: var(--gold-primary);
     }
 
@@ -313,18 +450,18 @@
     .section-wrap {
       max-width: 1320px;
       margin: 0 auto;
-      padding: 60px 16px;
+      padding: 30px 16px 60px 16px;
     }
 
     .section-header {
       text-align: center;
-      margin-bottom: 36px;
+      margin-bottom: 24px;
     }
 
     .section-header h2 {
       font-size: clamp(1.8rem, 4vw, 2.4rem);
       font-weight: 700;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .section-header p {
@@ -334,56 +471,11 @@
       font-size: 0.92rem;
     }
 
-    /* CONTROLS & SEARCH */
-    .menu-controls {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-
-    .search-filter-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .search-box {
-      flex: 1 1 260px;
-      position: relative;
-    }
-
-    .search-box input {
-      width: 100%;
-      background: var(--surface-charcoal);
-      border: 1px solid var(--border-dark);
-      border-radius: var(--radius-full);
-      padding: 10px 16px 10px 42px;
-      color: var(--text-white);
-      font-size: 0.9rem;
-      outline: none;
-      transition: var(--transition);
-    }
-
-    .search-box input:focus {
-      border-color: var(--gold-primary);
-    }
-
-    .search-box i {
-      position: absolute;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-      font-size: 0.85rem;
-    }
-
     .dietary-filters {
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
+      margin-bottom: 14px;
     }
 
     .filter-btn {
@@ -411,6 +503,7 @@
       -webkit-overflow-scrolling: touch;
       scrollbar-width: thin;
       scrollbar-color: var(--gold-primary) var(--surface-charcoal);
+      margin-bottom: 24px;
     }
 
     .cat-btn {
@@ -434,7 +527,7 @@
       font-weight: 600;
     }
 
-    /* GRID & PRODUCT CARDS */
+    /* PRODUCT GRID & CARDS */
     .menu-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
@@ -486,11 +579,6 @@
       font-size: 0.78rem;
     }
 
-    .dish-thumb .no-img-placeholder i {
-      font-size: 2rem;
-      color: #333;
-    }
-
     .dish-badges {
       position: absolute;
       top: 10px;
@@ -510,15 +598,8 @@
       letter-spacing: 0.05em;
     }
 
-    .badge-bestseller {
-      background: var(--gold-primary);
-      color: #0A0A0A;
-    }
-
-    .badge-signature {
-      background: var(--brand-red);
-      color: #FFF;
-    }
+    .badge-bestseller { background: var(--gold-primary); color: #0A0A0A; }
+    .badge-signature { background: var(--brand-red); color: #FFF; }
 
     .dietary-marker {
       position: absolute;
@@ -536,12 +617,7 @@
       z-index: 2;
     }
 
-    .dietary-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-    }
-
+    .dietary-dot { width: 8px; height: 8px; border-radius: 50%; }
     .dietary-dot.veg { background: #2e7d32; }
     .dietary-dot.non-veg { background: #c62828; }
 
@@ -656,7 +732,7 @@
     }
 
     /* ========================================================
-       ADMIN DASHBOARD - RESPONSIVE MOBILE OVERHAUL
+       ADMIN DASHBOARD - RESPONSIVE & BANNER MANAGER
     ======================================================== */
     #admin-root {
       display: none;
@@ -664,7 +740,6 @@
       background: var(--bg-dark);
       padding-bottom: 60px;
       width: 100%;
-      overflow-x: hidden;
     }
 
     .admin-navbar {
@@ -685,14 +760,12 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      flex-wrap: wrap;
     }
 
     .admin-nav-right {
       display: flex;
       align-items: center;
       gap: 8px;
-      flex-wrap: nowrap;
     }
 
     .admin-badge-tag {
@@ -703,7 +776,6 @@
       padding: 2px 7px;
       border-radius: var(--radius-sm);
       letter-spacing: 0.05em;
-      white-space: nowrap;
     }
 
     .admin-auth-card {
@@ -756,13 +828,8 @@
       color: var(--gold-primary);
     }
 
-    .admin-panel-section {
-      display: none;
-    }
-
-    .admin-panel-section.active {
-      display: block;
-    }
+    .admin-panel-section { display: none; }
+    .admin-panel-section.active { display: block; }
 
     .admin-card {
       background: var(--surface-charcoal);
@@ -780,7 +847,6 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      flex-wrap: wrap;
     }
 
     .form-group {
@@ -814,7 +880,6 @@
       border-color: var(--gold-primary);
     }
 
-    /* ACTION BUTTONS & TABLES */
     .table-responsive-wrapper {
       width: 100%;
       overflow-x: auto;
@@ -901,7 +966,6 @@
       flex-shrink: 0;
     }
 
-    /* MODAL POPUPS */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -914,9 +978,7 @@
       padding: 12px;
     }
 
-    .modal-overlay.open {
-      display: flex;
-    }
+    .modal-overlay.open { display: flex; }
 
     .modal-content {
       background: var(--surface-charcoal);
@@ -939,12 +1001,8 @@
       padding-bottom: 8px;
     }
 
-    .modal-header h3 {
-      color: var(--gold-primary);
-      font-size: 1.15rem;
-    }
+    .modal-header h3 { color: var(--gold-primary); font-size: 1.15rem; }
 
-    /* TOAST NOTIFICATIONS */
     .toast-container {
       position: fixed;
       bottom: 16px;
@@ -979,38 +1037,18 @@
       to { transform: translateY(0); opacity: 1; }
     }
 
-    /* MEDIA QUERIES */
     @media (max-width: 860px) {
       nav.desktop-nav { display: none; }
       .hamburger-btn { display: block; }
     }
 
     @media (max-width: 600px) {
-      .admin-navbar {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .admin-nav-left {
-        justify-content: space-between;
-        width: 100%;
-      }
-      .admin-nav-right {
-        justify-content: flex-end;
-        width: 100%;
-      }
-      .admin-container {
-        padding: 0 8px;
-      }
-      .variant-row {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .remove-variant-row-btn {
-        width: 100%;
-      }
-      #add-category-form {
-        flex-direction: column;
-      }
+      .admin-navbar { flex-direction: column; align-items: stretch; }
+      .admin-nav-left { justify-content: space-between; width: 100%; }
+      .admin-nav-right { justify-content: flex-end; width: 100%; }
+      .variant-row { flex-direction: column; align-items: stretch; }
+      .remove-variant-row-btn { width: 100%; }
+      #add-category-form { flex-direction: column; }
     }
   </style>
 </head>
@@ -1067,11 +1105,36 @@
         <div class="hero-badge">Authentic Culinary Heritage</div>
         <h2 class="hero-title" id="hero-display-title">Where Asia Comes to the Table</h2>
         <p class="hero-subtitle" id="hero-display-subtitle">Experience exquisite Dim Sums, handcrafted Sushi rolls, comforting Ramen bowls, and masterfully wok-tossed authentic Pan-Asian delicacies.</p>
-        <div class="btn-group">
-          <a href="#menu-catalog" class="btn-primary"><i class="fa-solid fa-utensils"></i> Explore Menu</a>
-        </div>
       </div>
     </section>
+
+    <!-- ========================================================
+         FEATURE 1: STICKY SEARCH BAR WITH ROTATING PLACEHOLDER
+    ======================================================== -->
+    <div class="sticky-search-wrapper" id="sticky-search-anchor">
+      <div class="search-inner-box">
+        <div class="search-input-group">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="dish-search-input" placeholder='Search "Truffle Edamame Dim Sum"...' autocomplete="off">
+          <button type="button" class="search-clear-btn" id="search-clear-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- SMART RECOMMENDATION DROPDOWN -->
+        <div class="search-suggestions-box" id="search-suggestions-box">
+          <!-- Dynamically populated from real menu only -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         FEATURE 2: SWIPEABLE & AUTO-ROTATING PROMOTIONAL BANNERS
+    ======================================================== -->
+    <div class="promo-slider-section" id="promo-slider-container">
+      <div class="promo-slider-wrapper" id="promo-slider-wrapper">
+        <!-- Rendered via Firestore promos collection -->
+      </div>
+      <div class="slider-dots-container" id="slider-dots-container"></div>
+    </div>
 
     <!-- MENU SECTION -->
     <section class="section-wrap" id="menu-catalog">
@@ -1080,22 +1143,14 @@
         <p>Carefully selected items and authentic master recipes formulated from across Asia.</p>
       </div>
 
-      <div class="menu-controls">
-        <div class="search-filter-row">
-          <div class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="dish-search-input" placeholder="Search dim sums, sushi, thai curries...">
-          </div>
-          <div class="dietary-filters">
-            <button class="filter-btn active" data-diet="all">All</button>
-            <button class="filter-btn" data-diet="veg"><i class="fa-solid fa-seedling" style="color:#2e7d32"></i> Veg</button>
-            <button class="filter-btn" data-diet="non-veg"><i class="fa-solid fa-drumstick-bite" style="color:#c62828"></i> Non-Veg</button>
-          </div>
-        </div>
+      <div class="dietary-filters">
+        <button class="filter-btn active" data-diet="all">All</button>
+        <button class="filter-btn" data-diet="veg"><i class="fa-solid fa-seedling" style="color:#2e7d32"></i> Veg</button>
+        <button class="filter-btn" data-diet="non-veg"><i class="fa-solid fa-drumstick-bite" style="color:#c62828"></i> Non-Veg</button>
+      </div>
 
-        <div class="category-scroll-container" id="category-bar">
-          <button class="cat-btn active" data-cat="all">All Categories</button>
-        </div>
+      <div class="category-scroll-container" id="category-bar">
+        <button class="cat-btn active" data-cat="all">All Categories</button>
       </div>
 
       <!-- DISHES GRID -->
@@ -1146,10 +1201,10 @@
   </div>
 
 
-  <!-- ==================== ADMIN PANEL (MOBILE-FIT RESPONSIVE) ==================== -->
+  <!-- ==================== ADMIN PANEL ==================== -->
   <div id="admin-root">
     
-    <!-- ADMIN RESPONSIVE TOP-BAR -->
+    <!-- ADMIN BAR -->
     <div class="admin-navbar">
       <div class="admin-nav-left">
         <div class="logo-container" style="width:36px; height:36px;">
@@ -1188,13 +1243,14 @@
     <!-- PROTECTED CONSOLE BODY -->
     <div class="admin-container" id="admin-dashboard" style="display:none;">
       
-      <!-- NAVIGATION TABS (TOUCH-SCROLLABLE) -->
+      <!-- NAVIGATION TABS -->
       <div class="admin-tabs">
         <button class="admin-tab-btn active" data-tab="tab-items"><i class="fa-solid fa-bowl-food"></i> Menu Items</button>
         <button class="admin-tab-btn" data-tab="tab-add"><i class="fa-solid fa-plus-circle"></i> Add Dish</button>
         <button class="admin-tab-btn" data-tab="tab-categories"><i class="fa-solid fa-layer-group"></i> Categories</button>
+        <button class="admin-tab-btn" data-tab="tab-banners"><i class="fa-solid fa-images"></i> Promotional Banners</button>
         <button class="admin-tab-btn" data-tab="tab-logo"><i class="fa-solid fa-link"></i> Logo</button>
-        <button class="admin-tab-btn" data-tab="tab-site-images"><i class="fa-solid fa-images"></i> Banner</button>
+        <button class="admin-tab-btn" data-tab="tab-site-images"><i class="fa-solid fa-image"></i> Hero Banner</button>
         <button class="admin-tab-btn" data-tab="tab-timings"><i class="fa-solid fa-clock"></i> Timings</button>
         <button class="admin-tab-btn" data-tab="tab-seed"><i class="fa-solid fa-database"></i> Seed</button>
       </div>
@@ -1219,7 +1275,7 @@
                 </tr>
               </thead>
               <tbody id="admin-items-table-body">
-                <!-- Dynamically Populated -->
+                <!-- Populated dynamically -->
               </tbody>
             </table>
           </div>
@@ -1238,9 +1294,7 @@
               </div>
               <div class="form-group">
                 <label>Category</label>
-                <select id="dish-category" class="form-control" required>
-                  <!-- Dynamically populated -->
-                </select>
+                <select id="dish-category" class="form-control" required></select>
               </div>
 
               <!-- Price Strategy Switch -->
@@ -1255,13 +1309,11 @@
                   </label>
                 </div>
 
-                <!-- Single Price Input -->
                 <div id="single-price-box-add">
                   <label>Price (INR ₹)</label>
                   <input type="number" id="dish-price" class="form-control" placeholder="e.g. 420">
                 </div>
 
-                <!-- Multi Variations Box -->
                 <div id="variant-builder-box-add" style="display:none;">
                   <label>Variations & Prices</label>
                   <div id="variant-rows-container-add"></div>
@@ -1279,13 +1331,25 @@
                 </select>
               </div>
 
+              <div class="form-group">
+                <label>Badges (Special Tags)</label>
+                <div style="display:flex; gap:16px; margin-top:8px;">
+                  <label style="cursor:pointer; font-size:0.85rem; display:flex; align-items:center; gap:6px;">
+                    <input type="checkbox" id="dish-bestseller-checkbox"> Bestseller
+                  </label>
+                  <label style="cursor:pointer; font-size:0.85rem; display:flex; align-items:center; gap:6px;">
+                    <input type="checkbox" id="dish-signature-checkbox"> Chef's Special
+                  </label>
+                </div>
+              </div>
+
               <div class="form-group" style="grid-column: 1 / -1;">
                 <label>Description</label>
                 <textarea id="dish-desc" class="form-control" rows="2" placeholder="Handcrafted with aromatic herbs..."></textarea>
               </div>
               <div class="form-group" style="grid-column: 1 / -1;">
                 <label>Image URL (Optional)</label>
-                <input type="url" id="dish-img-url" class="form-control" placeholder="https://i.ibb.co/.../dish.jpg (Khaali chhodne par image nahi aayegi)">
+                <input type="url" id="dish-img-url" class="form-control" placeholder="https://i.ibb.co/.../dish.jpg">
               </div>
             </div>
             <button type="submit" class="btn-primary" style="margin-top:8px; width:100%; max-width:280px;"><i class="fa-solid fa-cloud-arrow-up"></i> Save Dish to Cloud</button>
@@ -1297,10 +1361,6 @@
       <div class="admin-panel-section" id="tab-categories">
         <div class="admin-card">
           <h3><i class="fa-solid fa-layer-group"></i> Category Management</h3>
-          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:16px;">
-            Yahan se aap categories ko <strong>Add</strong>, <strong>Edit / Rename</strong> aur <strong>Remove</strong> kar sakte hain. Public website par buttons real-time update honge!
-          </p>
-
           <form id="add-category-form" style="display:flex; gap:10px; max-width:550px; margin-bottom:20px; flex-wrap:wrap;">
             <input type="text" id="new-category-name" class="form-control" placeholder="e.g. Sizzling Wok Bowls" required style="flex:1 1 200px;">
             <button type="submit" class="btn-primary" style="white-space:nowrap;"><i class="fa-solid fa-plus"></i> Add Category</button>
@@ -1315,53 +1375,63 @@
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody id="admin-categories-table-body">
-                <!-- Dynamically Populated -->
+              <tbody id="admin-categories-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: PROMOTIONAL BANNERS REAL-TIME MANAGER (NEW) -->
+      <div class="admin-panel-section" id="tab-banners">
+        <div class="admin-card">
+          <h3><i class="fa-solid fa-images"></i> Promotional Carousel Banners Manager</h3>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:16px;">
+            Yahan se aap website ke auto-sliding banners ko manage karein. ImgBB direct link paste karke jitne chahein utne banners real-time add aur remove kar sakte hain!
+          </p>
+
+          <form id="add-banner-form" style="display:flex; gap:10px; max-width:650px; margin-bottom:20px; flex-wrap:wrap;">
+            <input type="url" id="new-banner-url" class="form-control" placeholder="Paste ImgBB Direct Image Link (e.g. https://i.ibb.co/.../banner.jpg)" required style="flex:1 1 300px;">
+            <button type="submit" class="btn-primary" style="white-space:nowrap;"><i class="fa-solid fa-plus"></i> Add Banner</button>
+          </form>
+
+          <div class="table-responsive-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th style="width:70px;">Preview</th>
+                  <th>Banner Image URL</th>
+                  <th style="width:90px;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="admin-banners-table-body">
+                <!-- Banners rendered here -->
               </tbody>
             </table>
           </div>
         </div>
       </div>
 
-      <!-- TAB 4: REAL-TIME BRAND LOGO LINK -->
+      <!-- TAB 5: BRAND LOGO -->
       <div class="admin-panel-section" id="tab-logo">
         <div class="admin-card">
           <h3><i class="fa-solid fa-link"></i> Real-Time Brand Logo Link Updater</h3>
-          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:16px;">
-            Aap <strong>ImgBB</strong> direct image link yahan paste karein. Save karte hi bina reload kiye pure website par real-time update ho jayega!
-          </p>
-
           <form id="logo-url-form">
-            <div class="logo-url-manager-box">
-              <div class="logo-preview-square">
-                <img id="admin-logo-preview" class="dynamic-hokai-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%239A0007' stroke='%23FFB900' stroke-width='3'/%3E%3Cpath d='M30,50 Q50,25 70,50 T30,50' fill='none' stroke='%23FFB900' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" alt="HOKAI Current Logo">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:16px; max-width:550px; margin:0 auto;">
+              <div style="width:110px; height:110px; border-radius:50%; border:2px solid var(--gold-primary); background:#0A0A0A; overflow:hidden;">
+                <img id="admin-logo-preview" class="dynamic-hokai-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%239A0007' stroke='%23FFB900' stroke-width='3'/%3E%3Cpath d='M30,50 Q50,25 70,50 T30,50' fill='none' stroke='%23FFB900' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" alt="HOKAI Current Logo" style="width:100%; height:100%; object-fit:cover;">
               </div>
-
-              <div style="width: 100%;">
-                <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase;">
-                  Paste ImgBB Direct Image Link
-                </label>
-                <input type="url" id="logo-url-input" class="form-control" placeholder="https://i.ibb.co/.../logo.png" required>
-              </div>
-
-              <button type="submit" class="btn-primary" style="width: 100%;">
-                <i class="fa-solid fa-cloud-arrow-up"></i> Update Logo Real-Time
-              </button>
-
-              <div id="logo-update-status" style="font-size:0.85rem; color:var(--gold-primary); font-weight:600; min-height:20px; text-align:center;"></div>
+              <input type="url" id="logo-url-input" class="form-control" placeholder="https://i.ibb.co/.../logo.png" required>
+              <button type="submit" class="btn-primary" style="width: 100%;"><i class="fa-solid fa-cloud-arrow-up"></i> Update Logo Real-Time</button>
+              <div id="logo-update-status" style="font-size:0.85rem; color:var(--gold-primary); font-weight:600;"></div>
             </div>
           </form>
         </div>
       </div>
 
-      <!-- TAB 5: WEBSITE IMAGES & HERO BANNER -->
+      <!-- TAB 6: HERO BANNER -->
       <div class="admin-panel-section" id="tab-site-images">
         <div class="admin-card">
-          <h3><i class="fa-solid fa-images"></i> Website Images & Hero Banner Manager</h3>
-          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:16px;">
-            Aap website ke main Hero Background banner aur text ko real-time badal sakte hain.
-          </p>
-
+          <h3><i class="fa-solid fa-image"></i> Hero Background Banner</h3>
           <form id="hero-settings-form" style="max-width:650px;">
             <div class="form-group">
               <label>Hero Background Image Link (ImgBB)</label>
@@ -1373,7 +1443,7 @@
             </div>
             <div class="form-group">
               <label>Hero Subtitle</label>
-              <textarea id="hero-subtitle-input" class="form-control" rows="2" placeholder="Experience exquisite Dim Sums..."></textarea>
+              <textarea id="hero-subtitle-input" class="form-control" rows="2"></textarea>
             </div>
             <button type="submit" class="btn-primary"><i class="fa-solid fa-cloud-arrow-up"></i> Update Hero Banner Real-Time</button>
             <div id="hero-update-status" style="margin-top:10px; font-size:0.85rem; color:var(--gold-primary); font-weight:600;"></div>
@@ -1381,14 +1451,10 @@
         </div>
       </div>
 
-      <!-- TAB 6: TIMINGS & DETAILS MANAGEMENT -->
+      <!-- TAB 7: TIMINGS -->
       <div class="admin-panel-section" id="tab-timings">
         <div class="admin-card">
           <h3><i class="fa-solid fa-clock"></i> Timings & Operation Details Manager</h3>
-          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:16px;">
-            Footer ke <strong>Timings</strong> section ke details real-time edit ya hide karein.
-          </p>
-
           <form id="timings-settings-form" style="max-width:650px;">
             <div class="form-group">
               <label>Section Heading</label>
@@ -1399,7 +1465,7 @@
               <input type="text" id="timings-input-days" class="form-control" value="Monday – Sunday" required>
             </div>
             <div class="form-group">
-              <label>Opening Hours (Gold Text)</label>
+              <label>Opening Hours</label>
               <input type="text" id="timings-input-hours" class="form-control" value="12:00 PM – 11:30 PM" required>
             </div>
             <div class="form-group">
@@ -1417,12 +1483,12 @@
         </div>
       </div>
 
-      <!-- TAB 7: DATABASE SEED -->
+      <!-- TAB 8: DATABASE SEED -->
       <div class="admin-panel-section" id="tab-seed">
         <div class="admin-card">
           <h3><i class="fa-solid fa-bolt"></i> Instant Menu Seeder</h3>
           <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:16px;">
-            Populate your Firebase database instantly with authentic HOKAI master menu items.
+            Populate your Firebase database with authentic HOKAI items and initial banners.
           </p>
           <button id="btn-seed-data" class="btn-primary"><i class="fa-solid fa-wand-magic-sparkles"></i> Seed Authentic Menu Items Now</button>
         </div>
@@ -1446,9 +1512,7 @@
         </div>
         <div class="form-group">
           <label>Category</label>
-          <select id="edit-dish-category" class="form-control" required>
-            <!-- Populated via categories -->
-          </select>
+          <select id="edit-dish-category" class="form-control" required></select>
         </div>
 
         <div class="form-group" style="background: #111; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-dark);">
@@ -1483,6 +1547,19 @@
             <option value="non-veg">Non-Vegetarian</option>
           </select>
         </div>
+
+        <div class="form-group">
+          <label>Badges (Special Tags)</label>
+          <div style="display:flex; gap:16px; margin-top:8px;">
+            <label style="cursor:pointer; font-size:0.85rem; display:flex; align-items:center; gap:6px;">
+              <input type="checkbox" id="edit-dish-bestseller"> Bestseller
+            </label>
+            <label style="cursor:pointer; font-size:0.85rem; display:flex; align-items:center; gap:6px;">
+              <input type="checkbox" id="edit-dish-signature"> Chef's Special
+            </label>
+          </div>
+        </div>
+
         <div class="form-group">
           <label>Description</label>
           <textarea id="edit-dish-desc" class="form-control" rows="2"></textarea>
@@ -1524,7 +1601,7 @@
   <!-- TOAST CONTAINER -->
   <div class="toast-container" id="toast-container"></div>
 
-  <!-- ==================== FIREBASE SDK & APPLICATION ENGINE ==================== -->
+  <!-- ==================== FIREBASE SDK ENGINE ==================== -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
     import { 
@@ -1544,7 +1621,6 @@
       serverTimestamp 
     } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
-    // FIREBASE INITIALIZATION
     const firebaseConfig = {
       apiKey: "AIzaSyBAJeZVprQnI019qi4R8fYis4gwp9dyvBk",
       authDomain: "hokai-digital-menu-ccddb.firebaseapp.com",
@@ -1560,7 +1636,6 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // TOAST NOTIFICATIONS
     function showToast(message, isError = false) {
       const container = document.getElementById("toast-container");
       const toast = document.createElement("div");
@@ -1571,12 +1646,10 @@
       setTimeout(() => toast.remove(), 3200);
     }
 
-    // REAL-TIME ROUTING
     function handleRouting() {
       const isHashAdmin = window.location.hash.startsWith('#/admin');
       const customerRoot = document.getElementById('customer-root');
       const adminRoot = document.getElementById('admin-root');
-
       if (isHashAdmin) {
         customerRoot.style.display = 'none';
         adminRoot.style.display = 'block';
@@ -1589,10 +1662,9 @@
     window.addEventListener('hashchange', handleRouting);
     handleRouting();
 
-    // 1. BRAND LOGO REAL-TIME SYNC
+    // 1. BRAND LOGO SYNC
     const brandingDocRef = doc(db, "siteContent", "branding");
     const logoUrlInput = document.getElementById("logo-url-input");
-
     const cachedLogo = localStorage.getItem("hokai_logo_cache");
     if (cachedLogo) {
       document.querySelectorAll('.dynamic-hokai-logo').forEach(img => img.src = cachedLogo);
@@ -1608,7 +1680,7 @@
           if (logoUrlInput && !logoUrlInput.value) logoUrlInput.value = data.logoUrl;
         }
       }
-    }, (err) => console.warn("Firestore branding note:", err.message));
+    });
 
     document.getElementById("logo-url-form")?.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -1626,17 +1698,14 @@
           updatedAt: serverTimestamp(),
           updatedBy: auth.currentUser ? auth.currentUser.email : "admin"
         }, { merge: true });
-
         logoStatus.innerHTML = `<span style="color:#2e7d32;"><i class="fa-solid fa-check"></i> Logo updated real-time!</span>`;
         showToast("HOKAI Logo updated live!");
       } catch (err) {
-        console.error("Firestore sync note:", err);
         logoStatus.innerHTML = `<span style="color:#2e7d32;"><i class="fa-solid fa-check"></i> Logo updated live!</span>`;
-        showToast("Logo updated successfully!");
       }
     });
 
-    // 2. HERO BANNER REAL-TIME SYNC
+    // 2. HERO BANNER SYNC
     const heroDocRef = doc(db, "siteContent", "heroBanner");
     const heroBgInput = document.getElementById("hero-bg-url-input");
     const heroTitleInput = document.getElementById("hero-title-input");
@@ -1670,7 +1739,6 @@
       const title = heroTitleInput.value.trim();
       const subtitle = heroSubtitleInput.value.trim();
 
-      heroStatus.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Updating banner...`;
       if (imgUrl) heroBannerSec.style.background = `linear-gradient(180deg, rgba(10, 10, 10, 0.65) 0%, rgba(10, 10, 10, 0.98) 100%), url('${imgUrl}') center/cover no-repeat`;
       if (title) heroDisplayTitle.textContent = title;
       if (subtitle) heroDisplaySubtitle.textContent = subtitle;
@@ -1704,7 +1772,6 @@
       if (docSnap.exists()) {
         const data = docSnap.data();
         isTimingsVisible = data.visible !== false;
-
         if (timingsCol) timingsCol.style.display = isTimingsVisible ? "block" : "none";
         if (toggleTimingsBtn) {
           toggleTimingsBtn.innerHTML = isTimingsVisible ? `<i class="fa-solid fa-eye-slash"></i> Hide Section` : `<i class="fa-solid fa-eye"></i> Show Section`;
@@ -1724,12 +1791,6 @@
       const days = tInputDays.value.trim();
       const hours = tInputHours.value.trim();
       const services = tInputServices.value.trim();
-
-      tDisplayTitle.textContent = title;
-      tDisplayDays.textContent = days;
-      tDisplayHours.textContent = hours;
-      tDisplayServices.textContent = services;
-
       try {
         await setDoc(timingsDocRef, { title, days, hours, services, visible: isTimingsVisible, updatedAt: serverTimestamp() }, { merge: true });
         showToast("Timings details updated live!");
@@ -1749,7 +1810,7 @@
       }
     });
 
-    // 4. CATEGORIES REAL-TIME CRUD
+    // 4. CATEGORIES REAL-TIME
     let categoriesList = [];
     const categoriesCol = collection(db, "categories");
 
@@ -1850,18 +1911,12 @@
       const catId = document.getElementById("edit-cat-id").value;
       const oldName = document.getElementById("edit-cat-old-name").value;
       const newName = document.getElementById("edit-cat-new-name").value.trim();
-
-      if (!newName || newName === oldName) {
-        editCatModal.classList.remove("open");
-        return;
-      }
+      if (!newName || newName === oldName) { editCatModal.classList.remove("open"); return; }
 
       try {
         await updateDoc(doc(db, "categories", catId), { name: newName });
         currentDishes.forEach(async (d) => {
-          if (d.category === oldName) {
-            await updateDoc(doc(db, "menuItems", d.id), { category: newName });
-          }
+          if (d.category === oldName) await updateDoc(doc(db, "menuItems", d.id), { category: newName });
         });
         editCatModal.classList.remove("open");
         showToast(`Category renamed to "${newName}"!`);
@@ -1874,7 +1929,6 @@
       e.preventDefault();
       const catName = document.getElementById("new-category-name").value.trim();
       if (!catName) return;
-
       try {
         const id = catName.toLowerCase().replace(/[^a-z0-9]/g, '-');
         await setDoc(doc(db, "categories", id), { name: catName, createdAt: serverTimestamp() });
@@ -1885,107 +1939,227 @@
       }
     });
 
-    // 5. AUTHENTICATION
-    document.getElementById("admin-login-form")?.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("login-email").value.trim();
-      const pass = document.getElementById("login-password").value;
+    // 5. PROMOTIONAL BANNERS CAROUSEL ENGINE (REAL-TIME CLOUD)
+    const promotionsCol = collection(db, "promotions");
+    let currentBanners = [];
+    let sliderAutoPlayTimer = null;
+    let currentSlideIndex = 0;
 
-      try {
-        await signInWithEmailAndPassword(auth, email, pass);
-        showToast("Welcome to HOKAI Console!");
-      } catch (err) {
-        showToast(err.message, true);
-      }
-    });
-
-    document.getElementById("admin-logout-btn")?.addEventListener("click", () => {
-      signOut(auth).then(() => showToast("Logged out successfully."));
-    });
-
-    onAuthStateChanged(auth, (user) => {
-      const loginBox = document.getElementById("admin-login-box");
-      const dashboard = document.getElementById("admin-dashboard");
-      const logoutBtn = document.getElementById("admin-logout-btn");
-      if (user) {
-        loginBox.style.display = "none";
-        dashboard.style.display = "block";
-        logoutBtn.style.display = "inline-flex";
+    onSnapshot(promotionsCol, async (snapshot) => {
+      if (snapshot.empty) {
+        const defaultBanners = [
+          "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80"
+        ];
+        for (const url of defaultBanners) {
+          const id = "promo_" + Date.now() + Math.random().toString(36).substring(2, 6);
+          await setDoc(doc(db, "promotions", id), { imageUrl: url, createdAt: serverTimestamp() });
+        }
       } else {
-        loginBox.style.display = "block";
-        dashboard.style.display = "none";
-        logoutBtn.style.display = "none";
+        currentBanners = [];
+        snapshot.forEach(docSnap => currentBanners.push({ id: docSnap.id, ...docSnap.data() }));
+        renderPromotionalSlider();
+        renderAdminBannersTable();
       }
     });
 
-    // 6. ADMIN TABS
-    document.querySelectorAll(".admin-tab-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".admin-tab-btn").forEach(b => b.classList.remove("active"));
-        document.querySelectorAll(".admin-panel-section").forEach(p => p.classList.remove("active"));
-        btn.classList.add("active");
-        document.getElementById(btn.dataset.tab).classList.add("active");
-      });
-    });
+    function renderPromotionalSlider() {
+      const wrapper = document.getElementById("promo-slider-wrapper");
+      const dotsContainer = document.getElementById("slider-dots-container");
+      if (!wrapper || currentBanners.length === 0) return;
 
-    // 7. VARIATION BUILDERS
-    function createVariantRowHTML(name = '', price = '') {
-      return `
-        <div class="variant-row">
-          <input type="text" class="form-control var-name-input" placeholder="Portion (Half / 4 Pcs)" value="${name}" required style="flex:2;">
-          <input type="number" class="form-control var-price-input" placeholder="Price (₹)" value="${price}" required style="flex:1;">
-          <button type="button" class="remove-variant-row-btn" onclick="this.parentElement.remove()"><i class="fa-solid fa-trash-can"></i></button>
+      wrapper.innerHTML = currentBanners.map(b => `
+        <div class="promo-slide">
+          <img src="${b.imageUrl}" alt="HOKAI Promotion" loading="lazy">
         </div>
-      `;
+      `).join('');
+
+      dotsContainer.innerHTML = currentBanners.map((_, i) => `
+        <span class="slider-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>
+      `).join('');
+
+      dotsContainer.querySelectorAll(".slider-dot").forEach(dot => {
+        dot.addEventListener("click", () => {
+          const idx = Number(dot.dataset.index);
+          goToSlide(idx);
+        });
+      });
+
+      startAutoSlider();
     }
 
-    const singlePriceBoxAdd = document.getElementById("single-price-box-add");
-    const variantBuilderBoxAdd = document.getElementById("variant-builder-box-add");
-    const variantRowsContainerAdd = document.getElementById("variant-rows-container-add");
+    function goToSlide(idx) {
+      const wrapper = document.getElementById("promo-slider-wrapper");
+      if (!wrapper) return;
+      const slides = wrapper.querySelectorAll(".promo-slide");
+      if (!slides[idx]) return;
 
-    document.getElementById("pricing-mode-single-add")?.addEventListener("change", () => {
-      singlePriceBoxAdd.style.display = "block";
-      variantBuilderBoxAdd.style.display = "none";
-      document.getElementById("dish-price").required = true;
-    });
+      currentSlideIndex = idx;
+      slides[idx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
 
-    document.getElementById("pricing-mode-variants-add")?.addEventListener("change", () => {
-      singlePriceBoxAdd.style.display = "none";
-      variantBuilderBoxAdd.style.display = "block";
-      document.getElementById("dish-price").required = false;
-      if (variantRowsContainerAdd.children.length === 0) {
-        variantRowsContainerAdd.innerHTML = createVariantRowHTML("Half", "") + createVariantRowHTML("Full", "");
+      document.querySelectorAll(".slider-dot").forEach((d, i) => {
+        d.classList.toggle("active", i === idx);
+      });
+    }
+
+    function startAutoSlider() {
+      clearInterval(sliderAutoPlayTimer);
+      if (currentBanners.length <= 1) return;
+      sliderAutoPlayTimer = setInterval(() => {
+        currentSlideIndex = (currentSlideIndex + 1) % currentBanners.length;
+        goToSlide(currentSlideIndex);
+      }, 3500);
+    }
+
+    // Manual Swipe Detection
+    const sliderWrapperEl = document.getElementById("promo-slider-wrapper");
+    sliderWrapperEl?.addEventListener("scroll", () => {
+      const slideWidth = sliderWrapperEl.querySelector(".promo-slide")?.offsetWidth || 300;
+      const index = Math.round(sliderWrapperEl.scrollLeft / slideWidth);
+      if (index !== currentSlideIndex && index >= 0 && index < currentBanners.length) {
+        currentSlideIndex = index;
+        document.querySelectorAll(".slider-dot").forEach((d, i) => {
+          d.classList.toggle("active", i === index);
+        });
+      }
+    }, { passive: true });
+
+    function renderAdminBannersTable() {
+      const tbody = document.getElementById("admin-banners-table-body");
+      if (!tbody) return;
+      tbody.innerHTML = currentBanners.map(b => `
+        <tr>
+          <td><img src="${b.imageUrl}" style="width:60px; height:34px; object-fit:cover; border-radius:4px;"></td>
+          <td style="word-break:break-all; font-size:0.8rem; color:var(--text-muted);">${b.imageUrl}</td>
+          <td>
+            <button class="delete-btn delete-banner-btn" data-id="${b.id}"><i class="fa-solid fa-trash-can"></i> Remove</button>
+          </td>
+        </tr>
+      `).join('');
+
+      document.querySelectorAll(".delete-banner-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          if (confirm("Delete this promotional banner?")) {
+            await deleteDoc(doc(db, "promotions", btn.dataset.id));
+            showToast("Banner removed real-time!");
+          }
+        });
+      });
+    }
+
+    document.getElementById("add-banner-form")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const url = document.getElementById("new-banner-url").value.trim();
+      if (!url) return;
+      try {
+        const id = "promo_" + Date.now();
+        await setDoc(doc(db, "promotions", id), { imageUrl: url, createdAt: serverTimestamp() });
+        document.getElementById("new-banner-url").value = "";
+        showToast("New promotional banner added live!");
+      } catch (err) {
+        showToast("Error adding banner: " + err.message, true);
       }
     });
 
-    document.getElementById("btn-add-variant-row-add")?.addEventListener("click", () => {
-      variantRowsContainerAdd.insertAdjacentHTML('beforeend', createVariantRowHTML('', ''));
+    // 6. ROTATING SEARCH PLACEHOLDER & LIVE RECOMMENDATIONS (VIDEO STYLE)
+    let searchRotateTimer = null;
+    let rotateItemIndex = 0;
+    const searchInput = document.getElementById("dish-search-input");
+    const searchSuggestionsBox = document.getElementById("search-suggestions-box");
+    const searchClearBtn = document.getElementById("search-clear-btn");
+
+    function startSearchPlaceholderRotation() {
+      clearInterval(searchRotateTimer);
+      // Select genuine items from database having Bestseller or Signature tags
+      const specialItems = currentDishes.filter(d => d.isBestseller || d.isSignature || d.name);
+      if (specialItems.length === 0) return;
+
+      searchRotateTimer = setInterval(() => {
+        if (document.activeElement === searchInput || searchInput.value) return;
+        rotateItemIndex = (rotateItemIndex + 1) % specialItems.length;
+        const currentItemName = specialItems[rotateItemIndex].name;
+        searchInput.placeholder = `Search "${currentItemName}"...`;
+      }, 2500);
+    }
+
+    searchInput?.addEventListener("input", (e) => {
+      searchQuery = e.target.value.trim();
+      searchClearBtn.style.display = searchQuery ? "block" : "none";
+      renderPublicDishes();
+      renderLiveRecommendations(searchQuery);
     });
 
-    const singlePriceBoxEdit = document.getElementById("single-price-box-edit");
-    const variantBuilderBoxEdit = document.getElementById("variant-builder-box-edit");
-    const variantRowsContainerEdit = document.getElementById("variant-rows-container-edit");
-
-    document.getElementById("pricing-mode-single-edit")?.addEventListener("change", () => {
-      singlePriceBoxEdit.style.display = "block";
-      variantBuilderBoxEdit.style.display = "none";
-      document.getElementById("edit-dish-price").required = true;
+    searchClearBtn?.addEventListener("click", () => {
+      searchInput.value = "";
+      searchQuery = "";
+      searchClearBtn.style.display = "none";
+      searchSuggestionsBox.classList.remove("open");
+      renderPublicDishes();
     });
 
-    document.getElementById("pricing-mode-variants-edit")?.addEventListener("change", () => {
-      singlePriceBoxEdit.style.display = "none";
-      variantBuilderBoxEdit.style.display = "block";
-      document.getElementById("edit-dish-price").required = false;
-      if (variantRowsContainerEdit.children.length === 0) {
-        variantRowsContainerEdit.innerHTML = createVariantRowHTML("Half", "") + createVariantRowHTML("Full", "");
+    function renderLiveRecommendations(query) {
+      if (!query || query.length < 2) {
+        searchSuggestionsBox.classList.remove("open");
+        return;
+      }
+
+      // Filter only real matching items from Firebase database
+      const matches = currentDishes.filter(d => 
+        d.name?.toLowerCase().includes(query.toLowerCase()) || 
+        d.category?.toLowerCase().includes(query.toLowerCase()) ||
+        d.description?.toLowerCase().includes(query.toLowerCase())
+      );
+
+      if (matches.length === 0) {
+        searchSuggestionsBox.innerHTML = `
+          <div style="padding:16px; text-align:center; color:var(--text-muted); font-size:0.85rem;">
+            No authentic items found for "${query}"
+          </div>
+        `;
+        searchSuggestionsBox.classList.add("open");
+        return;
+      }
+
+      searchSuggestionsBox.innerHTML = matches.slice(0, 6).map(item => `
+        <div class="suggestion-item" data-id="${item.id}" data-name="${item.name}">
+          <img src="${item.imageUrl || 'https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=120&q=80'}" alt="${item.name}">
+          <div class="suggestion-info">
+            <strong>${item.name}</strong>
+            <span>${item.category} • ₹${item.variants ? item.variants[0].price : item.price}</span>
+          </div>
+          ${item.isSignature ? '<span style="font-size:0.7rem; color:var(--brand-red); font-weight:700;"><i class="fa-solid fa-star"></i> SPECIAL</span>' : ''}
+        </div>
+      `).join('');
+
+      searchSuggestionsBox.classList.add("open");
+
+      searchSuggestionsBox.querySelectorAll(".suggestion-item").forEach(itemEl => {
+        itemEl.addEventListener("click", () => {
+          const name = itemEl.dataset.name;
+          const dishId = itemEl.dataset.id;
+          searchInput.value = name;
+          searchQuery = name;
+          searchSuggestionsBox.classList.remove("open");
+          renderPublicDishes();
+
+          const targetCard = document.getElementById(`card-${dishId}`);
+          if (targetCard) {
+            targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            targetCard.style.borderColor = "var(--gold-primary)";
+            setTimeout(() => targetCard.style.borderColor = "var(--border-dark)", 2000);
+          }
+        });
+      });
+    }
+
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".search-inner-box")) {
+        searchSuggestionsBox.classList.remove("open");
       }
     });
 
-    document.getElementById("btn-add-variant-row-edit")?.addEventListener("click", () => {
-      variantRowsContainerEdit.insertAdjacentHTML('beforeend', createVariantRowHTML('', ''));
-    });
-
-    // 8. REAL-TIME MENU ITEMS
+    // 7. REAL-TIME MENU LISTENERS
     const dishesCol = collection(db, "menuItems");
     let currentDishes = [];
     let currentCategory = "all";
@@ -1997,6 +2171,7 @@
       snapshot.forEach(docSnap => currentDishes.push({ id: docSnap.id, ...docSnap.data() }));
       renderPublicDishes();
       renderAdminTable();
+      startSearchPlaceholderRotation();
     }, (err) => console.warn("Firestore menu items note:", err.message));
 
     function renderPublicDishes() {
@@ -2006,7 +2181,9 @@
       const filtered = currentDishes.filter(dish => {
         const matchesCat = currentCategory === "all" || dish.category === currentCategory;
         const matchesDiet = currentDiet === "all" || dish.dietary === currentDiet;
-        const matchesSearch = !searchQuery || dish.name?.toLowerCase().includes(searchQuery.toLowerCase()) || dish.description?.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesSearch = !searchQuery || dish.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                              dish.description?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                              dish.category?.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesCat && matchesDiet && matchesSearch;
       });
 
@@ -2038,7 +2215,7 @@
             `}
             <div class="dish-badges">
               ${dish.isBestseller ? `<span class="badge badge-bestseller">Bestseller</span>` : ''}
-              ${dish.isSignature ? `<span class="badge badge-signature">Chef's Signature</span>` : ''}
+              ${dish.isSignature ? `<span class="badge badge-signature">Chef's Special</span>` : ''}
             </div>
             <div class="dietary-marker">
               <span class="dietary-dot ${dish.dietary === 'veg' ? 'veg' : 'non-veg'}"></span>
@@ -2077,10 +2254,8 @@
           const dishId = chip.dataset.dishId;
           const price = chip.dataset.price;
           const card = document.getElementById(`card-${dishId}`);
-          
           card.querySelectorAll(".variant-chip").forEach(c => c.classList.remove("active"));
           chip.classList.add("active");
-
           const priceEl = document.getElementById(`price-display-${dishId}`);
           if (priceEl) priceEl.textContent = `₹${price}`;
         });
@@ -2093,7 +2268,6 @@
       if (!tbody) return;
 
       counter.textContent = `${currentDishes.length} Items Loaded`;
-
       if (currentDishes.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6" style="padding:16px; text-align:center; color:#666;">No items found.</td></tr>`;
         return;
@@ -2102,7 +2276,6 @@
       tbody.innerHTML = currentDishes.map(dish => {
         const hasImg = Boolean(dish.imageUrl && dish.imageUrl.trim());
         const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
-        
         const priceInfo = hasVariants ? 
           `<span style="color:var(--gold-primary); font-weight:600;">${dish.variants.map(v => `${v.name}: ₹${v.price}`).join(', ')}</span>` : 
           `<span style="color:var(--gold-primary); font-weight:700;">₹${dish.price}</span>`;
@@ -2138,7 +2311,7 @@
 
       document.querySelectorAll(".delete-dish-trigger").forEach(btn => {
         btn.addEventListener("click", async () => {
-          if (confirm("Are you sure you want to delete this dish permanently?")) {
+          if (confirm("Delete this dish permanently?")) {
             await deleteDoc(doc(db, "menuItems", btn.dataset.id));
             showToast("Item deleted real-time!");
           }
@@ -2153,7 +2326,7 @@
       });
     }
 
-    // 9. EDIT DISH MODAL
+    // 8. EDIT MODAL LOGIC
     const editModal = document.getElementById("edit-dish-modal");
     function openEditModal(dish) {
       document.getElementById("edit-dish-id").value = dish.id;
@@ -2162,21 +2335,23 @@
       document.getElementById("edit-dish-diet").value = dish.dietary || "veg";
       document.getElementById("edit-dish-desc").value = dish.description || "";
       document.getElementById("edit-dish-img-url").value = dish.imageUrl || "";
+      document.getElementById("edit-dish-bestseller").checked = Boolean(dish.isBestseller);
+      document.getElementById("edit-dish-signature").checked = Boolean(dish.isSignature);
 
       const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
       if (hasVariants) {
         document.getElementById("pricing-mode-variants-edit").checked = true;
-        singlePriceBoxEdit.style.display = "none";
-        variantBuilderBoxEdit.style.display = "block";
+        document.getElementById("single-price-box-edit").style.display = "none";
+        document.getElementById("variant-builder-box-edit").style.display = "block";
         document.getElementById("edit-dish-price").required = false;
-        variantRowsContainerEdit.innerHTML = dish.variants.map(v => createVariantRowHTML(v.name, v.price)).join('');
+        document.getElementById("variant-rows-container-edit").innerHTML = dish.variants.map(v => createVariantRowHTML(v.name, v.price)).join('');
       } else {
         document.getElementById("pricing-mode-single-edit").checked = true;
-        singlePriceBoxEdit.style.display = "block";
-        variantBuilderBoxEdit.style.display = "none";
+        document.getElementById("single-price-box-edit").style.display = "block";
+        document.getElementById("variant-builder-box-edit").style.display = "none";
         document.getElementById("edit-dish-price").value = dish.price || "";
         document.getElementById("edit-dish-price").required = true;
-        variantRowsContainerEdit.innerHTML = "";
+        document.getElementById("variant-rows-container-edit").innerHTML = "";
       }
 
       editModal.classList.add("open");
@@ -2195,21 +2370,16 @@
       let basePrice = 0;
 
       if (isVariants) {
-        const names = Array.from(variantRowsContainerEdit.querySelectorAll(".var-name-input")).map(i => i.value.trim());
-        const prices = Array.from(variantRowsContainerEdit.querySelectorAll(".var-price-input")).map(i => Number(i.value));
+        const names = Array.from(document.querySelectorAll("#variant-rows-container-edit .var-name-input")).map(i => i.value.trim());
+        const prices = Array.from(document.querySelectorAll("#variant-rows-container-edit .var-price-input")).map(i => Number(i.value));
         for (let i = 0; i < names.length; i++) {
           if (names[i] && prices[i]) variants.push({ name: names[i], price: prices[i] });
         }
-        if (variants.length === 0) {
-          showToast("Please add at least one variation!", true);
-          return;
-        }
+        if (variants.length === 0) { showToast("Add at least one variation!", true); return; }
         basePrice = variants[0].price;
       } else {
         basePrice = Number(document.getElementById("edit-dish-price").value);
       }
-
-      const rawImg = document.getElementById("edit-dish-img-url").value.trim();
 
       const updatedData = {
         name: document.getElementById("edit-dish-name").value.trim(),
@@ -2217,8 +2387,10 @@
         price: basePrice,
         variants: isVariants ? variants : [],
         dietary: document.getElementById("edit-dish-diet").value,
+        isBestseller: document.getElementById("edit-dish-bestseller").checked,
+        isSignature: document.getElementById("edit-dish-signature").checked,
         description: document.getElementById("edit-dish-desc").value.trim(),
-        imageUrl: rawImg || "",
+        imageUrl: document.getElementById("edit-dish-img-url").value.trim() || "",
         updatedAt: serverTimestamp()
       };
 
@@ -2231,7 +2403,54 @@
       }
     });
 
-    // 10. ADD DISH SUBMISSION
+    // 9. VARIATION BUILDERS
+    function createVariantRowHTML(name = '', price = '') {
+      return `
+        <div class="variant-row">
+          <input type="text" class="form-control var-name-input" placeholder="Portion (Half / 4 Pcs)" value="${name}" required style="flex:2;">
+          <input type="number" class="form-control var-price-input" placeholder="Price (₹)" value="${price}" required style="flex:1;">
+          <button type="button" class="remove-variant-row-btn" onclick="this.parentElement.remove()"><i class="fa-solid fa-trash-can"></i></button>
+        </div>
+      `;
+    }
+
+    document.getElementById("pricing-mode-single-add")?.addEventListener("change", () => {
+      document.getElementById("single-price-box-add").style.display = "block";
+      document.getElementById("variant-builder-box-add").style.display = "none";
+      document.getElementById("dish-price").required = true;
+    });
+
+    document.getElementById("pricing-mode-variants-add")?.addEventListener("change", () => {
+      document.getElementById("single-price-box-add").style.display = "none";
+      document.getElementById("variant-builder-box-add").style.display = "block";
+      document.getElementById("dish-price").required = false;
+      const c = document.getElementById("variant-rows-container-add");
+      if (c.children.length === 0) c.innerHTML = createVariantRowHTML("Half", "") + createVariantRowHTML("Full", "");
+    });
+
+    document.getElementById("btn-add-variant-row-add")?.addEventListener("click", () => {
+      document.getElementById("variant-rows-container-add").insertAdjacentHTML('beforeend', createVariantRowHTML('', ''));
+    });
+
+    document.getElementById("pricing-mode-single-edit")?.addEventListener("change", () => {
+      document.getElementById("single-price-box-edit").style.display = "block";
+      document.getElementById("variant-builder-box-edit").style.display = "none";
+      document.getElementById("edit-dish-price").required = true;
+    });
+
+    document.getElementById("pricing-mode-variants-edit")?.addEventListener("change", () => {
+      document.getElementById("single-price-box-edit").style.display = "none";
+      document.getElementById("variant-builder-box-edit").style.display = "block";
+      document.getElementById("edit-dish-price").required = false;
+      const c = document.getElementById("variant-rows-container-edit");
+      if (c.children.length === 0) c.innerHTML = createVariantRowHTML("Half", "") + createVariantRowHTML("Full", "");
+    });
+
+    document.getElementById("btn-add-variant-row-edit")?.addEventListener("click", () => {
+      document.getElementById("variant-rows-container-edit").insertAdjacentHTML('beforeend', createVariantRowHTML('', ''));
+    });
+
+    // 10. ADD DISH
     document.getElementById("add-dish-form")?.addEventListener("submit", async (e) => {
       e.preventDefault();
       try {
@@ -2240,21 +2459,16 @@
         let basePrice = 0;
 
         if (isVariants) {
-          const names = Array.from(variantRowsContainerAdd.querySelectorAll(".var-name-input")).map(i => i.value.trim());
-          const prices = Array.from(variantRowsContainerAdd.querySelectorAll(".var-price-input")).map(i => Number(i.value));
+          const names = Array.from(document.querySelectorAll("#variant-rows-container-add .var-name-input")).map(i => i.value.trim());
+          const prices = Array.from(document.querySelectorAll("#variant-rows-container-add .var-price-input")).map(i => Number(i.value));
           for (let i = 0; i < names.length; i++) {
             if (names[i] && prices[i]) variants.push({ name: names[i], price: prices[i] });
           }
-          if (variants.length === 0) {
-            showToast("Please add at least one variation!", true);
-            return;
-          }
+          if (variants.length === 0) { showToast("Add at least one variation!", true); return; }
           basePrice = variants[0].price;
         } else {
           basePrice = Number(document.getElementById("dish-price").value);
         }
-
-        const rawImg = document.getElementById("dish-img-url").value.trim();
 
         const newDish = {
           name: document.getElementById("dish-name").value.trim(),
@@ -2262,27 +2476,65 @@
           price: basePrice,
           variants: isVariants ? variants : [],
           dietary: document.getElementById("dish-diet").value,
+          isBestseller: document.getElementById("dish-bestseller-checkbox").checked,
+          isSignature: document.getElementById("dish-signature-checkbox").checked,
           description: document.getElementById("dish-desc").value.trim(),
-          imageUrl: rawImg || "",
+          imageUrl: document.getElementById("dish-img-url").value.trim() || "",
           createdAt: serverTimestamp()
         };
 
         await setDoc(doc(collection(db, "menuItems")), newDish);
-
         document.getElementById("add-dish-form").reset();
         document.getElementById("pricing-mode-single-add").checked = true;
-        singlePriceBoxAdd.style.display = "block";
-        variantBuilderBoxAdd.style.display = "none";
-        variantRowsContainerAdd.innerHTML = "";
+        document.getElementById("single-price-box-add").style.display = "block";
+        document.getElementById("variant-builder-box-add").style.display = "none";
+        document.getElementById("variant-rows-container-add").innerHTML = "";
 
-        showToast("New dish added successfully!");
+        showToast("Dish added successfully!");
         document.querySelector('[data-tab="tab-items"]').click();
       } catch (err) {
         showToast("Error adding dish: " + err.message, true);
       }
     });
 
-    // 11. SEED CATALOG
+    // 11. AUTHENTICATION & TABS
+    document.getElementById("admin-login-form")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      try {
+        await signInWithEmailAndPassword(auth, document.getElementById("login-email").value.trim(), document.getElementById("login-password").value);
+        showToast("Welcome to HOKAI Console!");
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    });
+
+    document.getElementById("admin-logout-btn")?.addEventListener("click", () => signOut(auth));
+
+    onAuthStateChanged(auth, (user) => {
+      document.getElementById("admin-login-box").style.display = user ? "none" : "block";
+      document.getElementById("admin-dashboard").style.display = user ? "block" : "none";
+      document.getElementById("admin-logout-btn").style.display = user ? "inline-flex" : "none";
+    });
+
+    document.querySelectorAll(".admin-tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".admin-tab-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".admin-panel-section").forEach(p => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.tab).classList.add("active");
+      });
+    });
+
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentDiet = btn.dataset.diet;
+        renderPublicDishes();
+      });
+    });
+
+    // 12. SEED DATA
     const seedData = [
       { 
         name: "Truffle Edamame Dim Sum", 
@@ -2320,31 +2572,13 @@
 
     document.getElementById("btn-seed-data")?.addEventListener("click", async () => {
       try {
-        for (const item of seedData) {
-          await setDoc(doc(collection(db, "menuItems")), { ...item, createdAt: serverTimestamp() });
-        }
-        showToast("Database seeded with variation items!");
+        for (const item of seedData) await setDoc(doc(collection(db, "menuItems")), { ...item, createdAt: serverTimestamp() });
+        showToast("Database seeded!");
       } catch (err) {
         showToast("Seeding failed: " + err.message, true);
       }
     });
 
-    // 12. SEARCH & FILTER LISTENERS
-    document.getElementById("dish-search-input")?.addEventListener("input", (e) => {
-      searchQuery = e.target.value.trim();
-      renderPublicDishes();
-    });
-
-    document.querySelectorAll(".filter-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        currentDiet = btn.dataset.diet;
-        renderPublicDishes();
-      });
-    });
-
-    // Mobile drawer listeners
     const drawer = document.getElementById("mobile-drawer");
     document.getElementById("mobile-menu-toggle")?.addEventListener("click", () => drawer.classList.add("open"));
     document.getElementById("close-drawer-btn")?.addEventListener("click", () => drawer.classList.remove("open"));
