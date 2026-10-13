@@ -505,7 +505,7 @@
     }
 
     /* ========================================================
-       SWIGGY STYLE HORIZONTAL MENU CARDS (PHOTO 1 FORMAT)
+       SMART ADAPTIVE MENU CARDS (NO EMPTY BLACK SQUARES)
     ======================================================== */
     .menu-grid {
       display: flex;
@@ -519,7 +519,7 @@
       background: var(--surface-charcoal);
       border: 1px solid var(--border-dark);
       border-radius: var(--radius-md);
-      padding: 14px 16px;
+      padding: 16px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -610,18 +610,19 @@
     }
 
     .card-desc-snippet {
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: var(--text-muted);
-      line-height: 1.4;
+      line-height: 1.45;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
 
+    /* Thumbnail rendered only if image link is valid */
     .card-right-thumb-wrap {
-      width: 105px;
-      height: 95px;
+      width: 110px;
+      height: 100px;
       border-radius: 12px;
       overflow: hidden;
       background: #202020;
@@ -644,14 +645,7 @@
       transform: scale(1.08);
     }
 
-    .no-thumb-icon {
-      color: #555;
-      font-size: 1.5rem;
-    }
-
-    /* ========================================================
-       SWIGGY BOTTOM SHEET DISH POPUP (PHOTO 2 FORMAT)
-    ======================================================== */
+    /* BOTTOM SHEET MODAL (PHOTO 2 STYLE) */
     .dish-detail-sheet-backdrop {
       display: none;
       position: fixed;
@@ -722,6 +716,19 @@
       height: 100%;
       object-fit: cover;
       display: block;
+    }
+
+    .sheet-no-img-header {
+      padding: 24px 20px 10px 20px;
+      border-bottom: 1px solid var(--border-dark);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sheet-no-img-header i {
+      font-size: 1.6rem;
+      color: var(--gold-primary);
     }
 
     .sheet-content-body {
@@ -1515,8 +1522,15 @@
     <div class="dish-sheet-card" id="dish-sheet-card">
       <button type="button" class="sheet-close-btn" id="sheet-close-btn"><i class="fa-solid fa-xmark"></i></button>
       
+      <!-- HERO IMAGE IN MODAL (ONLY IF IMAGE EXISTS) -->
       <div class="sheet-hero-image-box" id="sheet-hero-image-box">
         <img id="sheet-dish-img" src="" alt="Dish Preview">
+      </div>
+
+      <!-- NO-IMAGE MOTIF (ELEGANT RESTAURANT BADGE) -->
+      <div class="sheet-no-img-header" id="sheet-no-img-header" style="display:none;">
+        <i class="fa-solid fa-utensils"></i>
+        <span style="font-family:var(--font-heading); font-size:1.1rem; color:var(--gold-primary); font-weight:700;">HOKAI MASTER RECIPE</span>
       </div>
 
       <div class="sheet-content-body">
@@ -1716,7 +1730,7 @@
 
                 <div id="variant-builder-box-add" style="display:none;">
                   <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:10px;">
-                    Har variant ka alag <strong>Name, Price, Dietary (Veg/Non-Veg), Image URL aur Description</strong> set karein[span_12](start_span)[span_12](end_span). Customer jab select karega, website par photo aur detail auto-change ho jayegi[span_13](start_span)[span_13](end_span)!
+                    Har variant ka alag <strong>Name, Price, Dietary (Veg/Non-Veg), Image URL aur Description</strong> set karein[span_2](start_span)[span_2](end_span). Customer jab select karega, modal me photo aur detail real-time auto-change ho jayegi[span_3](start_span)[span_3](end_span)!
                   </p>
                   <div id="variant-rows-container-add"></div>
                   <button type="button" id="btn-add-variant-row-add" class="btn-outline" style="padding: 6px 14px; font-size:0.82rem; margin-top:8px;">
@@ -2012,7 +2026,7 @@
 
           <div id="variant-builder-box-edit" style="display:none;">
             <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">
-              Har variant ka alag <strong>Price, Dietary (Veg/Non-Veg), Image aur Description</strong> set karein[span_14](start_span)[span_14](end_span):
+              Har variant ka alag <strong>Price, Dietary (Veg/Non-Veg), Image aur Description</strong> set karein[span_4](start_span)[span_4](end_span):
             </p>
             <div id="variant-rows-container-edit"></div>
             <button type="button" id="btn-add-variant-row-edit" class="btn-outline" style="padding: 5px 12px; font-size:0.8rem; margin-top:8px;">
@@ -2910,7 +2924,7 @@
     }
 
     // ========================================================
-    // PUBLIC RENDERING: HORIZONTAL LIST CARDS (PHOTO 1 FORMAT)
+    // SMART ADAPTIVE CARDS: NO EMPTY BLACK SQUARES (PHOTO 1 FORMAT)
     // ========================================================
     window.renderPublicDishes = function() {
       const container = document.getElementById("dishes-container");
@@ -2942,6 +2956,8 @@
         const mainImg = (initialVariant && initialVariant.imageUrl) ? initialVariant.imageUrl : (dish.imageUrl || "");
         const dietType = (initialVariant && initialVariant.dietary) ? initialVariant.dietary : (dish.dietary || "veg");
 
+        const hasValidImg = Boolean(mainImg && mainImg.trim());
+
         return `
         <div class="pro-list-card" id="card-${dish.id}" data-id="${dish.id}">
           <div class="card-left-info">
@@ -2960,18 +2976,15 @@
             <p class="card-desc-snippet">${dish.description || 'Authentic traditional recipe prepared with fresh ingredients.'}</p>
           </div>
 
-          <div class="card-right-thumb-wrap">
-            ${mainImg && mainImg.trim() ? `
+          ${hasValidImg ? `
+            <div class="card-right-thumb-wrap">
               <img src="${mainImg}" alt="${dish.name}" loading="lazy" decoding="async">
-            ` : `
-              <i class="fa-solid fa-bowl-food no-thumb-icon"></i>
-            `}
-          </div>
+            </div>
+          ` : ''}
         </div>
       `;
       }).join('');
 
-      // OPEN SWIGGY STYLE BOTTOM SHEET ON TAP
       container.querySelectorAll(".pro-list-card").forEach(card => {
         card.addEventListener("click", () => {
           const dishId = card.dataset.id;
@@ -2982,7 +2995,7 @@
     };
 
     // ========================================================
-    // SWIGGY BOTTOM SHEET MODAL CONTROLLER (PHOTO 2 POPUP)
+    // BOTTOM SHEET CONTROLLER: NO EMPTY BLACK HEADER (PHOTO 2 FORMAT)
     // ========================================================
     const sheetBackdrop = document.getElementById("dish-detail-sheet-backdrop");
     const sheetCloseBtn = document.getElementById("sheet-close-btn");
@@ -2998,30 +3011,28 @@
         const imgEl = document.getElementById("sheet-dish-img");
         const dietDot = document.getElementById("sheet-diet-dot");
         const badgesContainer = document.getElementById("sheet-badges-container");
+        const heroImageBox = document.getElementById("sheet-hero-image-box");
+        const noImgHeader = document.getElementById("sheet-no-img-header");
 
         titleEl.textContent = dish.name;
-        
-        // Price
         priceEl.textContent = `₹${activeVariant ? activeVariant.price : (dish.price || 0)}`;
 
-        // Dietary
         const currentDiet = (activeVariant && activeVariant.dietary) ? activeVariant.dietary : (dish.dietary || 'veg');
         dietDot.className = `dietary-dot ${currentDiet === 'veg' ? 'veg' : 'non-veg'}`;
 
-        // Description
         const currentDesc = (activeVariant && activeVariant.description) ? activeVariant.description : (dish.description || 'Crafted with authentic Pan-Asian ingredients and spices.');
         descEl.textContent = currentDesc;
 
-        // Image
         const currentImg = (activeVariant && activeVariant.imageUrl) ? activeVariant.imageUrl : (dish.imageUrl || '');
         if (currentImg && currentImg.trim()) {
           imgEl.src = currentImg;
-          document.getElementById("sheet-hero-image-box").style.display = "block";
+          heroImageBox.style.display = "block";
+          noImgHeader.style.display = "none";
         } else {
-          document.getElementById("sheet-hero-image-box").style.display = "none";
+          heroImageBox.style.display = "none";
+          noImgHeader.style.display = "flex";
         }
 
-        // Badges
         badgesContainer.innerHTML = `
           ${dish.isSignature ? `<span class="badge badge-signature">Chef's Special</span>` : ''}
           ${dish.isBestseller ? `<span class="badge badge-bestseller">Bestseller</span>` : ''}
@@ -3030,7 +3041,6 @@
         `;
       }
 
-      // Render Variants list inside sheet
       const variantsBox = document.getElementById("sheet-variants-container");
       const variantsList = document.getElementById("sheet-variants-list");
 
@@ -3069,7 +3079,7 @@
       if (e.target === sheetBackdrop) sheetBackdrop.classList.remove("open");
     });
 
-    // 10. REAL-TIME ADMIN TABLE WITH ADVANCED MULTI-FILTERING & DISH POSITION RE-ORDERING
+    // 10. REAL-TIME ADMIN TABLE WITH FILTERS & RE-ORDERING
     window.renderAdminTable = function() {
       const tbody = document.getElementById("admin-items-table-body");
       const counter = document.getElementById("menu-counter");
