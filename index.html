@@ -49,35 +49,25 @@
       min-height: 100vh;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    button, input, select, textarea {
-      font-family: inherit;
-      max-width: 100%;
-    }
-
-    h1, h2, h3, h4, .brand-title {
-      font-family: var(--font-heading);
-      letter-spacing: 0.04em;
-    }
+    a { text-decoration: none; color: inherit; }
+    button, input, select, textarea { font-family: inherit; max-width: 100%; }
+    h1, h2, h3, h4, .brand-title { font-family: var(--font-heading); letter-spacing: 0.04em; }
 
     /* HEADER */
     header.site-header {
-      background: rgba(10, 10, 10, 0.95);
+      background: rgba(10, 10, 10, 0.96);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border-dark);
       width: 100%;
-      position: relative;
-      z-index: 100;
+      position: sticky;
+      top: 0;
+      z-index: 1100;
     }
 
     .nav-container {
       max-width: 1320px;
       margin: 0 auto;
-      padding: 12px 16px;
+      padding: 10px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -89,12 +79,11 @@
       align-items: center;
       gap: 10px;
       cursor: pointer;
-      min-width: 0;
     }
 
     .logo-container {
-      width: 44px;
-      height: 44px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       overflow: hidden;
       display: flex;
@@ -106,14 +95,10 @@
       flex-shrink: 0;
     }
 
-    .logo-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    .logo-container img { width: 100%; height: 100%; object-fit: cover; }
 
     .brand-text h1 {
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       font-weight: 800;
       line-height: 1.1;
       color: var(--brand-red);
@@ -122,7 +107,7 @@
     }
 
     .brand-text span {
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: #E6DFD5;
@@ -144,9 +129,7 @@
       transition: var(--transition);
     }
 
-    nav.desktop-nav a:hover, nav.desktop-nav a.active {
-      color: var(--gold-primary);
-    }
+    nav.desktop-nav a:hover, nav.desktop-nav a.active { color: var(--gold-primary); }
 
     .admin-pill-btn {
       background: rgba(255, 185, 0, 0.12);
@@ -159,15 +142,11 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: var(--transition);
       cursor: pointer;
       white-space: nowrap;
     }
 
-    .admin-pill-btn:hover {
-      background: var(--gold-primary);
-      color: #000;
-    }
+    .admin-pill-btn:hover { background: var(--gold-primary); color: #000; }
 
     .hamburger-btn {
       display: none;
@@ -177,7 +156,6 @@
       font-size: 1.5rem;
       cursor: pointer;
       padding: 4px;
-      line-height: 1;
     }
 
     /* MOBILE DRAWER */
@@ -186,13 +164,11 @@
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.85);
-      z-index: 1050;
+      z-index: 1200;
       backdrop-filter: blur(10px);
     }
 
-    .mobile-drawer.open {
-      display: block;
-    }
+    .mobile-drawer.open { display: block; }
 
     .mobile-drawer-content {
       position: absolute;
@@ -211,21 +187,17 @@
     /* HERO SECTION */
     .hero-section {
       position: relative;
-      min-height: 50vh;
+      min-height: 40vh;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 40px 16px;
+      padding: 36px 16px;
       background: linear-gradient(180deg, rgba(10, 10, 10, 0.65) 0%, rgba(10, 10, 10, 0.98) 100%),
                   url('https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
     }
 
-    .hero-content {
-      max-width: 850px;
-      margin: 0 auto;
-      z-index: 2;
-    }
+    .hero-content { max-width: 850px; margin: 0 auto; z-index: 2; }
 
     .hero-badge {
       display: inline-block;
@@ -234,35 +206,172 @@
       border: 1px solid var(--border-gold);
       border-radius: var(--radius-full);
       color: var(--gold-primary);
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 600;
       letter-spacing: 0.08em;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       text-transform: uppercase;
     }
 
     .hero-title {
-      font-size: clamp(1.8rem, 5vw, 3.4rem);
+      font-size: clamp(1.8rem, 5vw, 3.2rem);
       font-weight: 800;
       line-height: 1.15;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .hero-subtitle {
-      font-size: clamp(0.88rem, 2.2vw, 1.05rem);
+      font-size: clamp(0.85rem, 2.2vw, 1.05rem);
       color: var(--text-muted);
       max-width: 650px;
-      margin: 0 auto 20px auto;
+      margin: 0 auto;
       line-height: 1.5;
     }
 
-    /* =========================================================
-       SWIPEABLE & AUTO-ROTATING BANNER CAROUSEL (SWIGGY/ZOMATO)
-    ========================================================= */
-    .promo-slider-section {
+    /* ========================================================
+       STICKY TOP SEARCH BAR (STOPS AT TOP - SWIGGY / VIDEO STYLE)
+    ======================================================== */
+    .sticky-search-wrapper {
+      position: sticky;
+      top: 62px; /* Sticks right below main header */
+      z-index: 1050;
+      background: rgba(10, 10, 10, 0.98);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-dark);
+      padding: 10px 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    }
+
+    .search-inner-box {
       max-width: 1320px;
       margin: 0 auto;
-      padding: 10px 16px 20px 16px;
+      position: relative;
+    }
+
+    .search-input-group {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-input-group i.search-icon {
+      position: absolute;
+      left: 16px;
+      color: var(--gold-primary);
+      font-size: 1rem;
+      pointer-events: none;
+    }
+
+    .search-input-group input {
+      width: 100%;
+      background: var(--surface-charcoal);
+      border: 1.5px solid var(--border-gold);
+      border-radius: var(--radius-full);
+      padding: 12px 42px 12px 46px;
+      color: var(--text-white);
+      font-size: 0.95rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .search-input-group input:focus {
+      background: #181818;
+      border-color: var(--gold-primary);
+      box-shadow: 0 0 16px rgba(255, 185, 0, 0.3);
+    }
+
+    .search-clear-btn {
+      position: absolute;
+      right: 14px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: none;
+      font-size: 1.1rem;
+    }
+
+    /* PLAY STORE STYLE RECOMMENDATION DROPDOWN */
+    .search-suggestions-box {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: #151515;
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-md);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.9);
+      max-height: 420px;
+      overflow-y: auto;
+      z-index: 1060;
+      display: none;
+    }
+
+    .search-suggestions-box.open { display: block; }
+
+    .playstore-rec-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: var(--transition);
+    }
+
+    .playstore-rec-item:hover {
+      background: #202020;
+    }
+
+    .rec-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .rec-left i.lead-icon {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+
+    .rec-details {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .rec-details .dish-title {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #FFFFFF;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .rec-details .dish-meta {
+      font-size: 0.75rem;
+      color: var(--gold-primary);
+    }
+
+    .rec-action-arrow {
+      color: #666;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+      padding-left: 10px;
+    }
+
+    /* ========================================================
+       SWIPEABLE & AUTO-ROTATING PROMOTIONAL BANNERS CAROUSEL
+    ======================================================== */
+    .promo-slider-section {
+      max-width: 1320px;
+      margin: 14px auto 0 auto;
+      padding: 0 16px;
       position: relative;
     }
 
@@ -280,8 +389,8 @@
 
     .promo-slide {
       flex: 0 0 calc(100% - 10px);
-      max-width: 680px;
-      height: 170px;
+      max-width: 720px;
+      height: 180px;
       border-radius: var(--radius-md);
       overflow: hidden;
       scroll-snap-align: center;
@@ -295,7 +404,7 @@
     @media (min-width: 768px) {
       .promo-slide {
         flex: 0 0 calc(50% - 10px);
-        height: 200px;
+        height: 220px;
       }
     }
 
@@ -328,125 +437,7 @@
       border-radius: 4px;
     }
 
-    /* =========================================================
-       STICKY TOP SEARCH BAR WITH DYNAMIC ANIMATED PLACEHOLDER
-    ========================================================= */
-    .sticky-search-wrapper {
-      position: sticky;
-      top: 0;
-      z-index: 999;
-      background: rgba(10, 10, 10, 0.96);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border-dark);
-      padding: 10px 16px;
-      transition: var(--transition);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-    }
-
-    .search-inner-box {
-      max-width: 1320px;
-      margin: 0 auto;
-      position: relative;
-    }
-
-    .search-input-group {
-      position: relative;
-      width: 100%;
-      display: flex;
-      align-items: center;
-    }
-
-    .search-input-group i.search-icon {
-      position: absolute;
-      left: 16px;
-      color: var(--gold-primary);
-      font-size: 1rem;
-      pointer-events: none;
-    }
-
-    .search-input-group input {
-      width: 100%;
-      background: var(--surface-charcoal);
-      border: 1px solid var(--border-gold);
-      border-radius: var(--radius-full);
-      padding: 12px 42px 12px 46px;
-      color: var(--text-white);
-      font-size: 0.95rem;
-      outline: none;
-      transition: var(--transition);
-    }
-
-    .search-input-group input:focus {
-      background: #181818;
-      box-shadow: 0 0 16px rgba(255, 185, 0, 0.25);
-    }
-
-    .search-clear-btn {
-      position: absolute;
-      right: 14px;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      display: none;
-      font-size: 1rem;
-    }
-
-    /* SMART RECOMMENDATION DROPDOWN */
-    .search-suggestions-box {
-      position: absolute;
-      top: calc(100% + 8px);
-      left: 0;
-      right: 0;
-      background: var(--surface-charcoal);
-      border: 1px solid var(--border-gold);
-      border-radius: var(--radius-md);
-      box-shadow: 0 14px 40px rgba(0,0,0,0.8);
-      max-height: 380px;
-      overflow-y: auto;
-      z-index: 1001;
-      display: none;
-    }
-
-    .search-suggestions-box.open { display: block; }
-
-    .suggestion-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 14px;
-      cursor: pointer;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      transition: var(--transition);
-    }
-
-    .suggestion-item:hover {
-      background: var(--surface-elevated);
-    }
-
-    .suggestion-item img {
-      width: 38px;
-      height: 38px;
-      border-radius: 6px;
-      object-fit: cover;
-    }
-
-    .suggestion-info {
-      flex: 1;
-    }
-
-    .suggestion-info strong {
-      display: block;
-      font-size: 0.88rem;
-      color: var(--text-white);
-    }
-
-    .suggestion-info span {
-      font-size: 0.76rem;
-      color: var(--gold-primary);
-    }
-
-    /* SECTION LAYOUTS */
+    /* MENU CATALOG & PRODUCTS */
     .section-wrap {
       max-width: 1320px;
       margin: 0 auto;
@@ -527,7 +518,6 @@
       font-weight: 600;
     }
 
-    /* PRODUCT GRID & CARDS */
     .menu-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
@@ -577,6 +567,11 @@
       gap: 6px;
       color: #444;
       font-size: 0.78rem;
+    }
+
+    .dish-thumb .no-img-placeholder i {
+      font-size: 2rem;
+      color: #333;
     }
 
     .dish-badges {
@@ -709,17 +704,8 @@
       margin-bottom: 40px;
     }
 
-    .footer-col h4 {
-      color: var(--gold-primary);
-      margin-bottom: 14px;
-      font-size: 1.05rem;
-    }
-
-    .footer-col p, .footer-col li {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      line-height: 1.7;
-    }
+    .footer-col h4 { color: var(--gold-primary); margin-bottom: 14px; font-size: 1.05rem; }
+    .footer-col p, .footer-col li { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
 
     .footer-bottom {
       max-width: 1320px;
@@ -731,9 +717,7 @@
       padding-top: 20px;
     }
 
-    /* ========================================================
-       ADMIN DASHBOARD - RESPONSIVE & BANNER MANAGER
-    ======================================================== */
+    /* ADMIN INTERFACE */
     #admin-root {
       display: none;
       min-height: 100vh;
@@ -756,17 +740,8 @@
       flex-wrap: wrap;
     }
 
-    .admin-nav-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .admin-nav-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .admin-nav-left { display: flex; align-items: center; gap: 10px; }
+    .admin-nav-right { display: flex; align-items: center; gap: 8px; }
 
     .admin-badge-tag {
       background: var(--gold-primary);
@@ -849,10 +824,7 @@
       gap: 8px;
     }
 
-    .form-group {
-      margin-bottom: 16px;
-      width: 100%;
-    }
+    .form-group { margin-bottom: 16px; width: 100%; }
 
     .form-group label {
       display: block;
@@ -876,9 +848,7 @@
       transition: var(--transition);
     }
 
-    .form-control:focus {
-      border-color: var(--gold-primary);
-    }
+    .form-control:focus { border-color: var(--gold-primary); }
 
     .table-responsive-wrapper {
       width: 100%;
@@ -1040,6 +1010,7 @@
     @media (max-width: 860px) {
       nav.desktop-nav { display: none; }
       .hamburger-btn { display: block; }
+      .sticky-search-wrapper { top: 58px; }
     }
 
     @media (max-width: 600px) {
@@ -1109,7 +1080,7 @@
     </section>
 
     <!-- ========================================================
-         FEATURE 1: STICKY SEARCH BAR WITH ROTATING PLACEHOLDER
+         FEATURE 1: STICKY SEARCH BAR (FREEZES AT TOP WHEN SCROLLING)
     ======================================================== -->
     <div class="sticky-search-wrapper" id="sticky-search-anchor">
       <div class="search-inner-box">
@@ -1119,15 +1090,15 @@
           <button type="button" class="search-clear-btn" id="search-clear-btn"><i class="fa-solid fa-xmark"></i></button>
         </div>
 
-        <!-- SMART RECOMMENDATION DROPDOWN -->
+        <!-- PLAY STORE STYLE RECOMMENDATION DROPDOWN -->
         <div class="search-suggestions-box" id="search-suggestions-box">
-          <!-- Dynamically populated from real menu only -->
+          <!-- Dynamically populated from real Firestore menu only -->
         </div>
       </div>
     </div>
 
     <!-- ========================================================
-         FEATURE 2: SWIPEABLE & AUTO-ROTATING PROMOTIONAL BANNERS
+         FEATURE 2: PROMOTIONAL BANNERS CAROUSEL (RIGHT BELOW SEARCH)
     ======================================================== -->
     <div class="promo-slider-section" id="promo-slider-container">
       <div class="promo-slider-wrapper" id="promo-slider-wrapper">
@@ -1274,9 +1245,7 @@
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody id="admin-items-table-body">
-                <!-- Populated dynamically -->
-              </tbody>
+              <tbody id="admin-items-table-body"></tbody>
             </table>
           </div>
         </div>
@@ -1381,7 +1350,7 @@
         </div>
       </div>
 
-      <!-- TAB 4: PROMOTIONAL BANNERS REAL-TIME MANAGER (NEW) -->
+      <!-- TAB 4: PROMOTIONAL BANNERS CAROUSEL MANAGER -->
       <div class="admin-panel-section" id="tab-banners">
         <div class="admin-card">
           <h3><i class="fa-solid fa-images"></i> Promotional Carousel Banners Manager</h3>
@@ -1403,9 +1372,7 @@
                   <th style="width:90px;">Action</th>
                 </tr>
               </thead>
-              <tbody id="admin-banners-table-body">
-                <!-- Banners rendered here -->
-              </tbody>
+              <tbody id="admin-banners-table-body"></tbody>
             </table>
           </div>
         </div>
@@ -2012,7 +1979,6 @@
       }, 3500);
     }
 
-    // Manual Swipe Detection
     const sliderWrapperEl = document.getElementById("promo-slider-wrapper");
     sliderWrapperEl?.addEventListener("scroll", () => {
       const slideWidth = sliderWrapperEl.querySelector(".promo-slide")?.offsetWidth || 300;
@@ -2062,7 +2028,7 @@
       }
     });
 
-    // 6. ROTATING SEARCH PLACEHOLDER & LIVE RECOMMENDATIONS (VIDEO STYLE)
+    // 6. ROTATING SEARCH PLACEHOLDER & PLAY STORE STYLE LIVE RECOMMENDATIONS
     let searchRotateTimer = null;
     let rotateItemIndex = 0;
     const searchInput = document.getElementById("dish-search-input");
@@ -2071,7 +2037,6 @@
 
     function startSearchPlaceholderRotation() {
       clearInterval(searchRotateTimer);
-      // Select genuine items from database having Bestseller or Signature tags
       const specialItems = currentDishes.filter(d => d.isBestseller || d.isSignature || d.name);
       if (specialItems.length === 0) return;
 
@@ -2083,11 +2048,76 @@
       }, 2500);
     }
 
+    // Play Store style recommendations
+    function renderPlayStoreRecommendations(query = "") {
+      let matches = [];
+
+      if (!query || query.trim() === "") {
+        // Play store default: show trending/signature items
+        matches = currentDishes.filter(d => d.isSignature || d.isBestseller).slice(0, 5);
+      } else {
+        // Real-time matched items only
+        matches = currentDishes.filter(d => 
+          d.name?.toLowerCase().includes(query.toLowerCase()) || 
+          d.category?.toLowerCase().includes(query.toLowerCase())
+        ).slice(0, 6);
+      }
+
+      if (matches.length === 0) {
+        searchSuggestionsBox.innerHTML = `
+          <div style="padding:14px 16px; color:var(--text-muted); font-size:0.85rem; display:flex; align-items:center; gap:10px;">
+            <i class="fa-solid fa-magnifying-glass" style="color:#555;"></i>
+            <span>No authentic dishes matching "${query}"</span>
+          </div>
+        `;
+        searchSuggestionsBox.classList.add("open");
+        return;
+      }
+
+      searchSuggestionsBox.innerHTML = matches.map(item => `
+        <div class="playstore-rec-item" data-id="${item.id}" data-name="${item.name}">
+          <div class="rec-left">
+            <i class="fa-solid fa-magnifying-glass lead-icon"></i>
+            <div class="rec-details">
+              <span class="dish-title">${item.name}</span>
+              <span class="dish-meta">${item.category} • ₹${item.variants && item.variants.length > 0 ? item.variants[0].price : item.price}</span>
+            </div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square rec-action-arrow"></i>
+        </div>
+      `).join('');
+
+      searchSuggestionsBox.classList.add("open");
+
+      searchSuggestionsBox.querySelectorAll(".playstore-rec-item").forEach(itemEl => {
+        itemEl.addEventListener("click", () => {
+          const name = itemEl.dataset.name;
+          const dishId = itemEl.dataset.id;
+          searchInput.value = name;
+          searchQuery = name;
+          searchClearBtn.style.display = "block";
+          searchSuggestionsBox.classList.remove("open");
+          renderPublicDishes();
+
+          const targetCard = document.getElementById(`card-${dishId}`);
+          if (targetCard) {
+            targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            targetCard.style.borderColor = "var(--gold-primary)";
+            setTimeout(() => targetCard.style.borderColor = "var(--border-dark)", 2200);
+          }
+        });
+      });
+    }
+
+    searchInput?.addEventListener("focus", () => {
+      renderPlayStoreRecommendations(searchInput.value.trim());
+    });
+
     searchInput?.addEventListener("input", (e) => {
       searchQuery = e.target.value.trim();
       searchClearBtn.style.display = searchQuery ? "block" : "none";
       renderPublicDishes();
-      renderLiveRecommendations(searchQuery);
+      renderPlayStoreRecommendations(searchQuery);
     });
 
     searchClearBtn?.addEventListener("click", () => {
@@ -2097,61 +2127,6 @@
       searchSuggestionsBox.classList.remove("open");
       renderPublicDishes();
     });
-
-    function renderLiveRecommendations(query) {
-      if (!query || query.length < 2) {
-        searchSuggestionsBox.classList.remove("open");
-        return;
-      }
-
-      // Filter only real matching items from Firebase database
-      const matches = currentDishes.filter(d => 
-        d.name?.toLowerCase().includes(query.toLowerCase()) || 
-        d.category?.toLowerCase().includes(query.toLowerCase()) ||
-        d.description?.toLowerCase().includes(query.toLowerCase())
-      );
-
-      if (matches.length === 0) {
-        searchSuggestionsBox.innerHTML = `
-          <div style="padding:16px; text-align:center; color:var(--text-muted); font-size:0.85rem;">
-            No authentic items found for "${query}"
-          </div>
-        `;
-        searchSuggestionsBox.classList.add("open");
-        return;
-      }
-
-      searchSuggestionsBox.innerHTML = matches.slice(0, 6).map(item => `
-        <div class="suggestion-item" data-id="${item.id}" data-name="${item.name}">
-          <img src="${item.imageUrl || 'https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=120&q=80'}" alt="${item.name}">
-          <div class="suggestion-info">
-            <strong>${item.name}</strong>
-            <span>${item.category} • ₹${item.variants ? item.variants[0].price : item.price}</span>
-          </div>
-          ${item.isSignature ? '<span style="font-size:0.7rem; color:var(--brand-red); font-weight:700;"><i class="fa-solid fa-star"></i> SPECIAL</span>' : ''}
-        </div>
-      `).join('');
-
-      searchSuggestionsBox.classList.add("open");
-
-      searchSuggestionsBox.querySelectorAll(".suggestion-item").forEach(itemEl => {
-        itemEl.addEventListener("click", () => {
-          const name = itemEl.dataset.name;
-          const dishId = itemEl.dataset.id;
-          searchInput.value = name;
-          searchQuery = name;
-          searchSuggestionsBox.classList.remove("open");
-          renderPublicDishes();
-
-          const targetCard = document.getElementById(`card-${dishId}`);
-          if (targetCard) {
-            targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            targetCard.style.borderColor = "var(--gold-primary)";
-            setTimeout(() => targetCard.style.borderColor = "var(--border-dark)", 2000);
-          }
-        });
-      });
-    }
 
     document.addEventListener("click", (e) => {
       if (!e.target.closest(".search-inner-box")) {
