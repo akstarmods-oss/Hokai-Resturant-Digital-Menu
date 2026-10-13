@@ -189,51 +189,7 @@
       gap: 18px;
     }
 
-    /* HERO SECTION */
-    .hero-section {
-      position: relative;
-      min-height: 32vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 28px 16px;
-      background: linear-gradient(180deg, rgba(10, 10, 10, 0.65) 0%, rgba(10, 10, 10, 0.98) 100%),
-                  url('https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
-    }
-
-    .hero-content { max-width: 850px; margin: 0 auto; z-index: 2; }
-
-    .hero-badge {
-      display: inline-block;
-      padding: 4px 12px;
-      background: rgba(255, 185, 0, 0.1);
-      border: 1px solid var(--border-gold);
-      border-radius: var(--radius-full);
-      color: var(--gold-primary);
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-    }
-
-    .hero-title {
-      font-size: clamp(1.6rem, 4.5vw, 2.8rem);
-      font-weight: 800;
-      line-height: 1.15;
-      margin-bottom: 8px;
-    }
-
-    .hero-subtitle {
-      font-size: clamp(0.85rem, 2vw, 1rem);
-      color: var(--text-muted);
-      max-width: 620px;
-      margin: 0 auto;
-      line-height: 1.5;
-    }
-
-    /* PERMANENT STICKY SEARCH BAR */
+    /* STICKY TOP SEARCH BAR */
     .sticky-search-wrapper {
       position: -webkit-sticky !important;
       position: sticky !important;
@@ -333,12 +289,6 @@
       overflow: hidden;
     }
 
-    .rec-left i.lead-icon {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      flex-shrink: 0;
-    }
-
     .rec-details {
       display: flex;
       flex-direction: column;
@@ -364,6 +314,181 @@
       font-size: 0.95rem;
       flex-shrink: 0;
       padding-left: 10px;
+    }
+
+    /* ONLINE ORDER BADGES & QUICK ACTIONS BAR */
+    .quick-ordering-strip {
+      max-width: 1320px;
+      margin: 12px auto 0 auto;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .order-platforms {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .platform-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+      transition: var(--transition);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    }
+
+    .platform-swiggy {
+      background: #fc8019;
+      color: #fff;
+    }
+
+    .platform-zomato {
+      background: #cb202d;
+      color: #fff;
+    }
+
+    .platform-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.1);
+    }
+
+    .quick-social-icons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .social-round-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--surface-charcoal);
+      border: 1px solid var(--border-dark);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-white);
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+
+    .social-round-btn:hover {
+      background: var(--gold-primary);
+      color: #000;
+      border-color: var(--gold-primary);
+      transform: translateY(-2px);
+    }
+
+    .social-round-btn.whatsapp:hover { background: #25D366; color: #fff; border-color: #25D366; }
+    .social-round-btn.instagram:hover { background: #E1306C; color: #fff; border-color: #E1306C; }
+
+    /* LOCATION HERO STRIP */
+    .location-banner-strip {
+      background: rgba(255, 185, 0, 0.04);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-md);
+      padding: 10px 16px;
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .location-banner-strip:hover {
+      background: rgba(255, 185, 0, 0.08);
+      border-color: var(--gold-primary);
+    }
+
+    .location-info-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .location-info-left i {
+      color: var(--gold-primary);
+      font-size: 1.2rem;
+    }
+
+    .location-text strong {
+      font-size: 0.88rem;
+      display: block;
+      color: var(--text-white);
+    }
+
+    .location-text span {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    .map-badge-btn {
+      background: var(--gold-primary);
+      color: #000;
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* HERO SECTION */
+    .hero-section {
+      position: relative;
+      min-height: 30vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 26px 16px;
+      background: linear-gradient(180deg, rgba(10, 10, 10, 0.65) 0%, rgba(10, 10, 10, 0.98) 100%),
+                  url('https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+    }
+
+    .hero-content { max-width: 850px; margin: 0 auto; z-index: 2; }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(255, 185, 0, 0.1);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-full);
+      color: var(--gold-primary);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      font-size: clamp(1.6rem, 4.5vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      color: var(--text-muted);
+      max-width: 620px;
+      margin: 0 auto;
+      line-height: 1.5;
     }
 
     /* PROMOTIONAL BANNERS CAROUSEL */
@@ -510,7 +635,7 @@
       font-weight: 600;
     }
 
-    /* DISH GRID & DYNAMIC SMART CARD */
+    /* DISH GRID */
     .menu-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
@@ -703,7 +828,7 @@
       max-width: 1320px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 32px;
       margin-bottom: 40px;
     }
@@ -1048,6 +1173,7 @@
     @media (max-width: 860px) {
       nav.desktop-nav { display: none; }
       .hamburger-btn { display: block; }
+      .sticky-search-wrapper { top: 56px; }
     }
 
     @media (max-width: 600px) {
@@ -1082,7 +1208,7 @@
           <a href="#customer-root" class="active">Home</a>
           <a href="#menu-catalog">Menu</a>
           <a href="#about-section">About</a>
-          <a href="#contact-section">Contact</a>
+          <a href="#contact-section">Contact & Location</a>
           <a href="#/admin" class="admin-pill-btn"><i class="fa-solid fa-lock"></i> Staff Console</a>
         </nav>
 
@@ -1102,7 +1228,7 @@
         <a href="#customer-root" class="mobile-nav-link">Home</a>
         <a href="#menu-catalog" class="mobile-nav-link">Menu Catalog</a>
         <a href="#about-section" class="mobile-nav-link">About Us</a>
-        <a href="#contact-section" class="mobile-nav-link">Contact</a>
+        <a href="#contact-section" class="mobile-nav-link">Contact & Location</a>
         <a href="#/admin" class="mobile-nav-link" style="color:var(--gold-primary);"><i class="fa-solid fa-lock"></i> Staff Console</a>
       </div>
     </div>
@@ -1119,6 +1245,41 @@
         <!-- PLAY STORE STYLE RECOMMENDATION DROPDOWN -->
         <div class="search-suggestions-box" id="search-suggestions-box"></div>
       </div>
+    </div>
+
+    <!-- QUICK ORDERING & SOCIAL PLATFORMS STRIP -->
+    <div class="quick-ordering-strip">
+      <div class="order-platforms">
+        <span style="font-size:0.75rem; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Order Online:</span>
+        <a id="btn-swiggy-link" href="#" target="_blank" class="platform-btn platform-swiggy" style="display:none;">
+          <i class="fa-solid fa-bag-shopping"></i> Swiggy
+        </a>
+        <a id="btn-zomato-link" href="#" target="_blank" class="platform-btn platform-zomato" style="display:none;">
+          <i class="fa-solid fa-utensils"></i> Zomato
+        </a>
+      </div>
+      <div class="quick-social-icons">
+        <a id="btn-whatsapp-icon" href="#" target="_blank" class="social-round-btn whatsapp" title="Chat on WhatsApp" style="display:none;"><i class="fa-brands fa-whatsapp"></i></a>
+        <a id="btn-instagram-icon" href="#" target="_blank" class="social-round-btn instagram" title="Follow on Instagram" style="display:none;"><i class="fa-brands fa-instagram"></i></a>
+        <a id="btn-phone-icon" href="#" class="social-round-btn" title="Call Restaurant" style="display:none;"><i class="fa-solid fa-phone"></i></a>
+        <a id="btn-map-icon" href="#" target="_blank" class="social-round-btn" title="Open Google Maps"><i class="fa-solid fa-location-dot"></i></a>
+      </div>
+    </div>
+
+    <!-- LOCATION STRIP (CLICK OPENS DIRECT GOOGLE MAP) -->
+    <div style="max-width:1320px; margin:0 auto; padding:0 16px;">
+      <a id="public-location-anchor" href="#" target="_blank" class="location-banner-strip">
+        <div class="location-info-left">
+          <i class="fa-solid fa-location-crosshairs"></i>
+          <div class="location-text">
+            <strong id="display-location-name">HOKAI Restaurant Location</strong>
+            <span id="display-location-address">Click to open directions in Google Maps</span>
+          </div>
+        </div>
+        <div class="map-badge-badge">
+          <span class="map-badge-btn"><i class="fa-solid fa-diamond-turn-right"></i> Navigate</span>
+        </div>
+      </a>
     </div>
 
     <!-- HERO SECTION -->
@@ -1168,7 +1329,7 @@
       </div>
     </section>
 
-    <!-- FOOTER -->
+    <!-- FOOTER WITH LIVE SOCIAL LINKS & MAP ADDRESS -->
     <footer class="site-footer" id="contact-section">
       <div class="footer-grid">
         <div class="footer-col">
@@ -1182,6 +1343,19 @@
             </div>
           </div>
           <p>Where Asia Comes to the Table. An authentic journey through the refined flavours of the East.</p>
+          <div class="quick-social-icons" style="margin-top:14px;">
+            <a id="footer-whatsapp-link" href="#" target="_blank" class="social-round-btn whatsapp" style="display:none;"><i class="fa-brands fa-whatsapp"></i></a>
+            <a id="footer-instagram-link" href="#" target="_blank" class="social-round-btn instagram" style="display:none;"><i class="fa-brands fa-instagram"></i></a>
+            <a id="footer-phone-link" href="#" class="social-round-btn" style="display:none;"><i class="fa-solid fa-phone"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Location & Map</h4>
+          <p id="footer-display-address" style="margin-bottom:8px;">Defence Colony / Live Address</p>
+          <a id="footer-maps-btn" href="#" target="_blank" style="color:var(--gold-primary); font-size:0.85rem; font-weight:700; display:inline-flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-location-arrow"></i> Open in Google Maps
+          </a>
         </div>
         
         <div class="footer-col" id="footer-timings-col">
@@ -1243,6 +1417,8 @@
         <button class="admin-tab-btn active" data-tab="tab-items"><i class="fa-solid fa-bowl-food"></i> Menu Items</button>
         <button class="admin-tab-btn" data-tab="tab-add"><i class="fa-solid fa-plus-circle"></i> Add Dish</button>
         <button class="admin-tab-btn" data-tab="tab-categories"><i class="fa-solid fa-layer-group"></i> Categories</button>
+        <button class="admin-tab-btn" data-tab="tab-social-orders"><i class="fa-solid fa-share-nodes"></i> Social & Ordering Links</button>
+        <button class="admin-tab-btn" data-tab="tab-location-manager"><i class="fa-solid fa-location-dot"></i> Maps Location</button>
         <button class="admin-tab-btn" data-tab="tab-banners"><i class="fa-solid fa-images"></i> Promotional Banners</button>
         <button class="admin-tab-btn" data-tab="tab-logo"><i class="fa-solid fa-link"></i> Logo</button>
         <button class="admin-tab-btn" data-tab="tab-site-images"><i class="fa-solid fa-image"></i> Hero Banner</button>
@@ -1360,8 +1536,8 @@
                 <textarea id="dish-desc" class="form-control" rows="2" placeholder="Handcrafted with authentic Asian ingredients..."></textarea>
               </div>
               <div class="form-group" style="grid-column: 1 / -1;">
-                <label>Image URL (Optional)</label>
-                <input type="url" id="dish-img-url" class="form-control" placeholder="https://i.ibb.co/.../dish.jpg">
+                <label>Image URL (Direct Google Maps / ImgBB Link)</label>
+                <input type="url" id="dish-img-url" class="form-control" placeholder="https://lh3.googleusercontent.com/... or https://i.ibb.co/...">
               </div>
             </div>
             <button type="submit" class="btn-primary" style="margin-top:8px; width:100%; max-width:280px;"><i class="fa-solid fa-cloud-arrow-up"></i> Save Dish to Cloud</button>
@@ -1393,12 +1569,76 @@
         </div>
       </div>
 
-      <!-- TAB 4: PROMOTIONAL BANNERS CAROUSEL MANAGER -->
+      <!-- TAB 4: SOCIAL & ONLINE ORDERING HUB MANAGER (NEW) -->
+      <div class="admin-panel-section" id="tab-social-orders">
+        <div class="admin-card">
+          <h3><i class="fa-solid fa-share-nodes"></i> WhatsApp, Instagram & Online Ordering (Swiggy/Zomato)</h3>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:16px;">
+            Yahan se aap restaurant ka Swiggy/Zomato link, WhatsApp number aur Instagram direct profile live set kar sakte hain.
+          </p>
+
+          <form id="social-ordering-form" style="max-width:700px;">
+            <div class="form-group">
+              <label>WhatsApp Number (With Country Code, e.g. 919876543210)</label>
+              <input type="text" id="input-whatsapp-num" class="form-control" placeholder="919876543210">
+            </div>
+            <div class="form-group">
+              <label>Instagram Profile Link</label>
+              <input type="url" id="input-instagram-url" class="form-control" placeholder="https://instagram.com/hokairestaurant">
+            </div>
+            <div class="form-group">
+              <label>Direct Phone Call Number</label>
+              <input type="text" id="input-phone-num" class="form-control" placeholder="+91 98765 43210">
+            </div>
+            <div class="form-group">
+              <label>Swiggy Restaurant Page URL</label>
+              <input type="url" id="input-swiggy-url" class="form-control" placeholder="https://www.swiggy.com/restaurants/hokai-...">
+            </div>
+            <div class="form-group">
+              <label>Zomato Restaurant Page URL</label>
+              <input type="url" id="input-zomato-url" class="form-control" placeholder="https://www.zomato.com/ncr/hokai-...">
+            </div>
+
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-cloud-arrow-up"></i> Save Links Real-Time</button>
+            <div id="social-update-status" style="margin-top:10px; font-size:0.85rem; color:var(--gold-primary); font-weight:600;"></div>
+          </form>
+        </div>
+      </div>
+
+      <!-- TAB 5: MAPS LOCATION & ADDRESS MANAGER (NEW) -->
+      <div class="admin-panel-section" id="tab-location-manager">
+        <div class="admin-card">
+          <h3><i class="fa-solid fa-location-dot"></i> Restaurant Location & Google Maps Redirection</h3>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:16px;">
+            Jab customer click karega toh direct Google Maps par navigation start ho jayega.
+          </p>
+
+          <form id="location-settings-form" style="max-width:700px;">
+            <div class="form-group">
+              <label>Restaurant Display Name / Landmark</label>
+              <input type="text" id="input-location-title" class="form-control" value="HOKAI Pan-Asian Kitchen" required>
+            </div>
+            <div class="form-group">
+              <label>Full Physical Address</label>
+              <textarea id="input-location-address" class="form-control" rows="2" required placeholder="Shop No, Street, Defence Colony, New Delhi"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Google Maps Link (Google Maps location share link)</label>
+              <input type="url" id="input-location-map-url" class="form-control" placeholder="https://maps.app.goo.gl/... or https://maps.google.com/..." required>
+            </div>
+
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-map-location-dot"></i> Update Location Real-Time</button>
+            <div id="location-update-status" style="margin-top:10px; font-size:0.85rem; color:var(--gold-primary); font-weight:600;"></div>
+          </form>
+        </div>
+      </div>
+
+      <!-- TAB 6: PROMOTIONAL BANNERS CAROUSEL MANAGER -->
       <div class="admin-panel-section" id="tab-banners">
         <div class="admin-card">
           <h3><i class="fa-solid fa-images"></i> Promotional Carousel Banners Manager</h3>
           <form id="add-banner-form" style="display:flex; gap:10px; max-width:650px; margin-bottom:20px; flex-wrap:wrap;">
-            <input type="url" id="new-banner-url" class="form-control" placeholder="Paste ImgBB Direct Image Link (e.g. https://i.ibb.co/.../banner.jpg)" required style="flex:1 1 300px;">
+            <input type="url" id="new-banner-url" class="form-control" placeholder="Paste ImgBB/Google direct image link" required style="flex:1 1 300px;">
             <button type="submit" class="btn-primary" style="white-space:nowrap;"><i class="fa-solid fa-plus"></i> Add Banner</button>
           </form>
 
@@ -1417,7 +1657,7 @@
         </div>
       </div>
 
-      <!-- TAB 5: BRAND LOGO -->
+      <!-- TAB 7: BRAND LOGO -->
       <div class="admin-panel-section" id="tab-logo">
         <div class="admin-card">
           <h3><i class="fa-solid fa-link"></i> Real-Time Brand Logo Link Updater</h3>
@@ -1434,14 +1674,14 @@
         </div>
       </div>
 
-      <!-- TAB 6: HERO BANNER -->
+      <!-- TAB 8: HERO BANNER -->
       <div class="admin-panel-section" id="tab-site-images">
         <div class="admin-card">
           <h3><i class="fa-solid fa-image"></i> Hero Background Banner</h3>
           <form id="hero-settings-form" style="max-width:650px;">
             <div class="form-group">
-              <label>Hero Background Image Link (ImgBB)</label>
-              <input type="url" id="hero-bg-url-input" class="form-control" placeholder="https://i.ibb.co/.../banner.jpg" required>
+              <label>Hero Background Image Link (ImgBB / Google Photo)</label>
+              <input type="url" id="hero-bg-url-input" class="form-control" placeholder="https://lh3.googleusercontent.com/... or https://i.ibb.co/..." required>
             </div>
             <div class="form-group">
               <label>Hero Heading</label>
@@ -1457,7 +1697,7 @@
         </div>
       </div>
 
-      <!-- TAB 7: TIMINGS -->
+      <!-- TAB 9: TIMINGS -->
       <div class="admin-panel-section" id="tab-timings">
         <div class="admin-card">
           <h3><i class="fa-solid fa-clock"></i> Timings & Operation Details Manager</h3>
@@ -1489,7 +1729,7 @@
         </div>
       </div>
 
-      <!-- TAB 8: DATABASE SEED -->
+      <!-- TAB 10: DATABASE SEED -->
       <div class="admin-panel-section" id="tab-seed">
         <div class="admin-card">
           <h3><i class="fa-solid fa-bolt"></i> Instant Menu Seeder</h3>
@@ -1629,7 +1869,6 @@
 
   <!-- ==================== SCRIPT ENGINE ==================== -->
   <script>
-    // INSTANT LOCAL CACHE RENDERING
     const cachedCategories = JSON.parse(localStorage.getItem("hokai_cache_categories") || "[]");
     const cachedDishes = JSON.parse(localStorage.getItem("hokai_cache_dishes") || "[]");
     const cachedPromos = JSON.parse(localStorage.getItem("hokai_cache_promos") || "[]");
@@ -1650,12 +1889,8 @@
           bindCategoryClicks();
         }
       }
-      if (currentDishes.length > 0) {
-        renderPublicDishes();
-      }
-      if (currentBanners.length > 0) {
-        renderPromotionalSlider();
-      }
+      if (currentDishes.length > 0) renderPublicDishes();
+      if (currentBanners.length > 0) renderPromotionalSlider();
     }
 
     function bindCategoryClicks() {
@@ -1775,7 +2010,135 @@
       }
     });
 
-    // 2. HERO BANNER SYNC
+    // 2. SOCIAL LINKS & ONLINE ORDERING (SWIGGY, ZOMATO, WHATSAPP, INSTAGRAM)
+    const socialDocRef = doc(db, "siteContent", "socialOrders");
+
+    onSnapshot(socialDocRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const d = docSnap.data();
+        
+        // Swiggy
+        const swiggyBtn = document.getElementById("btn-swiggy-link");
+        if (d.swiggyUrl) {
+          swiggyBtn.href = d.swiggyUrl;
+          swiggyBtn.style.display = "inline-flex";
+          document.getElementById("input-swiggy-url").value = d.swiggyUrl;
+        } else {
+          swiggyBtn.style.display = "none";
+        }
+
+        // Zomato
+        const zomatoBtn = document.getElementById("btn-zomato-link");
+        if (d.zomatoUrl) {
+          zomatoBtn.href = d.zomatoUrl;
+          zomatoBtn.style.display = "inline-flex";
+          document.getElementById("input-zomato-url").value = d.zomatoUrl;
+        } else {
+          zomatoBtn.style.display = "none";
+        }
+
+        // WhatsApp
+        const waTop = document.getElementById("btn-whatsapp-icon");
+        const waFoot = document.getElementById("footer-whatsapp-link");
+        if (d.whatsappNum) {
+          const cleanNum = d.whatsappNum.replace(/[^0-9]/g, '');
+          const waUrl = `https://wa.me/${cleanNum}?text=Hello%20HOKAI,%20I%20would%20like%20to%20place%20an%20order`;
+          waTop.href = waUrl; waTop.style.display = "inline-flex";
+          waFoot.href = waUrl; waFoot.style.display = "inline-flex";
+          document.getElementById("input-whatsapp-num").value = d.whatsappNum;
+        } else {
+          waTop.style.display = "none"; waFoot.style.display = "none";
+        }
+
+        // Instagram
+        const igTop = document.getElementById("btn-instagram-icon");
+        const igFoot = document.getElementById("footer-instagram-link");
+        if (d.instagramUrl) {
+          igTop.href = d.instagramUrl; igTop.style.display = "inline-flex";
+          igFoot.href = d.instagramUrl; igFoot.style.display = "inline-flex";
+          document.getElementById("input-instagram-url").value = d.instagramUrl;
+        } else {
+          igTop.style.display = "none"; igFoot.style.display = "none";
+        }
+
+        // Phone
+        const phTop = document.getElementById("btn-phone-icon");
+        const phFoot = document.getElementById("footer-phone-link");
+        if (d.phoneNum) {
+          phTop.href = `tel:${d.phoneNum}`; phTop.style.display = "inline-flex";
+          phFoot.href = `tel:${d.phoneNum}`; phFoot.style.display = "inline-flex";
+          document.getElementById("input-phone-num").value = d.phoneNum;
+        } else {
+          phTop.style.display = "none"; phFoot.style.display = "none";
+        }
+      }
+    });
+
+    document.getElementById("social-ordering-form")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const status = document.getElementById("social-update-status");
+      status.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving links real-time...`;
+
+      try {
+        await setDoc(socialDocRef, {
+          whatsappNum: document.getElementById("input-whatsapp-num").value.trim(),
+          instagramUrl: document.getElementById("input-instagram-url").value.trim(),
+          phoneNum: document.getElementById("input-phone-num").value.trim(),
+          swiggyUrl: document.getElementById("input-swiggy-url").value.trim(),
+          zomatoUrl: document.getElementById("input-zomato-url").value.trim(),
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+
+        status.innerHTML = `<span style="color:#2e7d32;"><i class="fa-solid fa-check"></i> Social & Ordering links updated live!</span>`;
+        showToast("Swiggy, Zomato & Social links updated!");
+      } catch (err) {
+        status.innerHTML = `<span style="color:#ef5350;">Error updating links</span>`;
+      }
+    });
+
+    // 3. LOCATION & GOOGLE MAPS REDIRECTION SYNC
+    const locationDocRef = doc(db, "siteContent", "locationData");
+
+    onSnapshot(locationDocRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const d = docSnap.data();
+        const mapUrl = d.mapUrl || "https://maps.google.com";
+
+        document.getElementById("display-location-name").textContent = d.title || "HOKAI Pan-Asian Kitchen";
+        document.getElementById("display-location-address").textContent = d.address || "Click for directions in Google Maps";
+        document.getElementById("footer-display-address").textContent = d.address || "Restaurant Address";
+
+        document.getElementById("public-location-anchor").href = mapUrl;
+        document.getElementById("btn-map-icon").href = mapUrl;
+        document.getElementById("footer-maps-btn").href = mapUrl;
+
+        document.getElementById("input-location-title").value = d.title || "";
+        document.getElementById("input-location-address").value = d.address || "";
+        document.getElementById("input-location-map-url").value = d.mapUrl || "";
+      }
+    });
+
+    document.getElementById("location-settings-form")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const status = document.getElementById("location-update-status");
+      status.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Updating location real-time...`;
+
+      try {
+        await setDoc(locationDocRef, {
+          title: document.getElementById("input-location-title").value.trim(),
+          address: document.getElementById("input-location-address").value.trim(),
+          mapUrl: document.getElementById("input-location-map-url").value.trim(),
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+
+        status.innerHTML = `<span style="color:#2e7d32;"><i class="fa-solid fa-check"></i> Location & Google Map link updated live!</span>`;
+        showToast("Location updated across website!");
+      } catch (err) {
+        status.innerHTML = `<span style="color:#ef5350;">Error saving location</span>`;
+      }
+    });
+
+    // 4. HERO BANNER SYNC
     const heroDocRef = doc(db, "siteContent", "heroBanner");
     const heroBgInput = document.getElementById("hero-bg-url-input");
     const heroTitleInput = document.getElementById("hero-title-input");
@@ -1822,7 +2185,7 @@
       }
     });
 
-    // 3. TIMINGS REAL-TIME SYNC
+    // 5. TIMINGS REAL-TIME SYNC
     const timingsDocRef = doc(db, "siteContent", "timings");
     const timingsCol = document.getElementById("footer-timings-col");
     const toggleTimingsBtn = document.getElementById("btn-toggle-timings");
@@ -1880,7 +2243,7 @@
       }
     });
 
-    // 4. CATEGORIES REAL-TIME & AUTO-CACHE
+    // 6. CATEGORIES REAL-TIME
     const categoriesCol = collection(db, "categories");
 
     onSnapshot(categoriesCol, async (snapshot) => {
@@ -2002,8 +2365,7 @@
       }
     });
 
-    // 5. PROMOTIONAL BANNERS CAROUSEL & AUTO-CACHE
-    // (FIXED: NO scrollIntoView, ONLY INTERNAL SCROLL TO PREVENT PAGE JUMP)
+    // 7. PROMOTIONAL BANNERS CAROUSEL
     const promotionsCol = collection(db, "promotions");
     let sliderAutoPlayTimer = null;
     let currentSlideIndex = 0;
@@ -2060,8 +2422,6 @@
       if (!slides[idx]) return;
 
       currentSlideIndex = idx;
-      
-      // FIXED: Only scroll the slider wrapper horizontally, NEVER scroll the entire window/page
       const targetOffset = slides[idx].offsetLeft - wrapper.offsetLeft;
       wrapper.scrollTo({
         left: targetOffset,
@@ -2131,7 +2491,7 @@
       }
     });
 
-    // 6. ROTATING SEARCH PLACEHOLDER & PLAY STORE STYLE RECOMMENDATIONS
+    // 8. ROTATING PLACEHOLDER & PLAY STORE STYLE SEARCH
     let searchRotateTimer = null;
     let rotateItemIndex = 0;
     const searchInput = document.getElementById("dish-search-input");
@@ -2234,7 +2594,7 @@
       }
     });
 
-    // 7. REAL-TIME MENU ITEMS & AUTO-CACHE ENGINE
+    // 9. MENU ITEMS LISTENER
     const dishesCol = collection(db, "menuItems");
 
     onSnapshot(dishesCol, (snapshot) => {
@@ -2429,7 +2789,7 @@
       });
     }
 
-    // 8. EDIT MODAL LOGIC
+    // 10. EDIT MODAL LOGIC
     const editModal = document.getElementById("edit-dish-modal");
     function openEditModal(dish) {
       document.getElementById("edit-dish-id").value = dish.id;
@@ -2510,7 +2870,7 @@
       }
     });
 
-    // 9. VARIATION BUILDERS
+    // 11. VARIATION BUILDERS
     function createVariantRowHTML(name = '', price = '') {
       return `
         <div class="variant-row">
@@ -2557,7 +2917,7 @@
       document.getElementById("variant-rows-container-edit").insertAdjacentHTML('beforeend', createVariantRowHTML('', ''));
     });
 
-    // 10. ADD DISH
+    // 12. ADD DISH
     document.getElementById("add-dish-form")?.addEventListener("submit", async (e) => {
       e.preventDefault();
       try {
@@ -2606,7 +2966,7 @@
       }
     });
 
-    // 11. AUTHENTICATION & TABS
+    // 13. AUTHENTICATION & TABS
     document.getElementById("admin-login-form")?.addEventListener("submit", async (e) => {
       e.preventDefault();
       try {
@@ -2643,7 +3003,7 @@
       });
     });
 
-    // 12. SEED DATA
+    // 14. SEED DATA
     const seedData = [
       { 
         name: "Truffle Edamame Dim Sum", 
