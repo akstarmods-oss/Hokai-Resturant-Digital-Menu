@@ -504,7 +504,7 @@
       font-weight: 600;
     }
 
-    /* SMART ADAPTIVE CARDS (PHOTO 1 FORMAT) */
+    /* CLEAN COMPACT MENU CARDS (NO ONWARDS, NO EMPTY SQUARE) */
     .menu-grid {
       display: flex;
       flex-direction: column;
@@ -602,7 +602,7 @@
     }
 
     .card-price-tag {
-      font-size: 0.98rem;
+      font-size: 1rem;
       font-weight: 700;
       color: var(--gold-primary);
     }
@@ -1518,10 +1518,12 @@
     <div class="dish-sheet-card" id="dish-sheet-card">
       <button type="button" class="sheet-close-btn" id="sheet-close-btn"><i class="fa-solid fa-xmark"></i></button>
       
+      <!-- HERO IMAGE IN MODAL -->
       <div class="sheet-hero-image-box" id="sheet-hero-image-box">
         <img id="sheet-dish-img" src="" alt="Dish Preview">
       </div>
 
+      <!-- NO-IMAGE MOTIF -->
       <div class="sheet-no-img-header" id="sheet-no-img-header" style="display:none;">
         <i class="fa-solid fa-utensils"></i>
         <span style="font-family:var(--font-heading); font-size:1.1rem; color:var(--gold-primary); font-weight:700;">HOKAI MASTER RECIPE</span>
@@ -1702,7 +1704,7 @@
                     <input type="radio" name="pricing-mode-add" value="single" checked id="pricing-mode-single-add"> Single Standard Price
                   </label>
                   <label style="cursor: pointer; display: flex; align-items: center; gap: 6px; text-transform:none; font-size:0.85rem;">
-                    <input type="radio" name="pricing-mode-add" value="variants" id="pricing-mode-variants-add"> Multiple Variations (Veg/Chicken/Prawns, Half/Full)
+                    <input type="radio" name="pricing-mode-add" value="variants" id="pricing-mode-variants-add"> Multiple Variations (Veg, Chicken, Prawns, Sea Food, Half, Full)
                   </label>
                 </div>
 
@@ -2930,13 +2932,12 @@
                               dish.description?.toLowerCase().includes(searchQuery.toLowerCase()) || 
                               dish.category?.toLowerCase().includes(searchQuery.toLowerCase());
 
-        // MULTI-VARIANT DEEP DIETARY CHECK
+        // UNIVERSAL DIETARY CHECK ACROSS ALL VARIATIONS & MAIN ITEM
         let matchesDiet = true;
         const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
 
         if (currentDiet !== "all") {
           if (hasVariants) {
-            // Check if AT LEAST ONE variation matches the selected dietary filter
             matchesDiet = dish.variants.some(v => v.dietary === currentDiet);
           } else {
             matchesDiet = (dish.dietary || "veg") === currentDiet;
@@ -2959,8 +2960,7 @@
       container.innerHTML = filtered.map(dish => {
         const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
         
-        // CONTEXT-AWARE DEFAULT VARIANT:
-        // Agar customer ne Non-Veg filter dabaya hai, toh non-veg variant pehle dikhayega!
+        // CONTEXT-AWARE DEFAULT VARIANT (Veg filter = Veg variant, Non-Veg filter = Non-Veg variant)
         let activeVariant = null;
         if (hasVariants) {
           if (currentDiet === "non-veg") {
@@ -2972,6 +2972,7 @@
           }
         }
 
+        // EXACT PRICE WITHOUT ANY EXTRA WORD
         const priceDisplay = activeVariant ? `₹${activeVariant.price}` : `₹${dish.price || 0}`;
         const mainImg = (activeVariant && activeVariant.imageUrl) ? activeVariant.imageUrl : (dish.imageUrl || "");
         const dietType = (activeVariant && activeVariant.dietary) ? activeVariant.dietary : (dish.dietary || "veg");
@@ -2993,7 +2994,7 @@
             </div>
 
             <h3 class="card-dish-name">${dish.name}</h3>
-            <span class="card-price-tag">${hasVariants ? `${priceDisplay} onwards` : priceDisplay}</span>
+            <span class="card-price-tag">${priceDisplay}</span>
             <p class="card-desc-snippet">${descSnippet}</p>
           </div>
 
@@ -3024,7 +3025,6 @@
     function openDishDetailSheet(dish) {
       const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
       
-      // Auto pick context variant matching active dietary filter
       let activeVariant = null;
       if (hasVariants) {
         if (currentDiet === "non-veg") {
