@@ -783,7 +783,7 @@
       padding-top: 20px;
     }
 
-    /* ADMIN DASHBOARD */
+    /* ADMIN DASHBOARD & ADVANCED FILTER TOOLBAR */
     #admin-root {
       display: none;
       min-height: 100vh;
@@ -888,6 +888,81 @@
       display: flex;
       align-items: center;
       gap: 8px;
+    }
+
+    /* REAL-TIME ADMIN FILTER TOOLBAR */
+    .admin-filter-bar {
+      background: #101010;
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .admin-search-field-wrap {
+      position: relative;
+      width: 100%;
+    }
+
+    .admin-search-field-wrap i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gold-primary);
+      font-size: 0.9rem;
+    }
+
+    .admin-search-field-wrap input {
+      padding-left: 38px;
+    }
+
+    .admin-filter-dropdowns-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      align-items: center;
+    }
+
+    .admin-filter-select {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-dark);
+      color: var(--text-white);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      font-size: 0.82rem;
+      outline: none;
+      transition: var(--transition);
+      width: 100%;
+    }
+
+    .admin-filter-select:focus {
+      border-color: var(--gold-primary);
+    }
+
+    .btn-reset-filters {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-dark);
+      color: var(--text-muted);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-reset-filters:hover {
+      background: var(--surface-elevated);
+      color: var(--gold-primary);
+      border-color: var(--gold-primary);
     }
 
     .form-group { margin-bottom: 16px; width: 100%; }
@@ -1110,6 +1185,7 @@
     @media (max-width: 860px) {
       nav.desktop-nav { display: none; }
       .hamburger-btn { display: block; }
+      .sticky-search-wrapper { top: 56px; }
     }
 
     @media (max-width: 600px) {
@@ -1119,6 +1195,7 @@
       .variant-row { flex-direction: column; align-items: stretch; }
       .remove-variant-row-btn { width: 100%; }
       #add-category-form { flex-direction: column; }
+      .admin-filter-dropdowns-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
@@ -1348,13 +1425,66 @@
         <button class="admin-tab-btn" data-tab="tab-seed"><i class="fa-solid fa-database"></i> Seed</button>
       </div>
 
-      <!-- TAB 1: MENU ITEMS LIST -->
+      <!-- TAB 1: MENU ITEMS LIST (WITH SEARCH & MULTI-FILTERS) -->
       <div class="admin-panel-section active" id="tab-items">
         <div class="admin-card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
             <h3><i class="fa-solid fa-list-check"></i> Live Menu Catalog</h3>
             <span id="menu-counter" style="color:var(--text-muted); font-size:0.82rem;">0 Items Loaded</span>
           </div>
+
+          <!-- REAL-TIME SEARCH & FILTER TOOLBAR FOR ADMIN -->
+          <div class="admin-filter-bar">
+            <div class="admin-search-field-wrap">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="admin-search-input" class="form-control" placeholder="Search dish name or description in real-time...">
+            </div>
+
+            <div class="admin-filter-dropdowns-grid">
+              <!-- Category Filter -->
+              <select id="admin-filter-category" class="admin-filter-select">
+                <option value="all">All Categories</option>
+              </select>
+
+              <!-- Dietary Filter -->
+              <select id="admin-filter-diet" class="admin-filter-select">
+                <option value="all">All Dietary</option>
+                <option value="veg">🟢 Pure Veg</option>
+                <option value="non-veg">🔴 Non-Veg</option>
+              </select>
+
+              <!-- Spicy Level Filter -->
+              <select id="admin-filter-spicy" class="admin-filter-select">
+                <option value="all">All Spice Levels</option>
+                <option value="none">Not Spicy</option>
+                <option value="mild">🌶️ Mild</option>
+                <option value="medium">🌶️🌶️ Medium</option>
+                <option value="hot">🌶️🌶️🌶️ Hot</option>
+              </select>
+
+              <!-- Sweet Level Filter -->
+              <select id="admin-filter-sweet" class="admin-filter-select">
+                <option value="all">All Sweet Levels</option>
+                <option value="none">Not Sweet</option>
+                <option value="mild">🍯 Mild Sweet</option>
+                <option value="medium">🍯🍯 Medium</option>
+                <option value="hot">🍯🍯🍯 Extra Sweet</option>
+              </select>
+
+              <!-- Badges Filter -->
+              <select id="admin-filter-badge" class="admin-filter-select">
+                <option value="all">All Badges</option>
+                <option value="signature">⭐ Chef's Special</option>
+                <option value="bestseller">🔥 Bestseller</option>
+              </select>
+
+              <!-- Reset Button -->
+              <button type="button" id="btn-reset-admin-filters" class="btn-reset-filters">
+                <i class="fa-solid fa-arrows-rotate"></i> Reset
+              </button>
+            </div>
+          </div>
+
           <div class="table-responsive-wrapper">
             <table class="admin-table">
               <thead>
@@ -1802,6 +1932,14 @@
     let currentDiet = "all";
     let searchQuery = "";
 
+    // Admin Real-time Filter State
+    let adminSearchQuery = "";
+    let adminFilterCat = "all";
+    let adminFilterDiet = "all";
+    let adminFilterSpicy = "all";
+    let adminFilterSweet = "all";
+    let adminFilterBadge = "all";
+
     function fastInitRender() {
       if (categoriesList.length > 0) {
         const catBar = document.getElementById("category-bar");
@@ -1810,8 +1948,12 @@
             categoriesList.map(c => `<button class="cat-btn" data-cat="${c.name}">${c.name}</button>`).join('');
           bindCategoryClicks();
         }
+        renderCategoryDropdowns();
       }
-      if (currentDishes.length > 0) renderPublicDishes();
+      if (currentDishes.length > 0) {
+        renderPublicDishes();
+        renderAdminTable();
+      }
       if (currentBanners.length > 0) renderPromotionalSlider();
     }
 
@@ -1932,14 +2074,13 @@
       }
     });
 
-    // 2. SOCIAL LINKS & ONLINE ORDERING (SWIGGY, ZOMATO, WHATSAPP, INSTAGRAM, PHONE)
+    // 2. SOCIAL LINKS & ONLINE ORDERING
     const socialDocRef = doc(db, "siteContent", "socialOrders");
 
     onSnapshot(socialDocRef, (docSnap) => {
       if (docSnap.exists()) {
         const d = docSnap.data();
         
-        // Swiggy
         const swiggyBtn = document.getElementById("btn-swiggy-link");
         if (d.swiggyUrl) {
           swiggyBtn.href = d.swiggyUrl;
@@ -1949,7 +2090,6 @@
           swiggyBtn.style.display = "none";
         }
 
-        // Zomato
         const zomatoBtn = document.getElementById("btn-zomato-link");
         if (d.zomatoUrl) {
           zomatoBtn.href = d.zomatoUrl;
@@ -1959,7 +2099,6 @@
           zomatoBtn.style.display = "none";
         }
 
-        // WhatsApp
         const waFoot = document.getElementById("footer-whatsapp-link");
         if (d.whatsappNum) {
           const cleanNum = d.whatsappNum.replace(/[^0-9]/g, '');
@@ -1970,7 +2109,6 @@
           waFoot.style.display = "none";
         }
 
-        // Instagram
         const igFoot = document.getElementById("footer-instagram-link");
         if (d.instagramUrl) {
           igFoot.href = d.instagramUrl; igFoot.style.display = "inline-flex";
@@ -1979,7 +2117,6 @@
           igFoot.style.display = "none";
         }
 
-        // Phone
         const phFoot = document.getElementById("footer-phone-link");
         if (d.phoneNum) {
           phFoot.href = `tel:${d.phoneNum}`; phFoot.style.display = "inline-flex";
@@ -2022,7 +2159,6 @@
 
         document.getElementById("display-location-name").textContent = d.title || "HOKAI Pan-Asian Kitchen";
         document.getElementById("display-location-address").textContent = d.address || "218/1, Plot no 106, Defence Colony, Sainikpuri, Secunderabad, Telangana 500094";
-
         document.getElementById("footer-maps-btn").href = mapUrl;
 
         document.getElementById("input-location-title").value = d.title || "";
@@ -2181,15 +2317,24 @@
       }
     });
 
-    function renderCategoryDropdowns() {
-      const selects = [document.getElementById("dish-category"), document.getElementById("edit-dish-category")];
+    window.renderCategoryDropdowns = function() {
+      const selects = [
+        document.getElementById("dish-category"), 
+        document.getElementById("edit-dish-category"),
+        document.getElementById("admin-filter-category")
+      ];
       selects.forEach(sel => {
         if (!sel) return;
         const currentVal = sel.value;
-        sel.innerHTML = categoriesList.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+        if (sel.id === "admin-filter-category") {
+          sel.innerHTML = `<option value="all">All Categories</option>` + 
+            categoriesList.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+        } else {
+          sel.innerHTML = categoriesList.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+        }
         if (currentVal) sel.value = currentVal;
       });
-    }
+    };
 
     function renderCategoryButtons() {
       const container = document.getElementById("category-bar");
@@ -2507,7 +2652,7 @@
       }
     });
 
-    // 9. MENU ITEMS LISTENER
+    // 9. MENU ITEMS LISTENER & REAL-TIME CACHE
     const dishesCol = collection(db, "menuItems");
 
     onSnapshot(dishesCol, (snapshot) => {
@@ -2630,18 +2775,48 @@
       });
     };
 
-    function renderAdminTable() {
+    // 10. REAL-TIME ADMIN TABLE WITH ADVANCED MULTI-FILTERING
+    window.renderAdminTable = function() {
       const tbody = document.getElementById("admin-items-table-body");
       const counter = document.getElementById("menu-counter");
       if (!tbody) return;
 
-      counter.textContent = `${currentDishes.length} Items Loaded`;
-      if (currentDishes.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="padding:16px; text-align:center; color:#666;">No items found.</td></tr>`;
+      const filtered = currentDishes.filter(dish => {
+        // Search Filter
+        const matchesSearch = !adminSearchQuery || 
+          dish.name?.toLowerCase().includes(adminSearchQuery.toLowerCase()) || 
+          dish.description?.toLowerCase().includes(adminSearchQuery.toLowerCase());
+
+        // Category Filter
+        const matchesCat = adminFilterCat === "all" || dish.category === adminFilterCat;
+
+        // Dietary Filter
+        const matchesDiet = adminFilterDiet === "all" || dish.dietary === adminFilterDiet;
+
+        // Spicy Level Filter
+        const dishSpice = dish.spicyLevel || "none";
+        const matchesSpicy = adminFilterSpicy === "all" || dishSpice === adminFilterSpicy;
+
+        // Sweet Level Filter
+        const dishSweet = dish.sweetLevel || "none";
+        const matchesSweet = adminFilterSweet === "all" || dishSweet === adminFilterSweet;
+
+        // Badges Filter
+        let matchesBadge = true;
+        if (adminFilterBadge === "signature") matchesBadge = Boolean(dish.isSignature);
+        if (adminFilterBadge === "bestseller") matchesBadge = Boolean(dish.isBestseller);
+
+        return matchesSearch && matchesCat && matchesDiet && matchesSpicy && matchesSweet && matchesBadge;
+      });
+
+      counter.textContent = `${filtered.length} of ${currentDishes.length} Items`;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="padding:22px; text-align:center; color:#777;">No matching dishes found with active filters.</td></tr>`;
         return;
       }
 
-      tbody.innerHTML = currentDishes.map(dish => {
+      tbody.innerHTML = filtered.map(dish => {
         const hasImg = Boolean(dish.imageUrl && dish.imageUrl.trim());
         const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
         const priceInfo = hasVariants ? 
@@ -2665,6 +2840,7 @@
           <td style="font-weight:600;">
             ${dish.name}
             ${dish.isSignature ? '<span style="color:var(--brand-red); font-size:0.72rem; margin-left:4px;">[CHEF SPECIAL]</span>' : ''}
+            ${dish.isBestseller ? '<span style="color:var(--gold-primary); font-size:0.72rem; margin-left:4px;">[BESTSELLER]</span>' : ''}
           </td>
           <td style="color:var(--text-muted);">${dish.category}</td>
           <td>${priceInfo}</td>
@@ -2700,9 +2876,59 @@
           if (item) openEditModal(item);
         });
       });
-    }
+    };
 
-    // 10. EDIT MODAL LOGIC
+    // BIND ADMIN SEARCH & FILTER LISTENERS
+    document.getElementById("admin-search-input")?.addEventListener("input", (e) => {
+      adminSearchQuery = e.target.value.trim();
+      renderAdminTable();
+    });
+
+    document.getElementById("admin-filter-category")?.addEventListener("change", (e) => {
+      adminFilterCat = e.target.value;
+      renderAdminTable();
+    });
+
+    document.getElementById("admin-filter-diet")?.addEventListener("change", (e) => {
+      adminFilterDiet = e.target.value;
+      renderAdminTable();
+    });
+
+    document.getElementById("admin-filter-spicy")?.addEventListener("change", (e) => {
+      adminFilterSpicy = e.target.value;
+      renderAdminTable();
+    });
+
+    document.getElementById("admin-filter-sweet")?.addEventListener("change", (e) => {
+      adminFilterSweet = e.target.value;
+      renderAdminTable();
+    });
+
+    document.getElementById("admin-filter-badge")?.addEventListener("change", (e) => {
+      adminFilterBadge = e.target.value;
+      renderAdminTable();
+    });
+
+    document.getElementById("btn-reset-admin-filters")?.addEventListener("click", () => {
+      adminSearchQuery = "";
+      adminFilterCat = "all";
+      adminFilterDiet = "all";
+      adminFilterSpicy = "all";
+      adminFilterSweet = "all";
+      adminFilterBadge = "all";
+
+      document.getElementById("admin-search-input").value = "";
+      document.getElementById("admin-filter-category").value = "all";
+      document.getElementById("admin-filter-diet").value = "all";
+      document.getElementById("admin-filter-spicy").value = "all";
+      document.getElementById("admin-filter-sweet").value = "all";
+      document.getElementById("admin-filter-badge").value = "all";
+
+      renderAdminTable();
+      showToast("Admin filters reset!");
+    });
+
+    // 11. EDIT MODAL LOGIC
     const editModal = document.getElementById("edit-dish-modal");
     function openEditModal(dish) {
       document.getElementById("edit-dish-id").value = dish.id;
@@ -2783,7 +3009,7 @@
       }
     });
 
-    // 11. VARIATION BUILDERS
+    // 12. VARIATION BUILDERS
     function createVariantRowHTML(name = '', price = '') {
       return `
         <div class="variant-row">
@@ -2830,7 +3056,7 @@
       document.getElementById("variant-rows-container-edit").insertAdjacentHTML('beforeend', createVariantRowHTML('', ''));
     });
 
-    // 12. ADD DISH
+    // 13. ADD DISH
     document.getElementById("add-dish-form")?.addEventListener("submit", async (e) => {
       e.preventDefault();
       try {
@@ -2879,7 +3105,7 @@
       }
     });
 
-    // 13. AUTHENTICATION & TABS
+    // 14. AUTHENTICATION & TABS
     document.getElementById("admin-login-form")?.addEventListener("submit", async (e) => {
       e.preventDefault();
       try {
@@ -2916,7 +3142,7 @@
       });
     });
 
-    // 14. SEED DATA
+    // 15. SEED DATA
     const seedData = [
       { 
         name: "Truffle Edamame Dim Sum", 
