@@ -374,6 +374,188 @@
       line-height: 1.5;
     }
 
+    /* ========================================================
+       PROTECTED VIDEO ENGINE + CENTER LOGO WATERMARK
+    ======================================================== */
+    video {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .protected-video-stage {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #000;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .video-center-watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      opacity: 0.22;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      z-index: 3;
+      filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.55));
+    }
+
+    .promo-slide .video-center-watermark {
+      width: 56px;
+      height: 56px;
+    }
+
+    .promo-lightbox-player .video-center-watermark {
+      width: 96px;
+      height: 96px;
+    }
+
+    .video-tap-shield {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      cursor: pointer;
+      background: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .video-tap-indicator {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.85);
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(6px);
+      border: 1.5px solid var(--border-gold);
+      color: var(--gold-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 5;
+    }
+
+    .video-tap-indicator.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .custom-video-controls {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 26px 14px 12px 14px;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.88) 100%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 6;
+    }
+
+    .cv-progress-hitarea {
+      width: 100%;
+      padding: 7px 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      touch-action: none;
+    }
+
+    .cv-progress-track {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: var(--radius-full);
+      position: relative;
+      overflow: visible;
+    }
+
+    .cv-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--gold-primary);
+      border-radius: var(--radius-full);
+      position: relative;
+      transition: width 0.08s linear;
+    }
+
+    .cv-progress-fill::after {
+      content: '';
+      position: absolute;
+      right: -5px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--gold-light);
+      box-shadow: 0 0 8px rgba(255, 185, 0, 0.75);
+    }
+
+    .cv-controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .cv-left-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cv-icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #FFF;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .cv-icon-btn:hover {
+      background: var(--gold-primary);
+      color: #000;
+      border-color: var(--gold-primary);
+    }
+
+    .cv-time-label {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: #E5E5E5;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.02em;
+    }
+
     /* PROMOTIONAL BANNERS: SMART AUTO-FLOW STRIP (MIXED PORTRAIT & LANDSCAPE) */
     .promo-slider-section {
       max-width: 1320px;
@@ -429,7 +611,7 @@
       }
     }
 
-    .promo-slide img, .promo-slide video {
+    .promo-slide img:not(.video-center-watermark), .promo-slide video {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -452,14 +634,14 @@
       align-items: center;
       gap: 5px;
       pointer-events: none;
-      z-index: 2;
+      z-index: 5;
     }
 
     .promo-video-badge i {
       color: var(--gold-primary);
     }
 
-    /* FULLSCREEN PROMO VIDEO LIGHTBOX MODAL */
+    /* FULLSCREEN PROMO VIDEO LIGHTBOX MODAL (CUSTOM PROTECTED PLAYER) */
     .promo-video-lightbox {
       display: none;
       position: fixed;
@@ -476,25 +658,21 @@
       display: flex;
     }
 
-    .promo-lightbox-inner {
-      position: relative;
-      max-width: 96vw;
-      max-height: 88vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .promo-lightbox-player {
+      max-width: 94vw;
+      max-height: 86vh;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-gold);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.9);
     }
 
-    .promo-lightbox-inner video {
-      max-width: 100%;
+    .promo-lightbox-player video {
+      max-width: 94vw;
       max-height: 86vh;
       width: auto;
       height: auto;
-      border-radius: var(--radius-md);
+      display: block;
       background: #000;
-      border: 1px solid var(--border-gold);
-      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.9);
-      outline: none;
     }
 
     .promo-lightbox-close {
@@ -751,14 +929,19 @@
       justify-content: center;
     }
 
-    .card-right-thumb-wrap img, .card-right-thumb-wrap video {
+    .card-right-thumb-wrap img:not(.video-center-watermark), .card-right-thumb-wrap video {
       width: 100%;
       height: 100%;
       object-fit: cover;
       transition: transform 0.3s ease;
     }
 
-    .pro-list-card:hover .card-right-thumb-wrap img,
+    .card-right-thumb-wrap .video-center-watermark {
+      width: 34px;
+      height: 34px;
+    }
+
+    .pro-list-card:hover .card-right-thumb-wrap img:not(.video-center-watermark),
     .pro-list-card:hover .card-right-thumb-wrap video {
       transform: scale(1.08);
     }
@@ -829,7 +1012,20 @@
       position: relative;
     }
 
-    .sheet-hero-image-box img, .sheet-hero-image-box video {
+    .sheet-hero-image-box > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .sheet-video-player-wrap {
+      width: 100%;
+      height: 100%;
+      display: none;
+    }
+
+    .sheet-video-player-wrap video {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -1578,7 +1774,7 @@
 
     <!-- HERO SECTION (SUPPORTS PHOTO & VIDEO) -->
     <section class="hero-section" id="hero-banner-section">
-      <video id="hero-bg-video" class="hero-bg-video" autoplay muted loop playsinline preload="metadata"></video>
+      <video id="hero-bg-video" class="hero-bg-video" autoplay muted loop playsinline preload="metadata" disablepictureinpicture controlslist="nodownload noplaybackrate noremoteplayback"></video>
       <div class="hero-content">
         <div class="hero-badge">Authentic Culinary Heritage</div>
         <h2 class="hero-title" id="hero-display-title">Where Asia Comes to the Table</h2>
@@ -1684,19 +1880,40 @@
   </div>
 
   <!-- ========================================================
-       FULLSCREEN PROMO VIDEO POPUP (SOUND + CONTROLS)
+       FULLSCREEN PROMO VIDEO POPUP (CUSTOM PROTECTED PLAYER)
   ======================================================== -->
   <div class="promo-video-lightbox" id="promo-video-lightbox">
     <button type="button" class="promo-lightbox-close" id="promo-lightbox-close" aria-label="Close video">
       <i class="fa-solid fa-xmark"></i>
     </button>
-    <div class="promo-lightbox-inner">
-      <video id="promo-lightbox-video" controls playsinline></video>
+    <div class="protected-video-stage promo-lightbox-player" id="promo-lightbox-stage">
+      <video id="promo-lightbox-video" playsinline disablepictureinpicture controlslist="nodownload noplaybackrate noremoteplayback"></video>
+      <img class="video-center-watermark dynamic-hokai-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%239A0007' stroke='%23FFB900' stroke-width='3'/%3E%3Cpath d='M30,50 Q50,25 70,50 T30,50' fill='none' stroke='%23FFB900' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" alt="" draggable="false">
+      <div class="video-tap-shield" id="promo-lb-shield"></div>
+      <div class="video-tap-indicator" id="promo-lb-indicator"><i class="fa-solid fa-play"></i></div>
+      <div class="custom-video-controls">
+        <div class="cv-progress-hitarea" id="promo-lb-progress-hit">
+          <div class="cv-progress-track">
+            <div class="cv-progress-fill" id="promo-lb-progress-fill"></div>
+          </div>
+        </div>
+        <div class="cv-controls-row">
+          <div class="cv-left-group">
+            <button type="button" class="cv-icon-btn" id="promo-lb-play-btn" aria-label="Play or Pause">
+              <i class="fa-solid fa-pause"></i>
+            </button>
+            <span class="cv-time-label" id="promo-lb-time">0:00 / 0:00</span>
+          </div>
+          <button type="button" class="cv-icon-btn" id="promo-lb-mute-btn" aria-label="Mute or Unmute">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- ========================================================
-       SWIGGY BOTTOM SHEET DISH DETAIL MODAL (PHOTO & VIDEO)
+       SWIGGY BOTTOM SHEET DISH DETAIL MODAL (PROTECTED VIDEO + WATERMARK)
   ======================================================== -->
   <div class="dish-detail-sheet-backdrop" id="dish-detail-sheet-backdrop">
     <div class="dish-sheet-card" id="dish-sheet-card">
@@ -1704,7 +1921,30 @@
       
       <div class="sheet-hero-image-box" id="sheet-hero-image-box">
         <img id="sheet-dish-img" src="" alt="Dish Preview">
-        <video id="sheet-dish-video" autoplay muted loop playsinline controls style="display:none;"></video>
+        <div class="protected-video-stage sheet-video-player-wrap" id="sheet-video-player-wrap">
+          <video id="sheet-dish-video" autoplay muted loop playsinline disablepictureinpicture controlslist="nodownload noplaybackrate noremoteplayback"></video>
+          <img class="video-center-watermark dynamic-hokai-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%239A0007' stroke='%23FFB900' stroke-width='3'/%3E%3Cpath d='M30,50 Q50,25 70,50 T30,50' fill='none' stroke='%23FFB900' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" alt="" draggable="false">
+          <div class="video-tap-shield" id="sheet-vid-shield"></div>
+          <div class="video-tap-indicator" id="sheet-vid-indicator"><i class="fa-solid fa-play"></i></div>
+          <div class="custom-video-controls">
+            <div class="cv-progress-hitarea" id="sheet-vid-progress-hit">
+              <div class="cv-progress-track">
+                <div class="cv-progress-fill" id="sheet-vid-progress-fill"></div>
+              </div>
+            </div>
+            <div class="cv-controls-row">
+              <div class="cv-left-group">
+                <button type="button" class="cv-icon-btn" id="sheet-vid-play-btn" aria-label="Play or Pause">
+                  <i class="fa-solid fa-pause"></i>
+                </button>
+                <span class="cv-time-label" id="sheet-vid-time">0:00 / 0:00</span>
+              </div>
+              <button type="button" class="cv-icon-btn" id="sheet-vid-mute-btn" aria-label="Mute or Unmute">
+                <i class="fa-solid fa-volume-xmark"></i>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="sheet-no-img-header" id="sheet-no-img-header" style="display:none;">
@@ -2056,7 +2296,7 @@
         <div class="admin-card">
           <h3><i class="fa-solid fa-images"></i> Promotional Banners (Smart Auto-Flow Strip)</h3>
           <p style="color:var(--text-muted); font-size:0.84rem; margin-bottom:14px;">
-            Portrait aur Landscape (Photo ya Video) dono bina crop hue automatic set honge. Video aane par slider khatam hone tak wait karega aur tap par fullscreen sound ke saath play hoga.
+            Portrait aur Landscape (Photo ya Video) dono bina crop hue automatic set honge. Video par aapka live Logo watermark apne aap beech me dikhega aur download/copy options band rahenge.
           </p>
           <form id="add-banner-form" style="display:flex; gap:10px; max-width:700px; margin-bottom:20px; flex-wrap:wrap;">
             <div class="media-input-group" style="flex:1 1 320px;">
@@ -2084,10 +2324,10 @@
         </div>
       </div>
 
-      <!-- TAB 7: BRAND LOGO -->
+      <!-- TAB 7: BRAND LOGO (ALSO USED AS LIVE VIDEO WATERMARK) -->
       <div class="admin-panel-section" id="tab-logo">
         <div class="admin-card">
-          <h3><i class="fa-solid fa-link"></i> Real-Time Brand Logo Updater</h3>
+          <h3><i class="fa-solid fa-link"></i> Real-Time Brand Logo & Video Watermark Updater</h3>
           <form id="logo-url-form">
             <div style="display:flex; flex-direction:column; align-items:center; gap:16px; max-width:550px; margin:0 auto;">
               <div style="width:110px; height:110px; border-radius:50%; border:2px solid var(--gold-primary); background:#0A0A0A; overflow:hidden;">
@@ -2099,7 +2339,7 @@
                   <i class="fa-solid fa-cloud-arrow-up"></i> Upload
                 </button>
               </div>
-              <button type="submit" class="btn-primary" style="width: 100%;"><i class="fa-solid fa-cloud-arrow-up"></i> Update Logo Real-Time</button>
+              <button type="submit" class="btn-primary" style="width: 100%;"><i class="fa-solid fa-cloud-arrow-up"></i> Update Logo & Watermark Real-Time</button>
               <div id="logo-update-status" style="font-size:0.85rem; color:var(--gold-primary); font-weight:600;"></div>
             </div>
           </form>
@@ -2338,6 +2578,9 @@
 
   <!-- ==================== SCRIPT ENGINE ==================== -->
   <script>
+    const DEFAULT_LOGO_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%239A0007' stroke='%23FFB900' stroke-width='3'/%3E%3Cpath d='M30,50 Q50,25 70,50 T30,50' fill='none' stroke='%23FFB900' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E";
+    let currentBrandLogoUrl = localStorage.getItem("hokai_logo_cache") || DEFAULT_LOGO_SVG;
+
     const cachedCategories = JSON.parse(localStorage.getItem("hokai_cache_categories") || "[]");
     const cachedDishes = JSON.parse(localStorage.getItem("hokai_cache_dishes") || "[]");
     const cachedPromos = JSON.parse(localStorage.getItem("hokai_cache_promos") || "[]");
@@ -2369,7 +2612,35 @@
       return url.replace('/upload/', '/upload/f_auto,q_auto/');
     }
 
+    function formatVideoTime(sec) {
+      if (!isFinite(sec) || sec < 0) return "0:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    function applyBrandLogoEverywhere(url) {
+      currentBrandLogoUrl = url || DEFAULT_LOGO_SVG;
+      document.querySelectorAll('.dynamic-hokai-logo').forEach(img => {
+        img.src = currentBrandLogoUrl;
+      });
+    }
+
+    // Block right-click & drag on all videos and protected video stages
+    document.addEventListener("contextmenu", (e) => {
+      if (e.target.closest("video, .protected-video-stage, .promo-slide.is-video")) {
+        e.preventDefault();
+      }
+    });
+
+    document.addEventListener("dragstart", (e) => {
+      if (e.target.closest("video, .protected-video-stage, .video-center-watermark")) {
+        e.preventDefault();
+      }
+    });
+
     function fastInitRender() {
+      applyBrandLogoEverywhere(currentBrandLogoUrl);
       if (categoriesList.length > 0) {
         const catBar = document.getElementById("category-bar");
         if (catBar) {
@@ -2459,6 +2730,123 @@
     }
     window.addEventListener('hashchange', handleRouting);
     handleRouting();
+
+    // ========================================================
+    // CUSTOM PROTECTED VIDEO PLAYER ENGINE (NO 3-DOTS / NO DOWNLOAD)
+    // ========================================================
+    function initCustomVideoPlayer({ video, shield, indicator, playBtn, muteBtn, progressHit, progressFill, timeLabel }) {
+      if (!video) return { syncUI: () => {} };
+      let indicatorTimer = null;
+      let isSeeking = false;
+
+      function flashIndicator(isPlayingNow) {
+        if (!indicator) return;
+        indicator.innerHTML = `<i class="fa-solid ${isPlayingNow ? 'fa-play' : 'fa-pause'}"></i>`;
+        indicator.classList.add("show");
+        clearTimeout(indicatorTimer);
+        indicatorTimer = setTimeout(() => indicator.classList.remove("show"), 650);
+      }
+
+      function syncUI() {
+        const dur = isFinite(video.duration) && video.duration > 0 ? video.duration : 0;
+        const cur = isFinite(video.currentTime) ? video.currentTime : 0;
+        const pct = dur > 0 ? Math.min(100, Math.max(0, (cur / dur) * 100)) : 0;
+
+        if (progressFill) progressFill.style.width = `${pct}%`;
+        if (timeLabel) timeLabel.textContent = `${formatVideoTime(cur)} / ${formatVideoTime(dur)}`;
+        if (playBtn) {
+          playBtn.innerHTML = `<i class="fa-solid ${video.paused ? 'fa-play' : 'fa-pause'}"></i>`;
+        }
+        if (muteBtn) {
+          muteBtn.innerHTML = `<i class="fa-solid ${video.muted ? 'fa-volume-xmark' : 'fa-volume-high'}"></i>`;
+        }
+      }
+
+      function togglePlay(showPop = false) {
+        if (video.paused || video.ended) {
+          if (video.ended) video.currentTime = 0;
+          video.play().catch(() => {});
+          if (showPop) flashIndicator(true);
+        } else {
+          video.pause();
+          if (showPop) flashIndicator(false);
+        }
+        syncUI();
+      }
+
+      function seekFromClientX(clientX) {
+        if (!progressHit || !isFinite(video.duration) || video.duration <= 0) return;
+        const rect = progressHit.getBoundingClientRect();
+        const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+        video.currentTime = ratio * video.duration;
+        syncUI();
+      }
+
+      shield?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        togglePlay(true);
+      });
+
+      playBtn?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        togglePlay(false);
+      });
+
+      muteBtn?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        video.muted = !video.muted;
+        syncUI();
+      });
+
+      progressHit?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        seekFromClientX(e.clientX);
+      });
+
+      progressHit?.addEventListener("touchstart", (e) => {
+        e.stopPropagation();
+        isSeeking = true;
+        if (e.touches[0]) seekFromClientX(e.touches[0].clientX);
+      }, { passive: true });
+
+      progressHit?.addEventListener("touchmove", (e) => {
+        if (!isSeeking) return;
+        e.stopPropagation();
+        if (e.touches[0]) seekFromClientX(e.touches[0].clientX);
+      }, { passive: true });
+
+      progressHit?.addEventListener("touchend", () => {
+        isSeeking = false;
+      }, { passive: true });
+
+      ["timeupdate", "loadedmetadata", "play", "pause", "volumechange", "ended"].forEach(ev => {
+        video.addEventListener(ev, syncUI);
+      });
+
+      return { syncUI };
+    }
+
+    const promoLightboxPlayer = initCustomVideoPlayer({
+      video: document.getElementById("promo-lightbox-video"),
+      shield: document.getElementById("promo-lb-shield"),
+      indicator: document.getElementById("promo-lb-indicator"),
+      playBtn: document.getElementById("promo-lb-play-btn"),
+      muteBtn: document.getElementById("promo-lb-mute-btn"),
+      progressHit: document.getElementById("promo-lb-progress-hit"),
+      progressFill: document.getElementById("promo-lb-progress-fill"),
+      timeLabel: document.getElementById("promo-lb-time")
+    });
+
+    const sheetVideoPlayer = initCustomVideoPlayer({
+      video: document.getElementById("sheet-dish-video"),
+      shield: document.getElementById("sheet-vid-shield"),
+      indicator: document.getElementById("sheet-vid-indicator"),
+      playBtn: document.getElementById("sheet-vid-play-btn"),
+      muteBtn: document.getElementById("sheet-vid-mute-btn"),
+      progressHit: document.getElementById("sheet-vid-progress-hit"),
+      progressFill: document.getElementById("sheet-vid-progress-fill"),
+      timeLabel: document.getElementById("sheet-vid-time")
+    });
 
     // 0. CLOUDINARY DIRECT UPLOAD ENGINE (PHOTO + VIDEO FROM INTERNAL STORAGE)
     const cloudinaryDocRef = doc(db, "siteContent", "cloudinary");
@@ -2588,12 +2976,12 @@
       xhr.send(formData);
     });
 
-    // 1. BRAND LOGO SYNC
+    // 1. BRAND LOGO & LIVE WATERMARK SYNC
     const brandingDocRef = doc(db, "siteContent", "branding");
     const logoUrlInput = document.getElementById("logo-url-input");
     const cachedLogo = localStorage.getItem("hokai_logo_cache");
     if (cachedLogo) {
-      document.querySelectorAll('.dynamic-hokai-logo').forEach(img => img.src = cachedLogo);
+      applyBrandLogoEverywhere(cachedLogo);
       if (logoUrlInput) logoUrlInput.value = cachedLogo;
     }
 
@@ -2602,7 +2990,7 @@
         const data = docSnap.data();
         if (data.logoUrl) {
           localStorage.setItem("hokai_logo_cache", data.logoUrl);
-          document.querySelectorAll('.dynamic-hokai-logo').forEach(img => img.src = data.logoUrl);
+          applyBrandLogoEverywhere(data.logoUrl);
           if (logoUrlInput && !logoUrlInput.value) logoUrlInput.value = data.logoUrl;
         }
       }
@@ -2614,8 +3002,8 @@
       if (!enteredUrl) return;
 
       const logoStatus = document.getElementById("logo-update-status");
-      logoStatus.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Updating logo real-time...`;
-      document.querySelectorAll('.dynamic-hokai-logo').forEach(img => img.src = enteredUrl);
+      logoStatus.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Updating logo & video watermark...`;
+      applyBrandLogoEverywhere(enteredUrl);
       localStorage.setItem("hokai_logo_cache", enteredUrl);
 
       try {
@@ -2624,10 +3012,10 @@
           updatedAt: serverTimestamp(),
           updatedBy: auth.currentUser ? auth.currentUser.email : "admin"
         }, { merge: true });
-        logoStatus.innerHTML = `<span style="color:#2e7d32;"><i class="fa-solid fa-check"></i> Logo updated real-time!</span>`;
-        showToast("HOKAI Logo updated live!");
+        logoStatus.innerHTML = `<span style="color:#2e7d32;"><i class="fa-solid fa-check"></i> Logo & Video Watermark updated real-time!</span>`;
+        showToast("HOKAI Logo & Watermark updated live!");
       } catch (err) {
-        logoStatus.innerHTML = `<span style="color:#2e7d32;"><i class="fa-solid fa-check"></i> Logo updated real-time!</span>`;
+        logoStatus.innerHTML = `<span style="color:#2e7d32;"><i class="fa-solid fa-check"></i> Logo & Watermark updated real-time!</span>`;
       }
     });
 
@@ -3044,7 +3432,7 @@
       }
     });
 
-    // 7. PROMOTIONAL BANNERS: SMART AUTO-FLOW STRIP + SMART AUTO-WAIT + TAP FULLSCREEN VIDEO
+    // 7. PROMOTIONAL BANNERS: SMART AUTO-FLOW STRIP + SMART AUTO-WAIT + PROTECTED FULLSCREEN VIDEO
     const promotionsCol = collection(db, "promotions");
     let sliderAutoPlayTimer = null;
     let sliderTouchResumeTimer = null;
@@ -3085,7 +3473,6 @@
       activeInlinePromoVideo = inlineVideo || null;
       const startTime = (inlineVideo && !inlineVideo.ended && inlineVideo.currentTime > 0) ? inlineVideo.currentTime : 0;
 
-      // Pause all inline promo videos while fullscreen is open
       document.querySelectorAll("#promo-slider-wrapper video").forEach(v => v.pause());
 
       promoLightboxVideo.src = url;
@@ -3098,9 +3485,12 @@
             promoLightboxVideo.currentTime = startTime;
           }
         } catch (err) {}
-        promoLightboxVideo.play().catch(() => {
+        promoLightboxVideo.play().then(() => {
+          promoLightboxPlayer.syncUI();
+        }).catch(() => {
           promoLightboxVideo.muted = true;
           promoLightboxVideo.play().catch(() => {});
+          promoLightboxPlayer.syncUI();
         });
       };
 
@@ -3111,6 +3501,7 @@
       }
 
       promoLightbox.classList.add("open");
+      promoLightboxPlayer.syncUI();
     }
 
     function closePromoVideoModal() {
@@ -3222,7 +3613,6 @@
 
         if (currentBanners.length <= 1 || sliderPausedByUser || sliderPausedByModal) return;
 
-        // Smart Auto-Wait: wait until the active video finishes completely before sliding
         activeVideoEl = vid;
         activeVideoEndedHandler = () => {
           if (!sliderPausedByUser && !sliderPausedByModal) {
@@ -3238,7 +3628,6 @@
         vid.addEventListener("error", activeVideoErrorHandler, { once: true });
       } else {
         if (currentBanners.length <= 1 || sliderPausedByUser || sliderPausedByModal) return;
-        // Photo slide: advance after 3.5s
         sliderAutoPlayTimer = setTimeout(advanceToNextSlide, 3500);
       }
     }
@@ -3274,9 +3663,11 @@
       wrapper.innerHTML = currentBanners.map((b, i) => {
         const isVid = isVideoUrl(b.imageUrl);
         return `
-        <div class="promo-slide ${isVid ? 'is-video' : ''}" data-index="${i}" data-url="${b.imageUrl}">
+        <div class="promo-slide ${isVid ? 'is-video protected-video-stage' : ''}" data-index="${i}" data-url="${b.imageUrl}">
           ${isVid ? `
-            <video src="${b.imageUrl}" autoplay muted ${singleBannerLoop} playsinline preload="metadata"></video>
+            <video src="${b.imageUrl}" autoplay muted ${singleBannerLoop} playsinline preload="metadata" disablepictureinpicture controlslist="nodownload noplaybackrate noremoteplayback"></video>
+            <img class="video-center-watermark dynamic-hokai-logo" src="${currentBrandLogoUrl}" alt="" draggable="false">
+            <div class="video-tap-shield"></div>
             <span class="promo-video-badge"><i class="fa-solid fa-volume-xmark"></i> Tap for sound</span>
           ` : `
             <img src="${b.imageUrl}" alt="HOKAI Promotion" loading="eager" decoding="async">
@@ -3285,9 +3676,8 @@
       `;
       }).join('');
 
-      // Automatically detect natural portrait/landscape dimensions & bind tap-to-watch fullscreen for videos
       wrapper.querySelectorAll(".promo-slide").forEach(slide => {
-        const img = slide.querySelector("img");
+        const img = slide.querySelector("img:not(.video-center-watermark)");
         const vid = slide.querySelector("video");
 
         if (img) {
@@ -3619,7 +4009,7 @@
       return !isVariantNonVeg(v);
     }
 
-    // PUBLIC MENU RENDERING (PHOTO + VIDEO SUPPORT, DUAL-SCAN FILTER)
+    // PUBLIC MENU RENDERING (PHOTO + PROTECTED VIDEO + CENTER WATERMARK)
     window.renderPublicDishes = function() {
       const container = document.getElementById("dishes-container");
       if (!container) return;
@@ -3705,9 +4095,10 @@
           </div>
 
           ${hasValidImg ? `
-            <div class="card-right-thumb-wrap">
+            <div class="card-right-thumb-wrap ${isVideoUrl(mainImg) ? 'protected-video-stage' : ''}">
               ${isVideoUrl(mainImg) ? `
-                <video src="${mainImg}" autoplay muted loop playsinline preload="metadata"></video>
+                <video src="${mainImg}" autoplay muted loop playsinline preload="metadata" disablepictureinpicture controlslist="nodownload noplaybackrate noremoteplayback"></video>
+                <img class="video-center-watermark dynamic-hokai-logo" src="${currentBrandLogoUrl}" alt="" draggable="false">
               ` : `
                 <img src="${mainImg}" alt="${dish.name}" loading="lazy" decoding="async">
               `}
@@ -3726,7 +4117,7 @@
       });
     };
 
-    // BOTTOM SHEET MODAL (PHOTO & VIDEO SUPPORT)
+    // BOTTOM SHEET MODAL (PHOTO & PROTECTED VIDEO PLAYER)
     const sheetBackdrop = document.getElementById("dish-detail-sheet-backdrop");
     const sheetCloseBtn = document.getElementById("sheet-close-btn");
 
@@ -3759,6 +4150,7 @@
         const priceEl = document.getElementById("sheet-dish-price");
         const descEl = document.getElementById("sheet-dish-desc");
         const imgEl = document.getElementById("sheet-dish-img");
+        const videoWrap = document.getElementById("sheet-video-player-wrap");
         const videoEl = document.getElementById("sheet-dish-video");
         const dietDot = document.getElementById("sheet-diet-dot");
         const badgesContainer = document.getElementById("sheet-badges-container");
@@ -3781,17 +4173,19 @@
 
           if (isVideoUrl(currentMedia)) {
             imgEl.style.display = "none";
-            videoEl.style.display = "block";
+            videoWrap.style.display = "flex";
             videoEl.src = currentMedia;
-            videoEl.play().catch(() => {});
+            videoEl.muted = true;
+            videoEl.play().then(() => sheetVideoPlayer.syncUI()).catch(() => sheetVideoPlayer.syncUI());
           } else {
             videoEl.pause();
-            videoEl.style.display = "none";
+            videoWrap.style.display = "none";
             imgEl.style.display = "block";
             imgEl.src = currentMedia;
           }
         } else {
           videoEl.pause();
+          videoWrap.style.display = "none";
           heroImageBox.style.display = "none";
           noImgHeader.style.display = "flex";
         }
