@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link rel="preconnect" href="https://lh3.googleusercontent.com">
+  <link rel="preconnect" href="https://res.cloudinary.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -325,11 +326,24 @@
       justify-content: center;
       text-align: center;
       padding: 26px 16px;
+      overflow: hidden;
       background: linear-gradient(180deg, rgba(10, 10, 10, 0.65) 0%, rgba(10, 10, 10, 0.98) 100%),
                   url('https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
     }
 
-    .hero-content { max-width: 850px; margin: 0 auto; z-index: 2; }
+    .hero-bg-video {
+      display: none;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    .hero-content { max-width: 850px; margin: 0 auto; position: relative; z-index: 2; }
 
     .hero-badge {
       display: inline-block;
@@ -399,7 +413,7 @@
       }
     }
 
-    .promo-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .promo-slide img, .promo-slide video { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     .slider-dots-container {
       display: flex;
@@ -631,14 +645,15 @@
       justify-content: center;
     }
 
-    .card-right-thumb-wrap img {
+    .card-right-thumb-wrap img, .card-right-thumb-wrap video {
       width: 100%;
       height: 100%;
       object-fit: cover;
       transition: transform 0.3s ease;
     }
 
-    .pro-list-card:hover .card-right-thumb-wrap img {
+    .pro-list-card:hover .card-right-thumb-wrap img,
+    .pro-list-card:hover .card-right-thumb-wrap video {
       transform: scale(1.08);
     }
 
@@ -708,7 +723,7 @@
       position: relative;
     }
 
-    .sheet-hero-image-box img {
+    .sheet-hero-image-box img, .sheet-hero-image-box video {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -1082,6 +1097,47 @@
       border-color: var(--gold-primary);
     }
 
+    /* DUAL MEDIA INPUT (LINK + DIRECT UPLOAD BUTTON) */
+    .media-input-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      width: 100%;
+    }
+
+    .media-input-group input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .upload-media-btn {
+      background: rgba(255, 185, 0, 0.14);
+      border: 1px solid var(--border-gold);
+      color: var(--gold-primary);
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: var(--transition);
+    }
+
+    .upload-media-btn:hover:not(:disabled) {
+      background: var(--gold-primary);
+      color: #0A0A0A;
+    }
+
+    .upload-media-btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
     .form-group { margin-bottom: 16px; width: 100%; }
 
     .form-group label {
@@ -1254,6 +1310,18 @@
       gap: 8px;
     }
 
+    .remove-variant-row-btn {
+      background: rgba(239, 83, 80, 0.2);
+      border: 1px solid #ef5350;
+      color: #ef5350;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
     .modal-overlay {
       display: none;
       position: fixed;
@@ -1328,7 +1396,6 @@
     @media (max-width: 860px) {
       nav.desktop-nav { display: none; }
       .hamburger-btn { display: block; }
-      .sticky-search-wrapper { top: 56px; }
     }
 
     @media (max-width: 600px) {
@@ -1341,6 +1408,9 @@
   </style>
 </head>
 <body>
+
+  <!-- HIDDEN FILE INPUT FOR DIRECT PHONE STORAGE UPLOAD -->
+  <input type="file" id="global-cloudinary-file-input" style="display:none;">
 
   <!-- ==================== CUSTOMER FACING FRONTEND ==================== -->
   <div id="customer-root">
@@ -1387,7 +1457,7 @@
       </div>
     </div>
 
-    <!-- STICKY TOP SEARCH BAR (GUARANTEED TOP 0 LOCK) -->
+    <!-- STICKY TOP SEARCH BAR -->
     <div class="sticky-search-wrapper" id="sticky-search-anchor">
       <div class="search-inner-box">
         <div class="search-input-group">
@@ -1400,8 +1470,9 @@
       </div>
     </div>
 
-    <!-- HERO SECTION -->
+    <!-- HERO SECTION (SUPPORTS PHOTO & VIDEO) -->
     <section class="hero-section" id="hero-banner-section">
+      <video id="hero-bg-video" class="hero-bg-video" autoplay muted loop playsinline preload="metadata"></video>
       <div class="hero-content">
         <div class="hero-badge">Authentic Culinary Heritage</div>
         <h2 class="hero-title" id="hero-display-title">Where Asia Comes to the Table</h2>
@@ -1451,7 +1522,6 @@
     <footer class="site-footer" id="contact-section">
       <div class="footer-grid">
         
-        <!-- COL 1: BRANDING & DIRECT SOCIALS -->
         <div class="footer-col">
           <div class="brand-logo-group" style="margin-bottom: 14px;">
             <div class="logo-container">
@@ -1471,7 +1541,6 @@
           </div>
         </div>
 
-        <!-- COL 2: LOCATION & GOOGLE MAPS DIRECT NAVIGATION -->
         <div class="footer-col">
           <h4>Location & Navigation</h4>
           <p id="display-location-name" style="font-weight:700; color:#FFF; margin-bottom:4px;">HOKAI Pan-Asian Kitchen</p>
@@ -1481,7 +1550,6 @@
           </a>
         </div>
 
-        <!-- COL 3: ONLINE ORDERING -->
         <div class="footer-col">
           <h4>Order Online</h4>
           <p style="margin-bottom:10px;">Get your favourite Pan-Asian delicacies delivered fresh to your doorstep:</p>
@@ -1495,7 +1563,6 @@
           </div>
         </div>
         
-        <!-- COL 4: WORKING HOURS -->
         <div class="footer-col" id="footer-timings-col">
           <h4 id="timings-display-title">Timings</h4>
           <p id="timings-display-days">Monday – Sunday</p>
@@ -1511,18 +1578,17 @@
   </div>
 
   <!-- ========================================================
-       SWIGGY BOTTOM SHEET DISH DETAIL MODAL (PHOTO 2 STYLE)
+       SWIGGY BOTTOM SHEET DISH DETAIL MODAL (PHOTO & VIDEO)
   ======================================================== -->
   <div class="dish-detail-sheet-backdrop" id="dish-detail-sheet-backdrop">
     <div class="dish-sheet-card" id="dish-sheet-card">
       <button type="button" class="sheet-close-btn" id="sheet-close-btn"><i class="fa-solid fa-xmark"></i></button>
       
-      <!-- HERO IMAGE IN MODAL -->
       <div class="sheet-hero-image-box" id="sheet-hero-image-box">
         <img id="sheet-dish-img" src="" alt="Dish Preview">
+        <video id="sheet-dish-video" autoplay muted loop playsinline controls style="display:none;"></video>
       </div>
 
-      <!-- NO-IMAGE MOTIF -->
       <div class="sheet-no-img-header" id="sheet-no-img-header" style="display:none;">
         <i class="fa-solid fa-utensils"></i>
         <span style="font-family:var(--font-heading); font-size:1.1rem; color:var(--gold-primary); font-weight:700;">HOKAI MASTER RECIPE</span>
@@ -1543,7 +1609,6 @@
 
         <p class="sheet-desc-text" id="sheet-dish-desc">Detailed recipe description...</p>
 
-        <!-- Dynamic Variants Selector in Sheet -->
         <div class="sheet-variants-box" id="sheet-variants-container" style="display:none;">
           <h4>Choose Variation</h4>
           <div id="sheet-variants-list" style="display:flex; flex-direction:column; gap:8px;"></div>
@@ -1604,6 +1669,7 @@
         <button class="admin-tab-btn" data-tab="tab-logo"><i class="fa-solid fa-link"></i> Logo</button>
         <button class="admin-tab-btn" data-tab="tab-site-images"><i class="fa-solid fa-image"></i> Hero Banner</button>
         <button class="admin-tab-btn" data-tab="tab-timings"><i class="fa-solid fa-clock"></i> Timings</button>
+        <button class="admin-tab-btn" data-tab="tab-cloudinary"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Setup</button>
         <button class="admin-tab-btn" data-tab="tab-seed"><i class="fa-solid fa-database"></i> Seed</button>
       </div>
 
@@ -1615,7 +1681,6 @@
             <span id="menu-counter" style="color:var(--text-muted); font-size:0.82rem;">0 Items Loaded</span>
           </div>
 
-          <!-- REAL-TIME SEARCH & FILTER TOOLBAR FOR ADMIN -->
           <div class="admin-filter-bar">
             <div class="admin-search-field-wrap">
               <i class="fa-solid fa-magnifying-glass"></i>
@@ -1665,7 +1730,7 @@
             <table class="admin-table">
               <thead>
                 <tr>
-                  <th style="width:50px;">Photo</th>
+                  <th style="width:50px;">Media</th>
                   <th>Order</th>
                   <th>Name</th>
                   <th>Category</th>
@@ -1695,7 +1760,6 @@
                 <select id="dish-category" class="form-control" required></select>
               </div>
 
-              <!-- PRICING & ADVANCED VARIATION BUILDER -->
               <div class="form-group" style="grid-column: 1 / -1; background: #111; padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-dark);">
                 <label style="color:var(--gold-primary); margin-bottom: 8px;">Pricing Strategy & Variations</label>
                 <div style="display: flex; gap: 14px; align-items: center; margin-bottom: 12px; flex-wrap:wrap;">
@@ -1725,7 +1789,7 @@
 
                 <div id="variant-builder-box-add" style="display:none;">
                   <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:10px;">
-                    Har variant ka alag <strong>Name, Price, Dietary (Veg/Non-Veg), Image URL aur Description</strong> set karein. Customer jab select karega, modal me photo aur detail real-time auto-change ho jayegi!
+                    Har variant ka alag <strong>Name, Price, Dietary, Photo/Video (Link ya Direct Upload) aur Description</strong> set karein.
                   </p>
                   <div id="variant-rows-container-add"></div>
                   <button type="button" id="btn-add-variant-row-add" class="btn-outline" style="padding: 6px 14px; font-size:0.82rem; margin-top:8px;">
@@ -1767,12 +1831,17 @@
               </div>
 
               <div class="form-group" style="grid-column: 1 / -1;">
-                <label>Default Description (Agar variation select na ho)</label>
+                <label>Default Description</label>
                 <textarea id="dish-desc" class="form-control" rows="2" placeholder="Handcrafted with authentic Asian ingredients..."></textarea>
               </div>
               <div class="form-group" style="grid-column: 1 / -1;">
-                <label>Default Image URL (Direct Google Maps / ImgBB Link)</label>
-                <input type="url" id="dish-img-url" class="form-control" placeholder="https://lh3.googleusercontent.com/... or https://i.ibb.co/...">
+                <label>Default Photo / Video (Paste Link OR Direct Upload)</label>
+                <div class="media-input-group">
+                  <input type="url" id="dish-img-url" class="form-control" placeholder="Paste Link or click Upload...">
+                  <button type="button" class="upload-media-btn" data-accept="image/*,video/*">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Upload
+                  </button>
+                </div>
               </div>
             </div>
             <button type="submit" class="btn-primary" style="margin-top:8px; width:100%; max-width:280px;"><i class="fa-solid fa-cloud-arrow-up"></i> Save Dish to Cloud</button>
@@ -1868,8 +1937,13 @@
       <div class="admin-panel-section" id="tab-banners">
         <div class="admin-card">
           <h3><i class="fa-solid fa-images"></i> Promotional Carousel Banners Manager</h3>
-          <form id="add-banner-form" style="display:flex; gap:10px; max-width:650px; margin-bottom:20px; flex-wrap:wrap;">
-            <input type="url" id="new-banner-url" class="form-control" placeholder="Paste ImgBB/Google direct image link" required style="flex:1 1 300px;">
+          <form id="add-banner-form" style="display:flex; gap:10px; max-width:700px; margin-bottom:20px; flex-wrap:wrap;">
+            <div class="media-input-group" style="flex:1 1 320px;">
+              <input type="url" id="new-banner-url" class="form-control" placeholder="Paste Photo/Video link or Upload..." required>
+              <button type="button" class="upload-media-btn" data-accept="image/*,video/*">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Upload
+              </button>
+            </div>
             <button type="submit" class="btn-primary" style="white-space:nowrap;"><i class="fa-solid fa-plus"></i> Add Banner</button>
           </form>
 
@@ -1878,7 +1952,7 @@
               <thead>
                 <tr>
                   <th style="width:70px;">Preview</th>
-                  <th>Banner Image URL</th>
+                  <th>Banner Media URL</th>
                   <th style="width:90px;">Action</th>
                 </tr>
               </thead>
@@ -1891,13 +1965,18 @@
       <!-- TAB 7: BRAND LOGO -->
       <div class="admin-panel-section" id="tab-logo">
         <div class="admin-card">
-          <h3><i class="fa-solid fa-link"></i> Real-Time Brand Logo Link Updater</h3>
+          <h3><i class="fa-solid fa-link"></i> Real-Time Brand Logo Updater</h3>
           <form id="logo-url-form">
             <div style="display:flex; flex-direction:column; align-items:center; gap:16px; max-width:550px; margin:0 auto;">
               <div style="width:110px; height:110px; border-radius:50%; border:2px solid var(--gold-primary); background:#0A0A0A; overflow:hidden;">
                 <img id="admin-logo-preview" class="dynamic-hokai-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%239A0007' stroke='%23FFB900' stroke-width='3'/%3E%3Cpath d='M30,50 Q50,25 70,50 T30,50' fill='none' stroke='%23FFB900' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" alt="HOKAI Current Logo" style="width:100%; height:100%; object-fit:cover;">
               </div>
-              <input type="url" id="logo-url-input" class="form-control" placeholder="https://i.ibb.co/.../logo.png" required>
+              <div class="media-input-group">
+                <input type="url" id="logo-url-input" class="form-control" placeholder="Paste logo link or click Upload..." required>
+                <button type="button" class="upload-media-btn" data-accept="image/*">
+                  <i class="fa-solid fa-cloud-arrow-up"></i> Upload
+                </button>
+              </div>
               <button type="submit" class="btn-primary" style="width: 100%;"><i class="fa-solid fa-cloud-arrow-up"></i> Update Logo Real-Time</button>
               <div id="logo-update-status" style="font-size:0.85rem; color:var(--gold-primary); font-weight:600;"></div>
             </div>
@@ -1908,11 +1987,16 @@
       <!-- TAB 8: HERO BANNER -->
       <div class="admin-panel-section" id="tab-site-images">
         <div class="admin-card">
-          <h3><i class="fa-solid fa-image"></i> Hero Background Banner</h3>
+          <h3><i class="fa-solid fa-image"></i> Hero Background Banner (Photo / Video)</h3>
           <form id="hero-settings-form" style="max-width:650px;">
             <div class="form-group">
-              <label>Hero Background Image Link (ImgBB / Google Photo)</label>
-              <input type="url" id="hero-bg-url-input" class="form-control" placeholder="https://lh3.googleusercontent.com/... or https://i.ibb.co/..." required>
+              <label>Hero Background Link OR Direct Upload (Photo / Video)</label>
+              <div class="media-input-group">
+                <input type="url" id="hero-bg-url-input" class="form-control" placeholder="Paste Photo/Video link or Upload..." required>
+                <button type="button" class="upload-media-btn" data-accept="image/*,video/*">
+                  <i class="fa-solid fa-cloud-arrow-up"></i> Upload
+                </button>
+              </div>
             </div>
             <div class="form-group">
               <label>Hero Heading</label>
@@ -1960,7 +2044,29 @@
         </div>
       </div>
 
-      <!-- TAB 10: DATABASE SEED -->
+      <!-- TAB 10: CLOUDINARY DIRECT UPLOAD SETUP -->
+      <div class="admin-panel-section" id="tab-cloudinary">
+        <div class="admin-card">
+          <h3><i class="fa-solid fa-cloud-arrow-up"></i> Direct Phone Upload Setup (Cloudinary Free)</h3>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:16px;">
+            Apne free Cloudinary account ka <strong>Cloud Name</strong> aur <strong>Unsigned Upload Preset</strong> yahan save karein. Iske baad aap phone ki storage se direct Photo (10 MB tak) aur Video (100 MB tak) upload kar sakenge, aur manual link paste ka option bhi chalta rahega.
+          </p>
+          <form id="cloudinary-settings-form" style="max-width:600px;">
+            <div class="form-group">
+              <label>Cloudinary Cloud Name</label>
+              <input type="text" id="input-cloud-name" class="form-control" placeholder="e.g. dxyz123abc" required>
+            </div>
+            <div class="form-group">
+              <label>Unsigned Upload Preset Name</label>
+              <input type="text" id="input-upload-preset" class="form-control" placeholder="e.g. hokai_uploads" required>
+            </div>
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i> Save Upload Settings</button>
+            <div id="cloudinary-update-status" style="margin-top:10px; font-size:0.85rem; color:var(--gold-primary); font-weight:600;"></div>
+          </form>
+        </div>
+      </div>
+
+      <!-- TAB 11: DATABASE SEED -->
       <div class="admin-panel-section" id="tab-seed">
         <div class="admin-card">
           <h3><i class="fa-solid fa-bolt"></i> Instant Menu Seeder</h3>
@@ -2021,7 +2127,7 @@
 
           <div id="variant-builder-box-edit" style="display:none;">
             <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">
-              Har variant ka alag <strong>Price, Dietary (Veg/Non-Veg), Image aur Description</strong> set karein:
+              Har variant ka alag <strong>Price, Dietary, Photo/Video (Link ya Upload) aur Description</strong> set karein:
             </p>
             <div id="variant-rows-container-edit"></div>
             <button type="button" id="btn-add-variant-row-edit" class="btn-outline" style="padding: 5px 12px; font-size:0.8rem; margin-top:8px;">
@@ -2067,8 +2173,13 @@
           <textarea id="edit-dish-desc" class="form-control" rows="2"></textarea>
         </div>
         <div class="form-group">
-          <label>Default Image URL</label>
-          <input type="url" id="edit-dish-img-url" class="form-control" placeholder="https://lh3.googleusercontent.com/... or https://i.ibb.co/...">
+          <label>Default Photo / Video (Paste Link OR Direct Upload)</label>
+          <div class="media-input-group">
+            <input type="url" id="edit-dish-img-url" class="form-control" placeholder="Paste Link or click Upload...">
+            <button type="button" class="upload-media-btn" data-accept="image/*,video/*">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Upload
+            </button>
+          </div>
         </div>
         <div style="display:flex; gap:10px;">
           <button type="submit" class="btn-primary" style="flex:1;"><i class="fa-solid fa-check"></i> Save Changes</button>
@@ -2108,6 +2219,7 @@
     const cachedCategories = JSON.parse(localStorage.getItem("hokai_cache_categories") || "[]");
     const cachedDishes = JSON.parse(localStorage.getItem("hokai_cache_dishes") || "[]");
     const cachedPromos = JSON.parse(localStorage.getItem("hokai_cache_promos") || "[]");
+    let cloudinaryConfig = JSON.parse(localStorage.getItem("hokai_cloudinary_config") || '{"cloudName":"","uploadPreset":""}');
 
     let currentDishes = cachedDishes;
     let categoriesList = cachedCategories;
@@ -2123,6 +2235,18 @@
     let adminFilterSweet = "all";
     let adminFilterBadge = "all";
 
+    function isVideoUrl(url) {
+      if (!url) return false;
+      const clean = url.split('?')[0].toLowerCase();
+      return clean.includes('/video/upload/') || /\.(mp4|webm|mov|m4v|ogg)$/.test(clean);
+    }
+
+    function optimizeCloudinaryUrl(url) {
+      if (!url || !url.includes('res.cloudinary.com')) return url;
+      if (url.includes('/upload/f_auto')) return url;
+      return url.replace('/upload/', '/upload/f_auto,q_auto/');
+    }
+
     function fastInitRender() {
       if (categoriesList.length > 0) {
         const catBar = document.getElementById("category-bar");
@@ -2131,13 +2255,13 @@
             categoriesList.map(c => `<button class="cat-btn" data-cat="${c.name}">${c.name}</button>`).join('');
           bindCategoryClicks();
         }
-        renderCategoryDropdowns();
+        if (window.renderCategoryDropdowns) renderCategoryDropdowns();
       }
       if (currentDishes.length > 0) {
-        renderPublicDishes();
-        renderAdminTable();
+        if (window.renderPublicDishes) renderPublicDishes();
+        if (window.renderAdminTable) renderAdminTable();
       }
-      if (currentBanners.length > 0) renderPromotionalSlider();
+      if (currentBanners.length > 0 && window.renderPromotionalSlider) renderPromotionalSlider();
     }
 
     function bindCategoryClicks() {
@@ -2195,7 +2319,7 @@
       if (isError) toast.style.borderLeftColor = "#c62828";
       toast.innerHTML = `<i class="fa-solid ${isError ? 'fa-triangle-exclamation' : 'fa-circle-check'}"></i> <span>${message}</span>`;
       container.appendChild(toast);
-      setTimeout(() => toast.remove(), 3200);
+      setTimeout(() => toast.remove(), 3400);
     }
 
     function handleRouting() {
@@ -2213,6 +2337,135 @@
     }
     window.addEventListener('hashchange', handleRouting);
     handleRouting();
+
+    // 0. CLOUDINARY DIRECT UPLOAD ENGINE (PHOTO + VIDEO FROM INTERNAL STORAGE)
+    const cloudinaryDocRef = doc(db, "siteContent", "cloudinary");
+    const cloudNameInput = document.getElementById("input-cloud-name");
+    const uploadPresetInput = document.getElementById("input-upload-preset");
+
+    if (cloudinaryConfig.cloudName && cloudNameInput) cloudNameInput.value = cloudinaryConfig.cloudName;
+    if (cloudinaryConfig.uploadPreset && uploadPresetInput) uploadPresetInput.value = cloudinaryConfig.uploadPreset;
+
+    onSnapshot(cloudinaryDocRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const d = docSnap.data();
+        cloudinaryConfig = {
+          cloudName: (d.cloudName || "").trim(),
+          uploadPreset: (d.uploadPreset || "").trim()
+        };
+        localStorage.setItem("hokai_cloudinary_config", JSON.stringify(cloudinaryConfig));
+        if (cloudNameInput) cloudNameInput.value = cloudinaryConfig.cloudName;
+        if (uploadPresetInput) uploadPresetInput.value = cloudinaryConfig.uploadPreset;
+      }
+    });
+
+    document.getElementById("cloudinary-settings-form")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const cloudName = cloudNameInput.value.trim();
+      const uploadPreset = uploadPresetInput.value.trim();
+      const status = document.getElementById("cloudinary-update-status");
+      status.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving settings...`;
+
+      cloudinaryConfig = { cloudName, uploadPreset };
+      localStorage.setItem("hokai_cloudinary_config", JSON.stringify(cloudinaryConfig));
+
+      try {
+        await setDoc(cloudinaryDocRef, { cloudName, uploadPreset, updatedAt: serverTimestamp() }, { merge: true });
+        status.innerHTML = `<span style="color:#2e7d32;"><i class="fa-solid fa-check"></i> Direct Upload Ready! Ab kisi bhi Upload button se photo/video upload karein.</span>`;
+        showToast("Cloudinary upload settings saved!");
+      } catch (err) {
+        status.innerHTML = `<span style="color:#ef5350;">Error saving settings: ${err.message}</span>`;
+      }
+    });
+
+    // Global delegated handler for ALL Upload buttons (Static + Dynamic Variant rows)
+    const globalFileInput = document.getElementById("global-cloudinary-file-input");
+    let activeUploadBtn = null;
+    let activeTargetInput = null;
+
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(".upload-media-btn");
+      if (!btn) return;
+
+      if (!cloudinaryConfig.cloudName || !cloudinaryConfig.uploadPreset) {
+        showToast("Pehle 'Upload Setup' tab me Cloud Name aur Upload Preset save karein!", true);
+        const setupTab = document.querySelector('[data-tab="tab-cloudinary"]');
+        if (setupTab) setupTab.click();
+        return;
+      }
+
+      const group = btn.closest(".media-input-group");
+      const targetInput = group ? group.querySelector('input[type="url"]') : null;
+      if (!targetInput) return;
+
+      activeUploadBtn = btn;
+      activeTargetInput = targetInput;
+      globalFileInput.accept = btn.dataset.accept || "image/*,video/*";
+      globalFileInput.value = "";
+      globalFileInput.click();
+    });
+
+    globalFileInput?.addEventListener("change", () => {
+      const file = globalFileInput.files[0];
+      if (!file || !activeUploadBtn || !activeTargetInput) return;
+
+      const isVideo = file.type.startsWith("video/");
+      const maxMB = isVideo ? 100 : 10;
+      if (file.size > maxMB * 1024 * 1024) {
+        showToast(`File size ${maxMB} MB se kam honi chahiye!`, true);
+        return;
+      }
+
+      const btn = activeUploadBtn;
+      const inputEl = activeTargetInput;
+      const originalHTML = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> 0%`;
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", cloudinaryConfig.uploadPreset);
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", `https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudinaryConfig.cloudName)}/auto/upload`);
+
+      xhr.upload.onprogress = (ev) => {
+        if (ev.lengthComputable) {
+          const pct = Math.round((ev.loaded / ev.total) * 100);
+          btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${pct}%`;
+        }
+      };
+
+      xhr.onload = () => {
+        btn.disabled = false;
+        btn.innerHTML = originalHTML;
+        try {
+          const res = JSON.parse(xhr.responseText);
+          if (xhr.status >= 200 && xhr.status < 300 && res.secure_url) {
+            const optimizedUrl = optimizeCloudinaryUrl(res.secure_url);
+            inputEl.value = optimizedUrl;
+            inputEl.dispatchEvent(new Event("input", { bubbles: true }));
+            if (inputEl.id === "logo-url-input") {
+              const preview = document.getElementById("admin-logo-preview");
+              if (preview) preview.src = optimizedUrl;
+            }
+            showToast(isVideo ? "Video upload ho gaya! Ab Save button dabayein." : "Photo upload ho gayi! Ab Save button dabayein.");
+          } else {
+            showToast("Upload failed: " + (res.error?.message || "Check Cloud Name & Unsigned Preset"), true);
+          }
+        } catch (err) {
+          showToast("Upload response error!", true);
+        }
+      };
+
+      xhr.onerror = () => {
+        btn.disabled = false;
+        btn.innerHTML = originalHTML;
+        showToast("Network error! Internet check karke dobara try karein.", true);
+      };
+
+      xhr.send(formData);
+    });
 
     // 1. BRAND LOGO SYNC
     const brandingDocRef = doc(db, "siteContent", "branding");
@@ -2370,21 +2623,41 @@
       }
     });
 
-    // 4. HERO BANNER SYNC
+    // 4. HERO BANNER SYNC (SUPPORTS PHOTO & VIDEO)
     const heroDocRef = doc(db, "siteContent", "heroBanner");
     const heroBgInput = document.getElementById("hero-bg-url-input");
     const heroTitleInput = document.getElementById("hero-title-input");
     const heroSubtitleInput = document.getElementById("hero-subtitle-input");
     const heroBannerSec = document.getElementById("hero-banner-section");
+    const heroBgVideo = document.getElementById("hero-bg-video");
     const heroDisplayTitle = document.getElementById("hero-display-title");
     const heroDisplaySubtitle = document.getElementById("hero-display-subtitle");
     const heroStatus = document.getElementById("hero-update-status");
+
+    function applyHeroMedia(url) {
+      if (!url) return;
+      if (isVideoUrl(url)) {
+        heroBannerSec.style.background = "linear-gradient(180deg, rgba(10, 10, 10, 0.55) 0%, rgba(10, 10, 10, 0.98) 100%)";
+        if (heroBgVideo) {
+          heroBgVideo.src = url;
+          heroBgVideo.style.display = "block";
+          heroBgVideo.play().catch(() => {});
+        }
+      } else {
+        if (heroBgVideo) {
+          heroBgVideo.pause();
+          heroBgVideo.style.display = "none";
+          heroBgVideo.removeAttribute("src");
+        }
+        heroBannerSec.style.background = `linear-gradient(180deg, rgba(10, 10, 10, 0.65) 0%, rgba(10, 10, 10, 0.98) 100%), url('${url}') center/cover no-repeat`;
+      }
+    }
 
     onSnapshot(heroDocRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
         if (data.imageUrl) {
-          heroBannerSec.style.background = `linear-gradient(180deg, rgba(10, 10, 10, 0.65) 0%, rgba(10, 10, 10, 0.98) 100%), url('${data.imageUrl}') center/cover no-repeat`;
+          applyHeroMedia(data.imageUrl);
           if (heroBgInput && !heroBgInput.value) heroBgInput.value = data.imageUrl;
         }
         if (data.title) {
@@ -2404,7 +2677,7 @@
       const title = heroTitleInput.value.trim();
       const subtitle = heroSubtitleInput.value.trim();
 
-      if (imgUrl) heroBannerSec.style.background = `linear-gradient(180deg, rgba(10, 10, 10, 0.65) 0%, rgba(10, 10, 10, 0.98) 100%), url('${imgUrl}') center/cover no-repeat`;
+      if (imgUrl) applyHeroMedia(imgUrl);
       if (title) heroDisplayTitle.textContent = title;
       if (subtitle) heroDisplaySubtitle.textContent = subtitle;
 
@@ -2650,7 +2923,7 @@
       }
     });
 
-    // 7. PROMOTIONAL BANNERS CAROUSEL
+    // 7. PROMOTIONAL BANNERS CAROUSEL (SUPPORTS PHOTO & VIDEO)
     const promotionsCol = collection(db, "promotions");
     let sliderAutoPlayTimer = null;
     let currentSlideIndex = 0;
@@ -2682,7 +2955,11 @@
 
       wrapper.innerHTML = currentBanners.map(b => `
         <div class="promo-slide">
-          <img src="${b.imageUrl}" alt="HOKAI Promotion" loading="eager" decoding="async">
+          ${isVideoUrl(b.imageUrl) ? `
+            <video src="${b.imageUrl}" autoplay muted loop playsinline preload="metadata"></video>
+          ` : `
+            <img src="${b.imageUrl}" alt="HOKAI Promotion" loading="eager" decoding="async">
+          `}
         </div>
       `).join('');
 
@@ -2744,7 +3021,13 @@
       if (!tbody) return;
       tbody.innerHTML = currentBanners.map(b => `
         <tr>
-          <td><img src="${b.imageUrl}" style="width:60px; height:34px; object-fit:cover; border-radius:4px;"></td>
+          <td>
+            ${isVideoUrl(b.imageUrl) ? `
+              <video src="${b.imageUrl}" muted playsinline preload="metadata" style="width:60px; height:34px; object-fit:cover; border-radius:4px;"></video>
+            ` : `
+              <img src="${b.imageUrl}" style="width:60px; height:34px; object-fit:cover; border-radius:4px;">
+            `}
+          </td>
           <td style="word-break:break-all; font-size:0.8rem; color:var(--text-muted);">${b.imageUrl}</td>
           <td>
             <button class="delete-btn delete-banner-btn" data-id="${b.id}"><i class="fa-solid fa-trash-can"></i> Remove</button>
@@ -2917,7 +3200,6 @@
       return '';
     }
 
-    // HELPER: VARIANT DIETARY PARSER (Checks tag + Name like Chicken, Sea Food, Prawns)
     function isVariantNonVeg(v) {
       if (!v) return false;
       const tag = (v.dietary || '').toLowerCase().replace(/[^a-z]/g, '');
@@ -2933,9 +3215,7 @@
       return !isVariantNonVeg(v);
     }
 
-    // ========================================================
-    // BULLETPROOF DUAL-SCAN DIETARY FILTERING ENGINE
-    // ========================================================
+    // PUBLIC MENU RENDERING (PHOTO + VIDEO SUPPORT, DUAL-SCAN FILTER)
     window.renderPublicDishes = function() {
       const container = document.getElementById("dishes-container");
       if (!container) return;
@@ -3022,7 +3302,11 @@
 
           ${hasValidImg ? `
             <div class="card-right-thumb-wrap">
-              <img src="${mainImg}" alt="${dish.name}" loading="lazy" decoding="async">
+              ${isVideoUrl(mainImg) ? `
+                <video src="${mainImg}" autoplay muted loop playsinline preload="metadata"></video>
+              ` : `
+                <img src="${mainImg}" alt="${dish.name}" loading="lazy" decoding="async">
+              `}
             </div>
           ` : ''}
         </div>
@@ -3038,11 +3322,19 @@
       });
     };
 
-    // ========================================================
-    // BOTTOM SHEET MODAL (PHOTO 2 FORMAT)
-    // ========================================================
+    // BOTTOM SHEET MODAL (PHOTO & VIDEO SUPPORT)
     const sheetBackdrop = document.getElementById("dish-detail-sheet-backdrop");
     const sheetCloseBtn = document.getElementById("sheet-close-btn");
+
+    function closeDishDetailSheet() {
+      const videoEl = document.getElementById("sheet-dish-video");
+      if (videoEl) {
+        videoEl.pause();
+        videoEl.removeAttribute("src");
+        videoEl.load();
+      }
+      sheetBackdrop.classList.remove("open");
+    }
 
     function openDishDetailSheet(dish) {
       const hasVariants = Array.isArray(dish.variants) && dish.variants.length > 0;
@@ -3063,6 +3355,7 @@
         const priceEl = document.getElementById("sheet-dish-price");
         const descEl = document.getElementById("sheet-dish-desc");
         const imgEl = document.getElementById("sheet-dish-img");
+        const videoEl = document.getElementById("sheet-dish-video");
         const dietDot = document.getElementById("sheet-diet-dot");
         const badgesContainer = document.getElementById("sheet-badges-container");
         const heroImageBox = document.getElementById("sheet-hero-image-box");
@@ -3077,12 +3370,24 @@
         const currentDesc = (activeVariant && activeVariant.description) ? activeVariant.description : (dish.description || 'Crafted with authentic Pan-Asian ingredients and spices.');
         descEl.textContent = currentDesc;
 
-        const currentImg = (activeVariant && activeVariant.imageUrl) ? activeVariant.imageUrl : (dish.imageUrl || '');
-        if (currentImg && currentImg.trim()) {
-          imgEl.src = currentImg;
+        const currentMedia = (activeVariant && activeVariant.imageUrl) ? activeVariant.imageUrl : (dish.imageUrl || '');
+        if (currentMedia && currentMedia.trim()) {
           heroImageBox.style.display = "block";
           noImgHeader.style.display = "none";
+
+          if (isVideoUrl(currentMedia)) {
+            imgEl.style.display = "none";
+            videoEl.style.display = "block";
+            videoEl.src = currentMedia;
+            videoEl.play().catch(() => {});
+          } else {
+            videoEl.pause();
+            videoEl.style.display = "none";
+            imgEl.style.display = "block";
+            imgEl.src = currentMedia;
+          }
         } else {
+          videoEl.pause();
           heroImageBox.style.display = "none";
           noImgHeader.style.display = "flex";
         }
@@ -3131,9 +3436,9 @@
       sheetBackdrop.classList.add("open");
     }
 
-    sheetCloseBtn?.addEventListener("click", () => sheetBackdrop.classList.remove("open"));
+    sheetCloseBtn?.addEventListener("click", closeDishDetailSheet);
     sheetBackdrop?.addEventListener("click", (e) => {
-      if (e.target === sheetBackdrop) sheetBackdrop.classList.remove("open");
+      if (e.target === sheetBackdrop) closeDishDetailSheet();
     });
 
     // 10. REAL-TIME ADMIN TABLE WITH FILTERS & RE-ORDERING
@@ -3187,9 +3492,13 @@
         return `
         <tr>
           <td>
-            ${hasImg ? `
-              <img src="${dish.imageUrl}" style="width:36px; height:36px; object-fit:cover; border-radius:4px;">
-            ` : `
+            ${hasImg ? (
+              isVideoUrl(dish.imageUrl) ? `
+                <video src="${dish.imageUrl}" muted playsinline preload="metadata" style="width:36px; height:36px; object-fit:cover; border-radius:4px;"></video>
+              ` : `
+                <img src="${dish.imageUrl}" style="width:36px; height:36px; object-fit:cover; border-radius:4px;">
+              `
+            ) : `
               <div style="width:36px; height:36px; background:#222; border-radius:4px; display:flex; align-items:center; justify-content:center; color:#666; font-size:0.75rem;">
                 <i class="fa-solid fa-bowl-food"></i>
               </div>
@@ -3318,7 +3627,7 @@
       showToast("Admin filters reset!");
     });
 
-    // 11. ADVANCED MULTI-VARIANT BUILDER ROW GENERATOR
+    // 11. ADVANCED MULTI-VARIANT BUILDER ROW GENERATOR (LINK + DIRECT UPLOAD)
     function createAdvancedVariantRowHTML(name = '', price = '', dietary = 'veg', imageUrl = '', description = '') {
       return `
         <div class="variant-card-box">
@@ -3344,8 +3653,13 @@
             </div>
           </div>
           <div>
-            <label style="font-size:0.75rem; color:#888;">Variant Specific Image URL (Google Maps / ImgBB Link)</label>
-            <input type="url" class="form-control var-image-input" placeholder="https://lh3.googleusercontent.com/... or https://i.ibb.co/..." value="${imageUrl}">
+            <label style="font-size:0.75rem; color:#888;">Variant Photo / Video (Paste Link OR Direct Upload)</label>
+            <div class="media-input-group">
+              <input type="url" class="form-control var-image-input" placeholder="Paste Link or click Upload..." value="${imageUrl}">
+              <button type="button" class="upload-media-btn" data-accept="image/*,video/*">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Upload
+              </button>
+            </div>
           </div>
           <div>
             <label style="font-size:0.75rem; color:#888;">Variant Specific Description</label>
@@ -3591,7 +3905,6 @@
       });
     });
 
-    // CUSTOMER VEG / NON-VEG FILTER BUTTON CLICKS
     document.querySelectorAll(".filter-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
