@@ -317,7 +317,7 @@
       padding-left: 10px;
     }
 
-    /* HERO SECTION */
+    /* HERO SECTION (SUPPORTS PHOTO & VIDEO) */
     .hero-section {
       position: relative;
       min-height: 30vh;
@@ -374,46 +374,62 @@
       line-height: 1.5;
     }
 
-    /* PROMOTIONAL BANNERS CAROUSEL */
+    /* PROMOTIONAL BANNERS: SMART AUTO-FLOW STRIP (MIXED PORTRAIT & LANDSCAPE) */
     .promo-slider-section {
       max-width: 1320px;
       margin: 14px auto 0 auto;
       padding: 0 16px;
-      min-height: 180px;
+      min-height: 220px;
     }
 
     .promo-slider-wrapper {
       display: flex;
-      gap: 12px;
+      align-items: stretch;
+      gap: 10px;
       overflow-x: auto;
-      scroll-snap-type: x mandatory;
+      scroll-snap-type: x proximity;
       scroll-behavior: smooth;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
       border-radius: var(--radius-md);
+      padding: 2px 0;
     }
     .promo-slider-wrapper::-webkit-scrollbar { display: none; }
 
     .promo-slide {
-      flex: 0 0 calc(100% - 10px);
-      max-width: 720px;
-      height: 175px;
+      flex: 0 0 auto;
+      height: 215px;
+      aspect-ratio: 16 / 9;
+      max-width: 88vw;
       border-radius: var(--radius-md);
       overflow: hidden;
-      scroll-snap-align: center;
-      background: #181818;
+      scroll-snap-align: start;
+      background: #141414;
       border: 1px solid var(--border-dark);
       box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      transition: aspect-ratio 0.25s ease, border-color 0.22s ease;
+    }
+
+    .promo-slide:hover {
+      border-color: rgba(255, 185, 0, 0.35);
     }
 
     @media (min-width: 768px) {
+      .promo-slider-wrapper {
+        gap: 14px;
+      }
       .promo-slide {
-        flex: 0 0 calc(50% - 10px);
-        height: 220px;
+        height: 270px;
+        max-width: 680px;
       }
     }
 
-    .promo-slide img, .promo-slide video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .promo-slide img, .promo-slide video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
 
     .slider-dots-container {
       display: flex;
@@ -1480,7 +1496,7 @@
       </div>
     </section>
 
-    <!-- PROMOTIONAL BANNERS CAROUSEL -->
+    <!-- PROMOTIONAL BANNERS: SMART AUTO-FLOW STRIP -->
     <div class="promo-slider-section" id="promo-slider-container">
       <div class="promo-slider-wrapper" id="promo-slider-wrapper"></div>
       <div class="slider-dots-container" id="slider-dots-container"></div>
@@ -1933,10 +1949,13 @@
         </div>
       </div>
 
-      <!-- TAB 6: PROMOTIONAL BANNERS CAROUSEL MANAGER -->
+      <!-- TAB 6: PROMOTIONAL BANNERS CAROUSEL MANAGER (WITH UP/DOWN ORDERING) -->
       <div class="admin-panel-section" id="tab-banners">
         <div class="admin-card">
-          <h3><i class="fa-solid fa-images"></i> Promotional Carousel Banners Manager</h3>
+          <h3><i class="fa-solid fa-images"></i> Promotional Banners (Smart Auto-Flow Strip)</h3>
+          <p style="color:var(--text-muted); font-size:0.84rem; margin-bottom:14px;">
+            Portrait aur Landscape (Photo ya Video) dono bina crop hue automatic set honge. <strong>⬆️ Up</strong> aur <strong>⬇️ Down</strong> se live sequence badal sakte hain.
+          </p>
           <form id="add-banner-form" style="display:flex; gap:10px; max-width:700px; margin-bottom:20px; flex-wrap:wrap;">
             <div class="media-input-group" style="flex:1 1 320px;">
               <input type="url" id="new-banner-url" class="form-control" placeholder="Paste Photo/Video link or Upload..." required>
@@ -1952,6 +1971,7 @@
               <thead>
                 <tr>
                   <th style="width:70px;">Preview</th>
+                  <th style="width:90px;">Order</th>
                   <th>Banner Media URL</th>
                   <th style="width:90px;">Action</th>
                 </tr>
@@ -2506,7 +2526,7 @@
         logoStatus.innerHTML = `<span style="color:#2e7d32;"><i class="fa-solid fa-check"></i> Logo updated real-time!</span>`;
         showToast("HOKAI Logo updated live!");
       } catch (err) {
-        logoStatus.innerHTML = `<span style="color:#2e7d32;"><i class="fa-solid fa-check"></i> Logo updated live!</span>`;
+        logoStatus.innerHTML = `<span style="color:#2e7d32;"><i class="fa-solid fa-check"></i> Logo updated real-time!</span>`;
       }
     });
 
@@ -2923,9 +2943,10 @@
       }
     });
 
-    // 7. PROMOTIONAL BANNERS CAROUSEL (SUPPORTS PHOTO & VIDEO)
+    // 7. PROMOTIONAL BANNERS: SMART AUTO-FLOW STRIP (PORTRAIT + LANDSCAPE PHOTO & VIDEO + UP/DOWN ORDERING)
     const promotionsCol = collection(db, "promotions");
     let sliderAutoPlayTimer = null;
+    let sliderPausedByUser = false;
     let currentSlideIndex = 0;
 
     onSnapshot(promotionsCol, async (snapshot) => {
@@ -2935,26 +2956,44 @@
           "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=1200&q=80",
           "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80"
         ];
+        let ord = 1;
         for (const url of defaultBanners) {
           const id = "promo_" + Date.now() + Math.random().toString(36).substring(2, 6);
-          await setDoc(doc(db, "promotions", id), { imageUrl: url, createdAt: serverTimestamp() });
+          await setDoc(doc(db, "promotions", id), { imageUrl: url, order: ord++, createdAt: serverTimestamp() });
         }
       } else {
         currentBanners = [];
-        snapshot.forEach(docSnap => currentBanners.push({ id: docSnap.id, ...docSnap.data() }));
+        snapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          currentBanners.push({
+            id: docSnap.id,
+            ...data,
+            order: data.order !== undefined ? data.order : 999
+          });
+        });
+
+        currentBanners.sort((a, b) => a.order - b.order);
+
         localStorage.setItem("hokai_cache_promos", JSON.stringify(currentBanners));
         renderPromotionalSlider();
         renderAdminBannersTable();
       }
     });
 
+    function applyAutoAspectRatio(slideEl, w, h) {
+      if (!slideEl || !w || !h) return;
+      const rawRatio = w / h;
+      const clampedRatio = Math.max(0.55, Math.min(2.05, rawRatio));
+      slideEl.style.aspectRatio = clampedRatio.toFixed(3);
+    }
+
     window.renderPromotionalSlider = function() {
       const wrapper = document.getElementById("promo-slider-wrapper");
       const dotsContainer = document.getElementById("slider-dots-container");
       if (!wrapper || currentBanners.length === 0) return;
 
-      wrapper.innerHTML = currentBanners.map(b => `
-        <div class="promo-slide">
+      wrapper.innerHTML = currentBanners.map((b, i) => `
+        <div class="promo-slide" data-index="${i}">
           ${isVideoUrl(b.imageUrl) ? `
             <video src="${b.imageUrl}" autoplay muted loop playsinline preload="metadata"></video>
           ` : `
@@ -2962,6 +3001,30 @@
           `}
         </div>
       `).join('');
+
+      // Automatically detect natural portrait/landscape dimensions for every photo & video
+      wrapper.querySelectorAll(".promo-slide").forEach(slide => {
+        const img = slide.querySelector("img");
+        const vid = slide.querySelector("video");
+
+        if (img) {
+          if (img.complete && img.naturalWidth > 0) {
+            applyAutoAspectRatio(slide, img.naturalWidth, img.naturalHeight);
+          } else {
+            img.addEventListener("load", () => {
+              applyAutoAspectRatio(slide, img.naturalWidth, img.naturalHeight);
+            }, { once: true });
+          }
+        } else if (vid) {
+          if (vid.readyState >= 1 && vid.videoWidth > 0) {
+            applyAutoAspectRatio(slide, vid.videoWidth, vid.videoHeight);
+          } else {
+            vid.addEventListener("loadedmetadata", () => {
+              applyAutoAspectRatio(slide, vid.videoWidth, vid.videoHeight);
+            }, { once: true });
+          }
+        }
+      });
 
       dotsContainer.innerHTML = currentBanners.map((_, i) => `
         <span class="slider-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>
@@ -2974,6 +3037,7 @@
         });
       });
 
+      currentSlideIndex = 0;
       startAutoSlider();
     };
 
@@ -2999,34 +3063,81 @@
       clearInterval(sliderAutoPlayTimer);
       if (currentBanners.length <= 1) return;
       sliderAutoPlayTimer = setInterval(() => {
-        currentSlideIndex = (currentSlideIndex + 1) % currentBanners.length;
+        if (sliderPausedByUser) return;
+        const wrapper = document.getElementById("promo-slider-wrapper");
+        if (!wrapper) return;
+        const atEnd = wrapper.scrollLeft + wrapper.clientWidth >= wrapper.scrollWidth - 8;
+        if (atEnd || currentSlideIndex >= currentBanners.length - 1) {
+          currentSlideIndex = 0;
+        } else {
+          currentSlideIndex = currentSlideIndex + 1;
+        }
         goToSlide(currentSlideIndex);
       }, 3500);
     }
 
     const sliderWrapperEl = document.getElementById("promo-slider-wrapper");
+    sliderWrapperEl?.addEventListener("touchstart", () => { sliderPausedByUser = true; }, { passive: true });
+    sliderWrapperEl?.addEventListener("touchend", () => {
+      setTimeout(() => { sliderPausedByUser = false; }, 4000);
+    }, { passive: true });
+    sliderWrapperEl?.addEventListener("mouseenter", () => { sliderPausedByUser = true; });
+    sliderWrapperEl?.addEventListener("mouseleave", () => { sliderPausedByUser = false; });
+
     sliderWrapperEl?.addEventListener("scroll", () => {
-      const slideWidth = sliderWrapperEl.querySelector(".promo-slide")?.offsetWidth || 300;
-      const index = Math.round(sliderWrapperEl.scrollLeft / slideWidth);
-      if (index !== currentSlideIndex && index >= 0 && index < currentBanners.length) {
-        currentSlideIndex = index;
+      const slides = sliderWrapperEl.querySelectorAll(".promo-slide");
+      if (!slides.length) return;
+      const scrollPos = sliderWrapperEl.scrollLeft + sliderWrapperEl.offsetLeft;
+      let closestIdx = 0;
+      let minDist = Infinity;
+      slides.forEach((s, i) => {
+        const dist = Math.abs(s.offsetLeft - scrollPos);
+        if (dist < minDist) {
+          minDist = dist;
+          closestIdx = i;
+        }
+      });
+      if (closestIdx !== currentSlideIndex) {
+        currentSlideIndex = closestIdx;
         document.querySelectorAll(".slider-dot").forEach((d, i) => {
-          d.classList.toggle("active", i === index);
+          d.classList.toggle("active", i === closestIdx);
         });
       }
     }, { passive: true });
 
+    async function reorderBanners(fromIdx, toIdx) {
+      if (toIdx < 0 || toIdx >= currentBanners.length) return;
+      const list = [...currentBanners];
+      const [moved] = list.splice(fromIdx, 1);
+      list.splice(toIdx, 0, moved);
+
+      try {
+        await Promise.all(
+          list.map((b, i) => updateDoc(doc(db, "promotions", b.id), { order: i + 1 }))
+        );
+        showToast(toIdx < fromIdx ? "Banner moved up!" : "Banner moved down!");
+      } catch (err) {
+        showToast("Order update failed: " + err.message, true);
+      }
+    }
+
     function renderAdminBannersTable() {
       const tbody = document.getElementById("admin-banners-table-body");
       if (!tbody) return;
-      tbody.innerHTML = currentBanners.map(b => `
+      tbody.innerHTML = currentBanners.map((b, index) => `
         <tr>
           <td>
             ${isVideoUrl(b.imageUrl) ? `
-              <video src="${b.imageUrl}" muted playsinline preload="metadata" style="width:60px; height:34px; object-fit:cover; border-radius:4px;"></video>
+              <video src="${b.imageUrl}" muted playsinline preload="metadata" style="width:60px; height:38px; object-fit:cover; border-radius:4px;"></video>
             ` : `
-              <img src="${b.imageUrl}" style="width:60px; height:34px; object-fit:cover; border-radius:4px;">
+              <img src="${b.imageUrl}" style="width:60px; height:38px; object-fit:cover; border-radius:4px;">
             `}
+          </td>
+          <td>
+            <div style="display:inline-flex; gap:4px;">
+              <button class="move-btn move-banner-up" data-index="${index}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
+              <button class="move-btn move-banner-down" data-index="${index}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+            </div>
           </td>
           <td style="word-break:break-all; font-size:0.8rem; color:var(--text-muted);">${b.imageUrl}</td>
           <td>
@@ -3034,6 +3145,20 @@
           </td>
         </tr>
       `).join('');
+
+      document.querySelectorAll(".move-banner-up").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const idx = Number(btn.dataset.index);
+          reorderBanners(idx, idx - 1);
+        });
+      });
+
+      document.querySelectorAll(".move-banner-down").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const idx = Number(btn.dataset.index);
+          reorderBanners(idx, idx + 1);
+        });
+      });
 
       document.querySelectorAll(".delete-banner-btn").forEach(btn => {
         btn.addEventListener("click", async () => {
@@ -3051,7 +3176,8 @@
       if (!url) return;
       try {
         const id = "promo_" + Date.now();
-        await setDoc(doc(db, "promotions", id), { imageUrl: url, createdAt: serverTimestamp() });
+        const nextOrder = currentBanners.length + 1;
+        await setDoc(doc(db, "promotions", id), { imageUrl: url, order: nextOrder, createdAt: serverTimestamp() });
         document.getElementById("new-banner-url").value = "";
         showToast("New promotional banner added live!");
       } catch (err) {
