@@ -408,6 +408,11 @@
       border: 1px solid var(--border-dark);
       box-shadow: 0 8px 24px rgba(0,0,0,0.5);
       transition: aspect-ratio 0.25s ease, border-color 0.22s ease;
+      position: relative;
+    }
+
+    .promo-slide.is-video {
+      cursor: pointer;
     }
 
     .promo-slide:hover {
@@ -429,6 +434,91 @@
       height: 100%;
       object-fit: cover;
       display: block;
+    }
+
+    .promo-video-badge {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 185, 0, 0.4);
+      color: #FFF;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.7rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .promo-video-badge i {
+      color: var(--gold-primary);
+    }
+
+    /* FULLSCREEN PROMO VIDEO LIGHTBOX MODAL */
+    .promo-video-lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.94);
+      backdrop-filter: blur(12px);
+      z-index: 100020;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .promo-video-lightbox.open {
+      display: flex;
+    }
+
+    .promo-lightbox-inner {
+      position: relative;
+      max-width: 96vw;
+      max-height: 88vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .promo-lightbox-inner video {
+      max-width: 100%;
+      max-height: 86vh;
+      width: auto;
+      height: auto;
+      border-radius: var(--radius-md);
+      background: #000;
+      border: 1px solid var(--border-gold);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.9);
+      outline: none;
+    }
+
+    .promo-lightbox-close {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(20, 20, 20, 0.85);
+      border: 1px solid var(--border-gold);
+      color: #FFF;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100025;
+      transition: var(--transition);
+    }
+
+    .promo-lightbox-close:hover {
+      background: var(--gold-primary);
+      color: #000;
     }
 
     .slider-dots-container {
@@ -1496,7 +1586,7 @@
       </div>
     </section>
 
-    <!-- PROMOTIONAL BANNERS: SMART AUTO-FLOW STRIP -->
+    <!-- PROMOTIONAL BANNERS: SMART AUTO-FLOW STRIP (SMART AUTO-WAIT + TAP FULLSCREEN) -->
     <div class="promo-slider-section" id="promo-slider-container">
       <div class="promo-slider-wrapper" id="promo-slider-wrapper"></div>
       <div class="slider-dots-container" id="slider-dots-container"></div>
@@ -1591,6 +1681,18 @@
         &copy; 2026 HOKAI Pan-Asian Kitchen.
       </div>
     </footer>
+  </div>
+
+  <!-- ========================================================
+       FULLSCREEN PROMO VIDEO POPUP (SOUND + CONTROLS)
+  ======================================================== -->
+  <div class="promo-video-lightbox" id="promo-video-lightbox">
+    <button type="button" class="promo-lightbox-close" id="promo-lightbox-close" aria-label="Close video">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="promo-lightbox-inner">
+      <video id="promo-lightbox-video" controls playsinline></video>
+    </div>
   </div>
 
   <!-- ========================================================
@@ -1954,7 +2056,7 @@
         <div class="admin-card">
           <h3><i class="fa-solid fa-images"></i> Promotional Banners (Smart Auto-Flow Strip)</h3>
           <p style="color:var(--text-muted); font-size:0.84rem; margin-bottom:14px;">
-            Portrait aur Landscape (Photo ya Video) dono bina crop hue automatic set honge. <strong>⬆️ Up</strong> aur <strong>⬇️ Down</strong> se live sequence badal sakte hain.
+            Portrait aur Landscape (Photo ya Video) dono bina crop hue automatic set honge. Video aane par slider khatam hone tak wait karega aur tap par fullscreen sound ke saath play hoga.
           </p>
           <form id="add-banner-form" style="display:flex; gap:10px; max-width:700px; margin-bottom:20px; flex-wrap:wrap;">
             <div class="media-input-group" style="flex:1 1 320px;">
@@ -2398,7 +2500,6 @@
       }
     });
 
-    // Global delegated handler for ALL Upload buttons (Static + Dynamic Variant rows)
     const globalFileInput = document.getElementById("global-cloudinary-file-input");
     let activeUploadBtn = null;
     let activeTargetInput = null;
@@ -2943,11 +3044,111 @@
       }
     });
 
-    // 7. PROMOTIONAL BANNERS: SMART AUTO-FLOW STRIP (PORTRAIT + LANDSCAPE PHOTO & VIDEO + UP/DOWN ORDERING)
+    // 7. PROMOTIONAL BANNERS: SMART AUTO-FLOW STRIP + SMART AUTO-WAIT + TAP FULLSCREEN VIDEO
     const promotionsCol = collection(db, "promotions");
     let sliderAutoPlayTimer = null;
+    let sliderTouchResumeTimer = null;
+    let sliderScrollEndTimer = null;
+    let isProgrammaticScroll = false;
     let sliderPausedByUser = false;
+    let sliderPausedByModal = false;
     let currentSlideIndex = 0;
+
+    let activeVideoEl = null;
+    let activeVideoEndedHandler = null;
+    let activeVideoErrorHandler = null;
+    let activeInlinePromoVideo = null;
+
+    const promoLightbox = document.getElementById("promo-video-lightbox");
+    const promoLightboxVideo = document.getElementById("promo-lightbox-video");
+    const promoLightboxClose = document.getElementById("promo-lightbox-close");
+
+    function clearSlideSchedule() {
+      if (sliderAutoPlayTimer) {
+        clearTimeout(sliderAutoPlayTimer);
+        sliderAutoPlayTimer = null;
+      }
+      if (activeVideoEl) {
+        if (activeVideoEndedHandler) activeVideoEl.removeEventListener("ended", activeVideoEndedHandler);
+        if (activeVideoErrorHandler) activeVideoEl.removeEventListener("error", activeVideoErrorHandler);
+        activeVideoEl = null;
+        activeVideoEndedHandler = null;
+        activeVideoErrorHandler = null;
+      }
+    }
+
+    function openPromoVideoModal(url, inlineVideo) {
+      if (!promoLightbox || !promoLightboxVideo) return;
+      sliderPausedByModal = true;
+      clearSlideSchedule();
+
+      activeInlinePromoVideo = inlineVideo || null;
+      const startTime = (inlineVideo && !inlineVideo.ended && inlineVideo.currentTime > 0) ? inlineVideo.currentTime : 0;
+
+      // Pause all inline promo videos while fullscreen is open
+      document.querySelectorAll("#promo-slider-wrapper video").forEach(v => v.pause());
+
+      promoLightboxVideo.src = url;
+      promoLightboxVideo.muted = false;
+      promoLightboxVideo.loop = false;
+
+      const setStartAndPlay = () => {
+        try {
+          if (startTime > 0 && promoLightboxVideo.duration && startTime < promoLightboxVideo.duration - 0.5) {
+            promoLightboxVideo.currentTime = startTime;
+          }
+        } catch (err) {}
+        promoLightboxVideo.play().catch(() => {
+          promoLightboxVideo.muted = true;
+          promoLightboxVideo.play().catch(() => {});
+        });
+      };
+
+      if (promoLightboxVideo.readyState >= 1) {
+        setStartAndPlay();
+      } else {
+        promoLightboxVideo.addEventListener("loadedmetadata", setStartAndPlay, { once: true });
+      }
+
+      promoLightbox.classList.add("open");
+    }
+
+    function closePromoVideoModal() {
+      if (!promoLightbox || !promoLightbox.classList.contains("open")) return;
+      const watchedTime = promoLightboxVideo ? promoLightboxVideo.currentTime : 0;
+      const wasEnded = promoLightboxVideo ? promoLightboxVideo.ended : false;
+
+      if (promoLightboxVideo) {
+        promoLightboxVideo.pause();
+        promoLightboxVideo.removeAttribute("src");
+        promoLightboxVideo.load();
+      }
+
+      promoLightbox.classList.remove("open");
+      sliderPausedByModal = false;
+
+      if (activeInlinePromoVideo) {
+        try {
+          activeInlinePromoVideo.currentTime = wasEnded ? 0 : watchedTime;
+        } catch (err) {}
+        activeInlinePromoVideo.play().catch(() => {});
+        activeInlinePromoVideo = null;
+      }
+
+      if (wasEnded && currentBanners.length > 1) {
+        advanceToNextSlide();
+      } else {
+        scheduleNextSlide(false);
+      }
+    }
+
+    promoLightboxClose?.addEventListener("click", closePromoVideoModal);
+    promoLightbox?.addEventListener("click", (e) => {
+      if (e.target === promoLightbox) closePromoVideoModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closePromoVideoModal();
+    });
 
     onSnapshot(promotionsCol, async (snapshot) => {
       if (snapshot.empty) {
@@ -2987,22 +3188,104 @@
       slideEl.style.aspectRatio = clampedRatio.toFixed(3);
     }
 
+    function updateSliderDots(idx) {
+      document.querySelectorAll(".slider-dot").forEach((d, i) => {
+        d.classList.toggle("active", i === idx);
+      });
+    }
+
+    function advanceToNextSlide() {
+      if (sliderPausedByUser || sliderPausedByModal || currentBanners.length <= 1) return;
+      const nextIdx = (currentSlideIndex + 1) % currentBanners.length;
+      goToSlide(nextIdx, true);
+    }
+
+    function scheduleNextSlide(restartVideoFromStart = false) {
+      clearSlideSchedule();
+      const wrapper = document.getElementById("promo-slider-wrapper");
+      if (!wrapper || currentBanners.length === 0) return;
+
+      const slides = wrapper.querySelectorAll(".promo-slide");
+      const activeSlide = slides[currentSlideIndex];
+      if (!activeSlide) return;
+
+      const vid = activeSlide.querySelector("video");
+
+      if (vid) {
+        vid.loop = currentBanners.length <= 1;
+        if (restartVideoFromStart || vid.ended) {
+          try { vid.currentTime = 0; } catch (err) {}
+        }
+        if (!sliderPausedByModal) {
+          vid.play().catch(() => {});
+        }
+
+        if (currentBanners.length <= 1 || sliderPausedByUser || sliderPausedByModal) return;
+
+        // Smart Auto-Wait: wait until the active video finishes completely before sliding
+        activeVideoEl = vid;
+        activeVideoEndedHandler = () => {
+          if (!sliderPausedByUser && !sliderPausedByModal) {
+            advanceToNextSlide();
+          }
+        };
+        activeVideoErrorHandler = () => {
+          if (!sliderPausedByUser && !sliderPausedByModal) {
+            sliderAutoPlayTimer = setTimeout(advanceToNextSlide, 3500);
+          }
+        };
+        vid.addEventListener("ended", activeVideoEndedHandler, { once: true });
+        vid.addEventListener("error", activeVideoErrorHandler, { once: true });
+      } else {
+        if (currentBanners.length <= 1 || sliderPausedByUser || sliderPausedByModal) return;
+        // Photo slide: advance after 3.5s
+        sliderAutoPlayTimer = setTimeout(advanceToNextSlide, 3500);
+      }
+    }
+
+    function goToSlide(idx, restartVideo = true) {
+      const wrapper = document.getElementById("promo-slider-wrapper");
+      if (!wrapper) return;
+      const slides = wrapper.querySelectorAll(".promo-slide");
+      if (!slides[idx]) return;
+
+      currentSlideIndex = idx;
+      isProgrammaticScroll = true;
+      const targetOffset = slides[idx].offsetLeft - wrapper.offsetLeft;
+      wrapper.scrollTo({
+        left: targetOffset,
+        behavior: 'smooth'
+      });
+
+      updateSliderDots(idx);
+      scheduleNextSlide(restartVideo);
+
+      setTimeout(() => { isProgrammaticScroll = false; }, 650);
+    }
+
     window.renderPromotionalSlider = function() {
+      clearSlideSchedule();
       const wrapper = document.getElementById("promo-slider-wrapper");
       const dotsContainer = document.getElementById("slider-dots-container");
       if (!wrapper || currentBanners.length === 0) return;
 
-      wrapper.innerHTML = currentBanners.map((b, i) => `
-        <div class="promo-slide" data-index="${i}">
-          ${isVideoUrl(b.imageUrl) ? `
-            <video src="${b.imageUrl}" autoplay muted loop playsinline preload="metadata"></video>
+      const singleBannerLoop = currentBanners.length === 1 ? "loop" : "";
+
+      wrapper.innerHTML = currentBanners.map((b, i) => {
+        const isVid = isVideoUrl(b.imageUrl);
+        return `
+        <div class="promo-slide ${isVid ? 'is-video' : ''}" data-index="${i}" data-url="${b.imageUrl}">
+          ${isVid ? `
+            <video src="${b.imageUrl}" autoplay muted ${singleBannerLoop} playsinline preload="metadata"></video>
+            <span class="promo-video-badge"><i class="fa-solid fa-volume-xmark"></i> Tap for sound</span>
           ` : `
             <img src="${b.imageUrl}" alt="HOKAI Promotion" loading="eager" decoding="async">
           `}
         </div>
-      `).join('');
+      `;
+      }).join('');
 
-      // Automatically detect natural portrait/landscape dimensions for every photo & video
+      // Automatically detect natural portrait/landscape dimensions & bind tap-to-watch fullscreen for videos
       wrapper.querySelectorAll(".promo-slide").forEach(slide => {
         const img = slide.querySelector("img");
         const vid = slide.querySelector("video");
@@ -3023,6 +3306,13 @@
               applyAutoAspectRatio(slide, vid.videoWidth, vid.videoHeight);
             }, { once: true });
           }
+
+          slide.addEventListener("click", () => {
+            const idx = Number(slide.dataset.index);
+            currentSlideIndex = idx;
+            updateSliderDots(idx);
+            openPromoVideoModal(slide.dataset.url, vid);
+          });
         }
       });
 
@@ -3033,58 +3323,41 @@
       dotsContainer.querySelectorAll(".slider-dot").forEach(dot => {
         dot.addEventListener("click", () => {
           const idx = Number(dot.dataset.index);
-          goToSlide(idx);
+          goToSlide(idx, true);
         });
       });
 
       currentSlideIndex = 0;
-      startAutoSlider();
+      scheduleNextSlide(true);
     };
 
-    function goToSlide(idx) {
-      const wrapper = document.getElementById("promo-slider-wrapper");
-      if (!wrapper) return;
-      const slides = wrapper.querySelectorAll(".promo-slide");
-      if (!slides[idx]) return;
-
-      currentSlideIndex = idx;
-      const targetOffset = slides[idx].offsetLeft - wrapper.offsetLeft;
-      wrapper.scrollTo({
-        left: targetOffset,
-        behavior: 'smooth'
-      });
-
-      document.querySelectorAll(".slider-dot").forEach((d, i) => {
-        d.classList.toggle("active", i === idx);
-      });
-    }
-
-    function startAutoSlider() {
-      clearInterval(sliderAutoPlayTimer);
-      if (currentBanners.length <= 1) return;
-      sliderAutoPlayTimer = setInterval(() => {
-        if (sliderPausedByUser) return;
-        const wrapper = document.getElementById("promo-slider-wrapper");
-        if (!wrapper) return;
-        const atEnd = wrapper.scrollLeft + wrapper.clientWidth >= wrapper.scrollWidth - 8;
-        if (atEnd || currentSlideIndex >= currentBanners.length - 1) {
-          currentSlideIndex = 0;
-        } else {
-          currentSlideIndex = currentSlideIndex + 1;
-        }
-        goToSlide(currentSlideIndex);
-      }, 3500);
-    }
-
     const sliderWrapperEl = document.getElementById("promo-slider-wrapper");
-    sliderWrapperEl?.addEventListener("touchstart", () => { sliderPausedByUser = true; }, { passive: true });
-    sliderWrapperEl?.addEventListener("touchend", () => {
-      setTimeout(() => { sliderPausedByUser = false; }, 4000);
+    sliderWrapperEl?.addEventListener("touchstart", () => {
+      sliderPausedByUser = true;
+      clearTimeout(sliderTouchResumeTimer);
+      clearSlideSchedule();
     }, { passive: true });
-    sliderWrapperEl?.addEventListener("mouseenter", () => { sliderPausedByUser = true; });
-    sliderWrapperEl?.addEventListener("mouseleave", () => { sliderPausedByUser = false; });
+
+    sliderWrapperEl?.addEventListener("touchend", () => {
+      clearTimeout(sliderTouchResumeTimer);
+      sliderTouchResumeTimer = setTimeout(() => {
+        sliderPausedByUser = false;
+        if (!sliderPausedByModal) scheduleNextSlide(false);
+      }, 3000);
+    }, { passive: true });
+
+    sliderWrapperEl?.addEventListener("mouseenter", () => {
+      sliderPausedByUser = true;
+      clearSlideSchedule();
+    });
+
+    sliderWrapperEl?.addEventListener("mouseleave", () => {
+      sliderPausedByUser = false;
+      if (!sliderPausedByModal) scheduleNextSlide(false);
+    });
 
     sliderWrapperEl?.addEventListener("scroll", () => {
+      if (isProgrammaticScroll) return;
       const slides = sliderWrapperEl.querySelectorAll(".promo-slide");
       if (!slides.length) return;
       const scrollPos = sliderWrapperEl.scrollLeft + sliderWrapperEl.offsetLeft;
@@ -3099,10 +3372,15 @@
       });
       if (closestIdx !== currentSlideIndex) {
         currentSlideIndex = closestIdx;
-        document.querySelectorAll(".slider-dot").forEach((d, i) => {
-          d.classList.toggle("active", i === closestIdx);
-        });
+        updateSliderDots(closestIdx);
       }
+
+      clearTimeout(sliderScrollEndTimer);
+      sliderScrollEndTimer = setTimeout(() => {
+        if (!sliderPausedByUser && !sliderPausedByModal) {
+          scheduleNextSlide(false);
+        }
+      }, 300);
     }, { passive: true });
 
     async function reorderBanners(fromIdx, toIdx) {
